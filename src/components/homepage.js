@@ -31,9 +31,8 @@ class HomePage extends Component {
                                 </ul>
                                 <center>
                                     <span className="text-muted">♥</span>
-                                    <a href="/faq" id="quote"> The Blocha Team</a>
+                                    <Link to="/faq" id="quote"> The Blocha Team</Link>
                                 </center>
-
                             </div>
                         </div>
                     </div>
