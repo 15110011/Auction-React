@@ -1,0 +1,32 @@
+.bg-dark {
+  background-color: #265c94 !important;
+}
+.feature img{
+  height: 240px;
+  width: 270px;
+  border-radius: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.dropdown-submenu {
+  position: relative;
+
+}
+.dropdown-submenu .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -1px;
+}
+.dropdown-submenu a{
+  text-decoration: none;
+  color: black;
+}
+.btn-info {
+  color: #fff;
+  background-color: transparent;
+  border: none;
+}
+.btn-info:hover{
+  color: #50b3e4;
+  background-color: transparent;
+}
