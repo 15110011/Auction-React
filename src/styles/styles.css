@@ -1,6 +1,31 @@
 .bg-dark {
   background-color: #265c94 !important;
 }
+.logo img{
+  width: 350px;
+  height: 320px;
+}
+.logo{
+  background-color: #a2b6c3;
+  height: 560px;
+  padding-top: 120px;
+}
+.image img{
+  float: right;
+}
+#word p, #word li{
+  font-size: 20px;
+  color: #091f61;
+}
+#word h1{
+  color: #091f61;
+}
+#quote{
+  color: #091f61;
+}
+#quote:hover{
+  text-decoration: none;
+}
 .feature img{
   height: 240px;
   width: 270px;
@@ -29,4 +54,43 @@
 .btn-info:hover{
   color: #50b3e4;
   background-color: transparent;
+}
+.feat{
+  margin-top: 120px;
+}
+.dropdown-menu{
+  position: absolute;
+  top: 100%;
+  left: -44px;
+  z-index: 970;
+  display: none;
+  float: left;
+  min-width: 7.5rem;
+  padding: .5rem 0;
+  margin: .125rem 0 0;s
+  font-size: 1rem;
+  color: #212529;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: .25rem;
+}
+.text-muted{
+  color: #7a25ad!important;
+}
+.bgrfeat{
+  background-color: #e9e9f1;
+}
+#page-footer{
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  height: 40px;
+  width: 100%;
+  position: relative;
+  left: 0px;
+  bottom: 0px
+}
+.about{
+  padding: 30px 0 30px 0;
 }

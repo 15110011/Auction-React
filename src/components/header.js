@@ -2,19 +2,6 @@ import React, { Component } from 'react';
 import { render } from 'react-dom'
 import { Link } from 'react-router-dom'
 import '../styles/styles.css'
-import {
-    Collapse,
-    Navbar,
-    NavbarToggler,
-    NavbarBrand,
-    Nav,
-    NavItem,
-    NavLink,
-    UncontrolledDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem
-} from 'reactstrap';
 
 class Header extends Component {
     render() {
@@ -110,10 +97,10 @@ class Header extends Component {
                                     <button className="btn btn-info my-2 my-sm-0" type="submit">Search</button>
                                 </div>
                             </form>
-                            <Link className="nav-item nav-link ml-auto" to="/contact" style={{color: 'white'}}><i className="fas fa-cart-plus"></i></Link>
-                            <Link className="nav-item nav-link" to="/contact" style={{color: 'white'}}><i className="far fa-bell"></i></Link>
-                            <div className="nav-item dropdown" style={{color: 'white'}}>
-                                <Link className="nav-link dropdown-toggle" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="far fa-user"></i></Link>
+                            <Link className="nav-item nav-link ml-auto" to="/contact" style={{ color: 'white' }}><i className="fas fa-cart-plus"></i></Link>
+                            <Link className="nav-item nav-link" to="/contact" style={{ color: 'white' }}><i className="far fa-bell"></i></Link>
+                            <div className="nav-item dropdown" style={{ color: 'white' }}>
+                                <a className="nav-link dropdown-toggle" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="far fa-user"></i></a>
                                 <div className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
                                     <Link className="dropdown-item" to="/account">Settings</Link>
                                     <Link className="dropdown-item" to="/logout">Sign out</Link>
