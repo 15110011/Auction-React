@@ -17,12 +17,7 @@ class Features extends Component {
                                 <div className="col-sm-4 feature">
                                     <img src="/images/car.jpg" alt="car" />
                                     <br />
-                                    <div
-                                        className="feature-name"
-                                        style={{
-                                            color: "#14acc2"
-                                        }}
-                                    >
+                                    <div className="feature-name">
                                         <h3>Cars</h3>
                                     </div>
                                 </div>
@@ -30,23 +25,14 @@ class Features extends Component {
                                     <img src="/images/house.jpg" alt="car" />
                                     <br />
                                     <div
-                                        className="feature-name"
-                                        style={{
-                                            color: "#14acc2"
-                                        }}
-                                    >
+                                        className="feature-name">
                                         <h3>House</h3>
                                     </div>
                                 </div>
                                 <div className="col-sm-4 feature">
                                     <img src="/images/diamond.jpg" alt="car" />
                                     <br />
-                                    <div
-                                        className="feature-name"
-                                        style={{
-                                            color: "#14acc2"
-                                        }}
-                                    >
+                                    <div className="feature-name">
                                         <h3>Diamond</h3>
                                     </div>
                                 </div>
@@ -58,36 +44,21 @@ class Features extends Component {
                                 <div className="col-sm-4 feature">
                                     <img src="/images/ring.jpg" alt="car" />
                                     <br />
-                                    <div
-                                        className="feature-name"
-                                        style={{
-                                            color: "#14acc2"
-                                        }}
-                                    >
+                                    <div className="feature-name">
                                         <h3>Rings</h3>
                                     </div>
                                 </div>
                                 <div className="col-sm-4 feature">
                                     <img src="/images/coin.jpg" alt="car" />
                                     <br />
-                                    <div
-                                        className="feature-name"
-                                        style={{
-                                            color: "#14acc2"
-                                        }}
-                                    >
+                                    <div className="feature-name">
                                         <h3>Coins</h3>
                                     </div>
                                 </div>
                                 <div className="col-sm-4 feature">
                                     <img src="/images/cigar.jpg" alt="car" />
                                     <br />
-                                    <div
-                                        className="feature-name"
-                                        style={{
-                                            color: "#14acc2"
-                                        }}
-                                    >
+                                    <div className="feature-name">
                                         <h3>Cigars</h3>
                                     </div>
                                 </div>

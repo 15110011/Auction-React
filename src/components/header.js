@@ -97,15 +97,27 @@ class Header extends Component {
                                     <button className="btn btn-info my-2 my-sm-0" type="submit">Search</button>
                                 </div>
                             </form>
-                            <Link className="nav-item nav-link ml-auto" to="/contact" style={{ color: 'white' }}><i className="fas fa-cart-plus"></i></Link>
-                            <Link className="nav-item nav-link" to="/contact" style={{ color: 'white' }}><i className="far fa-bell"></i></Link>
-                            <div className="nav-item dropdown" style={{ color: 'white' }}>
-                                <a className="nav-link dropdown-toggle" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="far fa-user"></i></a>
-                                <div className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
-                                    <Link className="dropdown-item" to="/account">Settings</Link>
-                                    <Link className="dropdown-item" to="/logout">Sign out</Link>
-                                </div>
-                            </div>
+                            {
+                                localStorage.getItem('session') ?
+                                    <div>
+                                        <Link className="nav-item nav-link ml-auto" to="/contact" style={{ color: 'white' }}><i className="fas fa-cart-plus"></i></Link>
+                                        <Link className="nav-item nav-link" to="/contact" style={{ color: 'white' }}><i className="far fa-bell"></i></Link>
+                                        <div className="nav-item dropdown" style={{ color: 'white' }}>
+                                            <a className="nav-link dropdown-toggle" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="far fa-user"></i></a>
+                                            <div className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
+                                                <Link className="dropdown-item" to="/account">Settings</Link>
+                                                <Link className="dropdown-item" to="/logout">Sign out</Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    :
+                                    <div className="ml-auto">
+                                        <div className="form-inline">
+                                            <Link className="btn btn-info" to="/signin">Log in</Link>
+                                            <Link className="btn btn-info" to="/signup">Sign up</Link>
+                                        </div>
+                                    </div>
+                            }
                         </div>
                     </div>
                 </nav>

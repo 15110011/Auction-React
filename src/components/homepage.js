@@ -5,6 +5,7 @@ import '../styles/styles.css'
 import Header from './header'
 import Features from './hotfeatures';
 import Footer from './footer';
+import Particles from 'react-particles-js'
 
 class HomePage extends Component {
     render() {

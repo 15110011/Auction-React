@@ -4,3 +4,38 @@
 .errorsInput{
     color: red;
 }
+.signup{
+    margin-top: 50px;
+    height: 100vh;
+    padding-left: 530px;
+}
+.form-control{
+    display: block;
+    width: 320px;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #0e345a;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 10px;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.signupbtn{
+    position: relative;
+    left: 15%;
+    border-radius: 10px;
+    width: 10%;
+}
+.signin{
+    margin-top: 156px;
+    height: 64vh;
+    padding-left: 530px;
+}
+.signinbtn{
+    position: relative;
+    left: 15%;
+    border-radius: 15px;
+    width: 10%;
+}

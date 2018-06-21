@@ -10,7 +10,7 @@ class FAQ extends Component {
         return (
             <div>
                 <div id="faq">
-                    <div className="container" style={{minHeight: '100vh'}}>
+                    <div className="container" style={{ minHeight: '100vh', marginTop: '50px' }}>
                         <h1>FAQ</h1>
                         <div className="q-and-a">
                             <hr />
@@ -52,7 +52,7 @@ class FAQ extends Component {
                         </div>
                     </div>
                 </div>
-                
+
             </div>
         )
     }
