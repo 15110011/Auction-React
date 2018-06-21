@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom'
-import { Switch, Route, BrowserRouter } from 'react-router-dom'
+import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import Header from './header';
 import './../styles/setting.css'
@@ -89,16 +89,16 @@ class SignUpPage extends Component {
         e.preventDefault()
         const form = new FormData(e.target)
         if (this.validate(this.state.fullName, this.state.userName, this.state.emailAddress, this.state.password, this.state.confirmPassword, this.state.phoneNumber)) {
-            fetch(' /api/v1/entrance/signup', {
+            fetch('/api/v1/entrance/signup', {
                 method: 'POST',
                 body: form
             })
                 .then(res => res.json())
-                .then((res) => {
-                    if (!res.success) {
-                        res.error
-                    }
-                })
+                // .then((res) => {
+                //     if (!res.success) {
+                //         res.error
+                //     }
+                // })
         }
 
     }
@@ -109,14 +109,14 @@ class SignUpPage extends Component {
                     <div className="form-group">
                         <label for="exampleInputName">Full name</label>
                         <input type="text" className="form-control" id="exampleInputName" aria-describedby="Name" placeholder="ex: Truong Trung Nghia" 
-                        value={this.state.fullName}onChange={e => this.setState({ fullName: e.target.value })} />
+                        value={this.state.fullName} onChange={e => this.setState({ fullName: e.target.value })} name="fullName" />
                         <p className="hidden errorsInput" id="validfullName">Full name cannot be empty!!</p>
                     </div>
                     <div className="form-group">
                         <label for="exampleInputUserName">User name</label>
                         <input type="text" className="form-control" id="exampleInputUserName" aria-describedby="UserName" placeholder="ex: nghia1" 
                         value={this.state.userName}
-                        onChange={e => this.setState({ userName: e.target.value })} />
+                        onChange={e => this.setState({ userName: e.target.value })} name="userName" />
                         <p className="hidden errorsInput" id="validuserName">User name cannot be empty!!</p>
                     </div>
                     <div className="form-group">
@@ -124,7 +124,7 @@ class SignUpPage extends Component {
                         <input type="email" className="form-control" id="exampleInputEmail" aria-describedby="Email" placeholder="ex: nghia1@gmail.com" 
                         value={this.state.emailAddress}
                         onChange={e => {
-                        this.setState({ emailAddress: e.target.value })}}/>
+                        this.setState({ emailAddress: e.target.value })}} name="emailAddress"/>
                         <p className="hidden errorsInput" id="validEmail">Please enter a valid email address!!</p>
                     </div>
                     <div className="form-group">
@@ -132,7 +132,7 @@ class SignUpPage extends Component {
                         <input type="password" className="form-control" id="exampleInputPassword1" placeholder="Minimum of 6 characters"
                         value={this.state.password}
                         onChange={e => {
-                        this.setState({ password: e.target.value })}} />
+                        this.setState({ password: e.target.value })}} name="password" />
                         <p className="hidden errorsInput" id="validPass">Password must contain 6 characters!!</p>
                     </div>
                     <div className="form-group">
@@ -140,7 +140,7 @@ class SignUpPage extends Component {
                         <input type="password" className="form-control" id="exampleInputConPassword" placeholder="Confirm password"
                         value={this.state.confirmPassword}
                         onChange={e => {
-                        this.setState({ confirmPassword: e.target.value })}} />
+                        this.setState({ confirmPassword: e.target.value })}} name="confirmPassword" />
                         <p className="hidden errorsInput" id="validConfirmPass">The password and its confirm are not the same!!</p>    
                     </div>
                     <div className="form-group">
@@ -148,7 +148,7 @@ class SignUpPage extends Component {
                         <input type="text" className="form-control" id="exampleInputPhoneNumber" placeholder="(+84) 012345" 
                         value={this.state.phoneNumber}
                         onChange={e => {
-                        this.setState({ phoneNumber: e.target.value })}}/>
+                        this.setState({ phoneNumber: e.target.value })}} name="phoneNumber"/>
                         <p className="hidden errorsInput" id="validPhone">You must provide at least 10 number for Phone number</p>        
                     </div>
                     <button type="submit" className="btn btn-primary signupbtn">Sign Up</button>
