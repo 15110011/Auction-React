@@ -9,7 +9,6 @@ class FAQ extends Component {
     render() {
         return (
             <div>
-                <Header />
                 <div id="faq">
                     <div className="container" style={{minHeight: '100vh'}}>
                         <h1>FAQ</h1>
@@ -52,7 +51,6 @@ class FAQ extends Component {
                             </div>
                         </div>
                     </div>
-                    <Footer />
                 </div>
                 
             </div>

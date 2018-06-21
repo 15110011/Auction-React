@@ -10,7 +10,6 @@ class HomePage extends Component {
     render() {
         return (
             <div>
-                <Header />
                 <div className="logo">
                     <div className="container">
                         <div className="row">
@@ -38,7 +37,6 @@ class HomePage extends Component {
                     </div>
                 </div>
                 <Features />
-                <Footer />
             </div>
         )
     }
