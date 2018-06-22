@@ -26,6 +26,7 @@ class SignInPage extends Component {
             .then(res => res.json())
             .then((res) => {
                 if (res.checkPass) {
+                    localStorage.setItem('session', 'token')
                     this.props.history.push('/')
                 } else {
                     this.setState({ isLoggedIn: false })
