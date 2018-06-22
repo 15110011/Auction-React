@@ -94,11 +94,13 @@ class SignUpPage extends Component {
                 body: form
             })
                 .then(res => res.json())
-                // .then((res) => {
-                //     if (!res.success) {
-                //         res.error
-                //     }
-                // })
+                .then((res) => {
+                    if(res.success) {
+                        this.props.history.push('/')
+                    } else {
+                        this.props.history.push('signup')
+                    }
+                })
         }
 
     }

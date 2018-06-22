@@ -10,8 +10,6 @@ import SignInPage from './components/sign-in';
 import Account from './components/account';
 import ItemDetail from './components/itemdetail';
 import Items from './components/items';
-import ScrollButton from './components/scroll';
-import ScrollApp from './components/scroll';
 
 
 class App extends Component {
