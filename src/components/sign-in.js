@@ -46,7 +46,7 @@ class SignInPage extends Component {
                             className="form-control"
                             id="exampleInputEmailAddress"
                             aria-describedby="EmailAddress"
-                            placeholder="Ex: Email"
+                            placeholder="blocha@gmail.com"
                             name="emailAddress"
                             value={this.state.emailAddress}
                             onChange={e => this.setState({ emailAddress: e.target.value })}
