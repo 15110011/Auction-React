@@ -95,8 +95,10 @@ class SignUpPage extends Component {
             })
                 .then(res => res.json())
                 .then((res) => {
-                    if(res) {
-                        <Redirect to="/"/>
+                    if(res.success) {
+                        this.props.history.push('/')
+                    } else {
+                        this.props.history.push('signup')
                     }
                 })
         }

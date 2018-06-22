@@ -20,7 +20,7 @@ class HomePage extends Component {
                                 <h1>Auctions Beyond Actions</h1>
                                 <p>
                                     We are here to offer you great deals of the most exclusive and beautiful items in the world.
-                                    When participate in our auction system.
+                                    When participate in our auction system
                                 </p>
                                 <p>You will have:</p>
                                 <ul>

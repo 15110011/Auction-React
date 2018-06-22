@@ -32,10 +32,15 @@
     margin-top: 156px;
     height: 64vh;
     padding-left: 530px;
+    position: absolute;
+    top: 20%;
 }
 .signinbtn{
-    position: relative;
-    left: 15%;
     border-radius: 15px;
-    width: 10%;
+    width: 30%;
+}
+#signinbgr{
+    height: 650px;
+    width: 1349px;
+    position: relative;
 }

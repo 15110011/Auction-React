@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom'
-import { Switch, Route, BrowserRouter } from 'react-router-dom'
+import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom'
+import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
+import Header from './header'
 import './../styles/setting.css'
 
 class SignInPage extends Component {
@@ -9,7 +11,8 @@ class SignInPage extends Component {
         super(props)
         this.state = {
             emailAddress: '',
-            password: ''
+            password: '',
+            isLoggedIn: true
         }
         this.handleLogin = this.handleLogin.bind(this)
     }
@@ -21,11 +24,20 @@ class SignInPage extends Component {
             body: form
         })
             .then(res => res.json())
+            .then((res) => {
+                if (res.checkPass) {
+                    this.props.history.push('/')
+                } else {
+                    this.setState({ isLoggedIn: false })
+                }
+
+            })
     }
     render() {
         return (
-            <div className="signin">
-                <form onSubmit={this.handleLogin}>
+            <div className="signinbgr">
+                <img src="/images/signinbgr.jpg" alt="bgr" id="signinbgr" />
+                <form className="signin" onSubmit={this.handleLogin}>
                     <div className="form-group">
                         <label for="exampleInputEmail1">Email or user name</label>
                         <input
@@ -52,6 +64,9 @@ class SignInPage extends Component {
                             onChange={e => this.setState({ password: e.target.value })}
                         />
                     </div>
+                    {this.state.isLoggedIn === false && (
+                    <p className="errorsInput" id="invalid">Incorrect email or password</p>
+                    )}
                     <button type="submit" className="btn btn-primary signinbtn">Sign In</button>
                 </form>
             </div>
