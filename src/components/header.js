@@ -4,6 +4,18 @@ import { Link } from 'react-router-dom'
 import '../styles/styles.css'
 
 class Header extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            isLoggedOut: false
+        }
+        this.handleLogOut = this.handleLogOut.bind(this)
+    }
+    handleLogOut(e) {
+        e.preventDefault()
+        localStorage.removeItem('session')
+        this.setState({ isLoggedOut: true })
+    }
     render() {
         return (
             <div>
@@ -98,7 +110,7 @@ class Header extends Component {
                                 </div>
                             </form>
                             {
-                                localStorage.getItem('session') ? (
+                                (localStorage.getItem('session') || !this.state.isLoggedOut ? (
                                     <div className="ml-auto">
                                         <div className="form-inline">
                                             <Link className="nav-item nav-link ml-auto" to="/contact" style={{ color: 'white' }}><i className="fas fa-cart-plus"></i></Link>
@@ -108,7 +120,7 @@ class Header extends Component {
                                                 <div className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
                                                     <Link className="dropdown-item" to="/account">Manage booth</Link>
                                                     <Link className="dropdown-item" to="/account">Settings</Link>
-                                                    <Link className="dropdown-item" to="/logout">Sign out</Link>
+                                                    <Link className="dropdown-item" to="/logout" onClick={this.handleLogOut}>Sign out</Link>
                                                 </div>
                                             </div>
                                         </div>
@@ -122,6 +134,7 @@ class Header extends Component {
                                             </div>
                                         </div>
                                     )
+                                )
                             }
                         </div>
                     </div>
