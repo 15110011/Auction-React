@@ -14,7 +14,10 @@ class Header extends Component {
     handleLogOut(e) {
         e.preventDefault()
         localStorage.removeItem('session')
-        this.setState({ isLoggedOut: true })
+        fetch('/api/v1/account/logout')
+            .then(() => {
+                this.setState({ isLoggedOut: true })
+            })
     }
     render() {
         return (
@@ -110,7 +113,7 @@ class Header extends Component {
                                 </div>
                             </form>
                             {
-                                (localStorage.getItem('session') || !this.state.isLoggedOut ? (
+                                (localStorage.getItem('session') ? (
                                     <div className="ml-auto">
                                         <div className="form-inline">
                                             <Link className="nav-item nav-link ml-auto" to="/contact" style={{ color: 'white' }}><i className="fas fa-cart-plus"></i></Link>
