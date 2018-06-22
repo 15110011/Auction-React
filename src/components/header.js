@@ -104,12 +104,13 @@ class Header extends Component {
                                             <Link className="nav-item nav-link ml-auto" to="/contact" style={{ color: 'white' }}><i className="fas fa-cart-plus"></i></Link>
                                             <Link className="nav-item nav-link" to="/contact" style={{ color: 'white' }}><i className="far fa-bell"></i></Link>
                                             <div className="nav-item dropdown" style={{ color: 'white' }}>
-                                            <a className="nav-link dropdown-toggle" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="far fa-user"></i></a>
-                                            <div className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
-                                                <Link className="dropdown-item" to="/account">Settings</Link>
-                                                <Link className="dropdown-item" to="/logout">Sign out</Link>
+                                                <a className="nav-link dropdown-toggle" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="far fa-user"></i></a>
+                                                <div className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
+                                                    <Link className="dropdown-item" to="/account">Manage booth</Link>
+                                                    <Link className="dropdown-item" to="/account">Settings</Link>
+                                                    <Link className="dropdown-item" to="/logout">Sign out</Link>
+                                                </div>
                                             </div>
-                                        </div>
                                         </div>
                                     </div>
                                 ) : (
