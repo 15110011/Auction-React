@@ -8,6 +8,8 @@
     margin-top: 50px;
     height: 100vh;
     padding-left: 530px;
+    position: absolute;
+    top: 10%;
 }
 .form-control{
     display: block;
@@ -16,7 +18,7 @@
     font-size: 1rem;
     line-height: 1.5;
     color: #0e345a;
-    background-color: #fff;
+    background-color: white;
     background-clip: padding-box;
     border: 1px solid #ced4da;
     border-radius: 10px;
@@ -24,23 +26,30 @@
 }
 .signupbtn{
     position: relative;
-    left: 15%;
+    left: 35%;
     border-radius: 10px;
-    width: 10%;
+    width: 30%;
 }
 .signin{
     margin-top: 156px;
     height: 64vh;
     padding-left: 530px;
     position: absolute;
-    top: 20%;
+    top: 3%;
 }
 .signinbtn{
     border-radius: 15px;
     width: 30%;
+    position: relative;
+    left: 35%;
 }
 #signinbgr{
-    height: 650px;
-    width: 1349px;
+    height: 604px;
+    width: 100%;
+    position: relative;
+}
+#signupbgr{
+    height: 725px;
+    width: 100%;
     position: relative;
 }

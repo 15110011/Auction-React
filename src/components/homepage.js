@@ -5,6 +5,7 @@ import '../styles/styles.css'
 import Header from './header'
 import Features from './hotfeatures';
 import Footer from './footer';
+import Items from './items';
 
 class HomePage extends Component {
     render() {
@@ -37,6 +38,9 @@ class HomePage extends Component {
                     </div>
                 </div>
                 <Features />
+                <br/>
+                <hr/>
+                <Items/>
             </div>
         )
     }

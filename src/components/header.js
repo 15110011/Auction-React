@@ -113,6 +113,7 @@ class Header extends Component {
                                     :
                                     <div className="ml-auto">
                                         <div className="form-inline">
+                                            <Link className="btn btn-info" to="/faq">FAQ</Link>
                                             <Link className="btn btn-info" to="/signin">Log in</Link>
                                             <Link className="btn btn-info" to="/signup">Sign up</Link>
                                         </div>

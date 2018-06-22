@@ -104,24 +104,25 @@ class SignUpPage extends Component {
     }
     render() {
         return (
-            <div className="signup">
-                <form onSubmit={this.handleSubmit} id="signupform">
+            <div>
+                <img src="/images/signupbgr.jpg" alt="bgr" id="signupbgr"/>
+                <form onSubmit={this.handleSubmit} className="signup">
                     <div className="form-group">
                         <label for="exampleInputName">Full name</label>
-                        <input type="text" className="form-control" id="exampleInputName" aria-describedby="Name" placeholder="ex: Truong Trung Nghia" 
+                        <input type="text" className="form-control" id="exampleInputName" aria-describedby="Name" placeholder="Vũ Quang Anh" 
                         value={this.state.fullName} onChange={e => this.setState({ fullName: e.target.value })} name="fullName" />
                         <p className="hidden errorsInput" id="validfullName">Full name cannot be empty!!</p>
                     </div>
                     <div className="form-group">
                         <label for="exampleInputUserName">User name</label>
-                        <input type="text" className="form-control" id="exampleInputUserName" aria-describedby="UserName" placeholder="ex: nghia1" 
+                        <input type="text" className="form-control" id="exampleInputUserName" aria-describedby="UserName" placeholder="blocha@gmail.com" 
                         value={this.state.userName}
                         onChange={e => this.setState({ userName: e.target.value })} name="userName" />
                         <p className="hidden errorsInput" id="validuserName">User name cannot be empty!!</p>
                     </div>
                     <div className="form-group">
                         <label for="exampleInputEmail">Email</label>
-                        <input type="email" className="form-control" id="exampleInputEmail" aria-describedby="Email" placeholder="ex: nghia1@gmail.com" 
+                        <input type="email" className="form-control" id="exampleInputEmail" aria-describedby="Email" placeholder="blocha@gmail.com" 
                         value={this.state.emailAddress}
                         onChange={e => {
                         this.setState({ emailAddress: e.target.value })}} name="emailAddress"/>
