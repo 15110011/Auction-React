@@ -158,7 +158,7 @@ class Header extends Component {
                                         <div className="ml-auto">
                                             <div className="form-inline">
                                                 <Link className="btn btn-info" to="/faq">FAQ</Link>
-                                                <button className="btn btn-primary" onClick={(e)=>{this.handleLogin(e)}}>Login with FACEBOOK</button>
+                                                <button class="loginBtn loginBtn--facebook" onClick={(e)=>{this.handleLogin(e)}}>Login with Facebook</button>
                                             </div>
                                         </div>
                                     )
