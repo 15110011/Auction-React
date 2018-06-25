@@ -1,3 +1,5 @@
+/*global FB*/
+
 import React, { Component } from 'react';
 import './App.css';
 import Header from './components/header'
@@ -13,17 +15,45 @@ import Items from './components/items';
 
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      loggedIn:false
+    }
+    this.isLoggedIn = this.isLoggedIn.bind(this)
+  }
+  isLoggedIn(e) {
+    e.preventDefault()
+    this.setState({
+      loggedIn:true
+    })
+  }
+  componentDidMount() {
+    FB.getLoginStatus(function (response) {
+      if (response.status === 'connected') {
+        var uid = response.authResponse.userID;
+        var accessToken = response.authResponse.accessToken;
+     
+      } else if (response.status === 'authorization_expired') {
+
+      } else if (response.status === 'not_authorized') {
+
+      } else {
+
+      }
+    });
+  }
   render() {
     return (
       <div className="App">
-        <Header />
-          <Route exact path='/' component={HomePage} />
-          <Route path='/faq' component={FAQ} />
-          <Route path='/signup' component={SignUpPage} />
-          <Route path='/signin' component={SignInPage} />
-          <Route path='/account' component={Account}/>
-          <Route path='/itemdetail' component={ItemDetail}/>
-          <Route path='/items' component={Items}/>
+        <Header isLoggedIn={this.isLoggedIn} />
+        <Route exact path='/' component={HomePage} />
+        <Route path='/faq' component={FAQ} />
+        {/* <Route path='/signup' component={SignUpPage} /> */}
+        {/* <Route path='/signin' component={(props) => (<SignInPage  {...props} />)} /> */}
+        <Route path='/account' component={Account} />
+        <Route path='/itemdetail' component={ItemDetail} />
+        <Route path='/items' component={Items} />
         <Footer />
       </div>
     );

@@ -15,6 +15,7 @@ class SignInPage extends Component {
             isLoggedIn: true
         }
         this.handleLogin = this.handleLogin.bind(this)
+        
     }
     handleLogin(e) {
         e.preventDefault()
@@ -27,7 +28,9 @@ class SignInPage extends Component {
             .then((res) => {
                 if (res.checkPass) {
                     localStorage.setItem('session', 'token')
+                    this.props.onLoginSuccess(res.newEmailAddress)
                     this.props.history.push('/')
+                    
                 } else {
                     this.setState({ isLoggedIn: false })
                 }
@@ -66,7 +69,7 @@ class SignInPage extends Component {
                         />
                     </div>
                     {this.state.isLoggedIn === false && (
-                    <p className="errorsInput" id="invalid">Incorrect email or password</p>
+                        <p className="errorsInput" id="invalid">Incorrect email or password</p>
                     )}
                     <button type="submit" className="btn btn-primary signinbtn">Sign In</button>
                 </form>

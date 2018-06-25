@@ -1,7 +1,9 @@
 /*global FB*/
 import React, { Component } from 'react';
+
 import { render } from 'react-dom'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
+import SignInPage from './sign-in'
 import '../styles/styles.css'
 
 class Header extends Component {
@@ -39,6 +41,10 @@ class Header extends Component {
                 })
             }
         })
+    }
+    onClick(e) {
+        e.preventDefault()
+        FB.login(console.log)
     }
     render() {
         return (
@@ -165,4 +171,4 @@ class Header extends Component {
         )
     }
 }
-export default Header
+export default withRouter(Header)

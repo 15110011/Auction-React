@@ -95,10 +95,11 @@ class SignUpPage extends Component {
             })
                 .then(res => res.json())
                 .then((res) => {
-                    if(res.success) {
+                    if(res.checkSuccess) {
+                        localStorage.getItem('session','token')
                         this.props.history.push('/')
                     } else {
-                        this.props.history.push('signup')
+                        this.props.history.push('/signup')
                     }
                 })
         }
