@@ -1,3 +1,4 @@
+/*global FB*/
 import React, { Component } from 'react';
 import { render } from 'react-dom'
 import { Link } from 'react-router-dom'
@@ -7,17 +8,37 @@ class Header extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            isLoggedOut: false
+            isLoggedIn: false,
+            name:'',
         }
         this.handleLogOut = this.handleLogOut.bind(this)
+        this.handleLogin = this.handleLogin.bind(this)
     }
     handleLogOut(e) {
         e.preventDefault()
-        localStorage.removeItem('session')
-        fetch('/api/v1/account/logout')
-            .then(() => {
-                this.setState({ isLoggedOut: true })
-            })
+        // localStorage.removeItem('session')
+        // fetch('/api/v1/account/logout')
+        //     .then(() => {
+        //         this.setState({ isLoggedOut: true })
+        //     })
+        FB.logout(
+            resp=>{
+                if(resp.status=='unknown'){
+                    this.setState({isLoggedIn:false})
+                }
+            }
+        )
+    }
+    handleLogin(e){
+        e.preventDefault()
+        FB.login(resp=>{
+            if(resp.status=='connected'){
+                this.setState({isLoggedIn:true});
+                FB.api('/me',resp=>{
+                    this.setState({name:resp.name})
+                })
+            }
+        })
     }
     render() {
         return (
@@ -113,7 +134,7 @@ class Header extends Component {
                                 </div>
                             </form>
                             {
-                                (localStorage.getItem('session') ? (
+                                (this.state.isLoggedIn ? (
                                     <div className="ml-auto">
                                         <div className="form-inline">
                                             <Link className="nav-item nav-link ml-auto" to="/contact" style={{ color: 'white' }}><i className="fas fa-cart-plus"></i></Link>
@@ -121,8 +142,7 @@ class Header extends Component {
                                             <div className="nav-item dropdown" style={{ color: 'white' }}>
                                                 <a className="nav-link dropdown-toggle" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="far fa-user"></i></a>
                                                 <div className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
-                                                    <Link className="dropdown-item" to="/account">Manage booth</Link>
-                                                    <Link className="dropdown-item" to="/account">Settings</Link>
+                                                    <Link className="dropdown-item" to="/account">{this.state.name}</Link>
                                                     <Link className="dropdown-item" to="/logout" onClick={this.handleLogOut}>Sign out</Link>
                                                 </div>
                                             </div>
@@ -132,8 +152,7 @@ class Header extends Component {
                                         <div className="ml-auto">
                                             <div className="form-inline">
                                                 <Link className="btn btn-info" to="/faq">FAQ</Link>
-                                                <Link className="btn btn-info" to="/signin">Log in</Link>
-                                                <Link className="btn btn-info" to="/signup">Sign up</Link>
+                                                <button className="btn btn-primary" onClick={(e)=>{this.handleLogin(e)}}>Login with FACEBOOK</button>
                                             </div>
                                         </div>
                                     )
