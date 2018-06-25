@@ -149,6 +149,7 @@ class Header extends Component {
                                                 <a className="nav-link dropdown-toggle" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="far fa-user"></i></a>
                                                 <div className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
                                                     <Link className="dropdown-item" to="/account">{this.state.name}</Link>
+                                                    <Link className="dropdown-item" to="/account">Dashboard</Link>
                                                     <Link className="dropdown-item" to="/logout" onClick={this.handleLogOut}>Sign out</Link>
                                                 </div>
                                             </div>

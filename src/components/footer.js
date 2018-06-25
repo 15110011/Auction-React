@@ -24,9 +24,8 @@ class Footer extends Component {
                     <span className="d-none d-sm-inline"> policy</span>
                             </Link>
                         </small>
-
                         <small className="nav-item">
-                            <Link className="nav-link text-info" to="/logout">Sign out</Link>
+                            <Link className="nav-link text-info" to="/logout" onClick={this.handleLogOut}>Sign out</Link>
                         </small>
                     </div>
                     <small className="copy">Copyright &copy; 2018 The BlochaTeam. All rights reserved.</small>
