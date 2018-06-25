@@ -9,7 +9,7 @@ import HomePage from './components/homepage';
 import FAQ from './components/faq'
 import SignUpPage from './components/sign-up';
 import SignInPage from './components/sign-in';
-import Account from './components/account';
+import DashBoard from './components/dashboard';
 import ItemDetail from './components/itemdetail';
 import Items from './components/items';
 
@@ -51,7 +51,7 @@ class App extends Component {
         <Route path='/faq' component={FAQ} />
         {/* <Route path='/signup' component={SignUpPage} /> */}
         {/* <Route path='/signin' component={(props) => (<SignInPage  {...props} />)} /> */}
-        <Route path='/account' component={Account} />
+        <Route path='/account' component={DashBoard} />
         <Route path='/itemdetail' component={ItemDetail} />
         <Route path='/items' component={Items} />
         <Footer />

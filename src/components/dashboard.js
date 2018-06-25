@@ -5,7 +5,7 @@ import '../styles/styles.css'
 import Header from './header';
 import Footer from './footer';
 
-class Account extends Component {
+class DashBoard extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -19,6 +19,7 @@ class Account extends Component {
         this.handleAddItem = this.handleAddItem.bind(this)
     }
     handleAddItem(e) {
+        const items = this.state.items.slice()
         e.preventDefault()
         const form = new FormData(e.target)
         fetch('/api/v1/items', {
@@ -30,7 +31,15 @@ class Account extends Component {
                 if (res.itemSuccess) {
                     this.setState({ isAdded : true })
                 }
-                
+                console.log(items)
+                items.push({
+                    name:res.name,
+                    currentPrice:res.currentPrice,
+                    quantity:res.quantity,
+                    details:res.details
+                 })
+                 console.log(items)
+                this.setState({items})
             })
     }
     render() {
@@ -67,10 +76,12 @@ class Account extends Component {
                             <p className="errorsInput" id="valid">Success</p>
                         )
                     }
+                    <hr/>
+                    <h4>{JSON.stringify(this.state.items,null,2)}</h4>
                 </form>
 
             </div>
         )
     }
 }
-export default Account
+export default DashBoard
