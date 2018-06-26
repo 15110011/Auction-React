@@ -6,29 +6,24 @@ import Header from './header';
 import Footer from './footer';
 import Item from './item'
 class Items extends Component {
-    constructor(props){
+    constructor(props) {
         super(props)
-        this.state={
-            items:[]
+        this.state = {
+            items: []
         }
     }
-
     render() {
-        var {items} = this.state
-            for(let j=0;j<12;j++) {
-                items.push(
-                <Item /> )
-            }
-         
-        
-            
+        var { items } = this.state
+        for (let j = 0; j < 12; j++) {
+            items.push(
+                <Item />)
+        }
         return (
             <div className="container">
-                    <br/>
-                    <div className="row">
-                    
-                    {items}                          
-            </div>
+                <br />
+                <div className="row">
+                    {items}
+                </div>
             </div>
         )
     }
