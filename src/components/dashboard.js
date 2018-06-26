@@ -1,3 +1,4 @@
+/*global FB */
 import React, { Component } from 'react'
 import { render } from 'react-dom'
 import { Link } from 'react-router-dom'
@@ -9,14 +10,38 @@ class DashBoard extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            userID: '',
+            token: '',
+            expired: false,
             name: '',
-            currentPrice: '',
-            quantity: '',
-            details: '',
             items: [],
             isAdded: false
         }
         this.handleAddItem = this.handleAddItem.bind(this)
+    }
+    componentWillMount() {
+        FB.getLoginStatus(resp => {
+            console.log(resp)
+            if (resp.status === 'connected') {
+                this.setState({
+                    userID: resp.authResponse.userID,
+                    token: resp.authResponse.accessToken,
+                    name: this.props.userName
+                })
+            }
+            else if (resp.status === 'authorization_expired') {
+                this.setState({
+                    expired: true
+                })
+            }
+            else {
+                this.setState({
+                    expired: true
+                })
+                FB.login()
+                this.props.history.push('/')
+            }
+        })
     }
     handleAddItem(e) {
 
@@ -26,7 +51,7 @@ class DashBoard extends Component {
             method: 'POST',
             body: form
         })
-            .then(res => res.json())
+            // .then(res => res.json())
             .then((res) => {
                 if (res.itemSuccess) {
                     this.setState({ isAdded: true })
@@ -37,11 +62,9 @@ class DashBoard extends Component {
     getItem() {
         const items = this.state.items
         if (this.state.isAdded) {
-            const form = new FormData()
-            fetch('/api/v1/item')
+            fetch('/api/v1/users/:userId/items')
                 .then(item => item.json())
                 .then(item => {
-                    form.append()
                     items.push({
                         name: item.name,
                         currentPrice: item.currentPrice,
@@ -56,7 +79,27 @@ class DashBoard extends Component {
 
         return (
             <div>
+                {
+                    this.state.expire === true && (
+                        <p className="errorsInput" id="expired">Please logged in</p>
+                    )
+                }
                 <form onSubmit={this.handleAddItem}>
+                    <input
+                        type="hidden"
+                        name="userName"
+                        value={this.state.name}
+                    />
+                    <input
+                        type="hidden"
+                        name="userId"
+                        value={this.state.userID}
+                    />
+                    <input
+                        type="hidden"
+                        name="token"
+                        value={this.state.token}
+                    />
                     <input
                         placeholder="Name"
                         name="name"
