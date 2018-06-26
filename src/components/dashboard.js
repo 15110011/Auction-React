@@ -13,13 +13,13 @@ class DashBoard extends Component {
             currentPrice: '',
             quantity: '',
             details: '',
-            items:[],
+            items: [],
             isAdded: false
         }
         this.handleAddItem = this.handleAddItem.bind(this)
     }
     handleAddItem(e) {
-        const items = this.state.items.slice()
+
         e.preventDefault()
         const form = new FormData(e.target)
         fetch('/api/v1/items', {
@@ -29,20 +29,31 @@ class DashBoard extends Component {
             .then(res => res.json())
             .then((res) => {
                 if (res.itemSuccess) {
-                    this.setState({ isAdded : true })
+                    this.setState({ isAdded: true })
+                    this.getItem()
                 }
-                console.log(items)
-                items.push({
-                    name:res.name,
-                    currentPrice:res.currentPrice,
-                    quantity:res.quantity,
-                    details:res.details
-                 })
-                 console.log(items)
-                this.setState({items})
             })
     }
+    getItem() {
+        const items = this.state.items
+        if (this.state.isAdded) {
+            const form = new FormData()
+            fetch('/api/v1/item')
+                .then(item => item.json())
+                .then(item => {
+                    form.append()
+                    items.push({
+                        name: item.name,
+                        currentPrice: item.currentPrice,
+                        quantity: item.quantity,
+                        details: item.details
+                    })
+                    this.setState({ items })
+                })
+        }
+    }
     render() {
+
         return (
             <div>
                 <form onSubmit={this.handleAddItem}>
@@ -74,10 +85,22 @@ class DashBoard extends Component {
                     {
                         this.state.isAdded === true && (
                             <p className="errorsInput" id="valid">Success</p>
+
                         )
                     }
-                    <hr/>
-                    <h4>{JSON.stringify(this.state.items,null,2)}</h4>
+                    <hr />
+                    {
+                        this.state.items.map(item => {
+                            return (
+                                <ul>
+                                    <li>{item.name}</li>
+                                    <li>{item.currentPrice}</li>
+                                    <li>{item.quantity}</li>
+                                    <li>{item.details}</li>
+                                </ul>
+                            )
+                        })
+                    }
                 </form>
 
             </div>
