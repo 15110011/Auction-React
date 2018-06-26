@@ -15,6 +15,7 @@ class Header extends Component {
         }
         this.handleLogOut = this.handleLogOut.bind(this)
         this.handleLogin = this.handleLogin.bind(this)
+        // this.loggedIn = this.loggedIn.bind(this)
     }
     handleLogOut(e) {
         e.preventDefault()
@@ -31,16 +32,28 @@ class Header extends Component {
             }
         )
     }
+    componentWillMount(){
+        // FB.getLoginStatus(resp=>{
+        //     if (resp.status === 'connected') {
+        //         this.loggedIn();
+        //     }
+        //     else if (resp.status === 'authorization_expired') {
+                
+        //     }
+        //     else if (resp.status === 'not_authorized') {}
+        //     else {}
+        // })
+        this.props.checkStatus()
+    }
+    // loggedIn(){
+    //     FB.api('/me',resp=>{
+    //         console.log(resp)
+    //         this.setState({name:resp.name,isLoggedIn:true})
+    //     })
+    // }
     handleLogin(e){
         e.preventDefault()
-        FB.login(resp=>{
-            if(resp.status=='connected'){
-                this.setState({isLoggedIn:true});
-                FB.api('/me',resp=>{
-                    this.setState({name:resp.name})
-                })
-            }
-        })
+       this.props.logIn()
     }
     onClick(e) {
         e.preventDefault()
@@ -140,7 +153,7 @@ class Header extends Component {
                                 </div>
                             </form>
                             {
-                                (this.state.isLoggedIn ? (
+                                (this.props.loggedIn ? (
                                     <div className="ml-auto">
                                         <div className="form-inline">
                                             <Link className="nav-item nav-link ml-auto" to="/contact" style={{ color: 'white' }}><i className="fas fa-cart-plus"></i></Link>
@@ -148,8 +161,7 @@ class Header extends Component {
                                             <div className="nav-item dropdown" style={{ color: 'white' }}>
                                                 <a className="nav-link dropdown-toggle" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="far fa-user"></i></a>
                                                 <div className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
-                                                    <Link className="dropdown-item" to="/account">{this.state.name}</Link>
-                                                    <Link className="dropdown-item" to="/account">Dashboard</Link>
+                                                    <Link className="dropdown-item" to="/account">{this.props.name}</Link>
                                                     <Link className="dropdown-item" to="/logout" onClick={this.handleLogOut}>Sign out</Link>
                                                 </div>
                                             </div>
@@ -159,7 +171,7 @@ class Header extends Component {
                                         <div className="ml-auto">
                                             <div className="form-inline">
                                                 <Link className="btn btn-info" to="/faq">FAQ</Link>
-                                                <button class="loginBtn loginBtn--facebook" onClick={(e)=>{this.handleLogin(e)}}>Login with Facebook</button>
+                                                <button className="loginBtn loginBtn--facebook" onClick={(e)=>{this.handleLogin(e)}}>Login with Facebook</button>
                                             </div>
                                         </div>
                                     )
