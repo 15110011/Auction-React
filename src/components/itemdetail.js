@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { render } from 'react-dom'
 import { Link } from 'react-router-dom'
 import ReactImageZoom from 'react-image-zoom';
+import NumericInput from 'react-numeric-input';
 import '../styles/styles.css'
 import Header from './header';
 import Footer from './footer';
@@ -54,6 +55,7 @@ class ItemDetail extends Component {
                 <div className="container">
                     <div className="row">
                         <div className="col-md-9">
+                            <br/>
                             <Link to='/'><i class="fas fa-backward"> Back to bid</i></Link>
                             <div className="items-info">
                                 <div className="container">
@@ -82,6 +84,10 @@ class ItemDetail extends Component {
                                                 <div className="col-md-6">
                                                     <h4>Current price: $300</h4>
                                                 </div>
+                                                <form className="form-inline bidform ml-3 pt-3">
+                                                    <NumericInput min={1} max={100} value={50} mobile={true} className="form-control pr-5" />
+                                                    <button className="btn btn-primary ml-3"><i class="fas fa-gavel"> Bid now</i></button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -98,7 +104,7 @@ class ItemDetail extends Component {
                             </div>
                         </div>
                         <div className="col-md-3">
-                            <div className="itemborder" style={{ marginTop: '25px' }}>
+                            <div className="itemborder" style={{ marginTop: '50px' }}>
                                 <div className="item-image">
                                     <Link className="detail" to="/itemdetail"><img src="/images/car.jpg" alt="item" /></Link>
                                 </div>
