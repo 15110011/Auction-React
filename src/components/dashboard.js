@@ -16,9 +16,16 @@ class DashBoard extends Component {
             expired: false,
             name: '',
             items: [],
-            isAdded: false
+            isAdded: false,
+            isDeleted: false
         }
         this.handleAddItem = this.handleAddItem.bind(this)
+        this.getItem = this.getItem.bind(this)
+        this.handleDelete = this.handleDelete.bind(this)
+    }
+    componentDidMount() {
+        this.getItem()
+
     }
     componentWillMount() {
         console.log('OK?',this.props)
@@ -50,6 +57,20 @@ class DashBoard extends Component {
         //         this.props.history.push('/')
         //     }
         // })
+        // this.props.checkStatus()
+    }
+    handleDelete(e) {
+        e.preventDefault()
+        console.log(e.target.value)
+        fetch(`/api/v1/items/${e.target.value}`, {
+            method: 'DELETE'
+        }).then(res => res.json())
+            .then((rs) => {
+                if (rs.deleteItem) {
+                    
+                    this.setState({ isDeleted: true })
+                }
+            })
     }
     handleAddItem(e) {
 
@@ -59,29 +80,23 @@ class DashBoard extends Component {
             method: 'POST',
             body: form
         })
-            // .then(res => res.json())
+            .then(res => res.json())
             .then((res) => {
-                if (res.itemSuccess) {
+                console.log(res)
+                if (res.item) {
                     this.setState({ isAdded: true })
-                    this.getItem()
                 }
             })
     }
     getItem() {
         const items = this.state.items
-        if (this.state.isAdded) {
-            fetch('/api/v1/users/:userId/items')
-                .then(item => item.json())
-                .then(item => {
-                    items.push({
-                        name: item.name,
-                        currentPrice: item.currentPrice,
-                        quantity: item.quantity,
-                        details: item.details
-                    })
-                    this.setState({ items })
-                })
-        }
+
+        fetch(`/api/v1/users/${this.props.userId}/items`)
+            .then(items => items.json())
+            .then(items => {
+                console.log(items.id)
+                this.setState({ items: items.findItem })
+            })
     }
     render() {
 
@@ -103,12 +118,12 @@ class DashBoard extends Component {
                         <input
                             type="hidden"
                             name="userId"
-                            value={this.state.userID}
+                            value={this.props.userId}
                         />
                         <input
                             type="hidden"
                             name="token"
-                            value={this.state.token}
+                            value={this.props.token}
                         />
                         <div className="form-group mx-sm-1 mb-2">
                             <input type="text" className="form-control" id="inputName" placeholder="Name" name="name"
@@ -155,18 +170,7 @@ class DashBoard extends Component {
                             )
                         }
                         <hr />
-                        {
-                            this.state.items.map(item => {
-                                return (
-                                    <ul>
-                                        <li>{item.name}</li>
-                                        <li>{item.currentPrice}</li>
-                                        <li>{item.quantity}</li>
-                                        <li>{item.details}</li>
-                                    </ul>
-                                )
-                            })
-                        }
+
                     </form>
                     <br />
                     <div className="container">
@@ -182,6 +186,30 @@ class DashBoard extends Component {
                                 </tr>
                             </thead>
                             <tbody>
+                                {
+                                    this.state.items.map(item => {
+                                        return (
+                                            <tr className="fixprop">
+                                                <th scope="row">1</th>
+                                                <td>{item.name}</td>
+                                                <td>{item.currentPrice}</td>
+                                                <td>{item.quantity}</td>
+                                                <td>
+                                                    <div className="edit-del">
+                                                        <button className="btn btn-info" style={{ color: '#1d93c1' }}><i class="fas fa-eye"></i></button>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className="edit-del">
+                                                        <button className="btn btn-success"><i class="far fa-edit"></i></button>
+                                                        <button className="btn btn-danger mx-2" onClick={this.handleDelete} value={item.id}><i class="far fa-trash-alt"></i></button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                        )
+                                    })
+                                }
                                 <tr className="fixprop">
                                     <th scope="row">1</th>
                                     <td>{this.state.name}</td>

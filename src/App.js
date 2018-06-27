@@ -62,11 +62,11 @@ class App extends Component {
           method: 'POST',
           body: form,
           credentials: 'include'
-        }).then(res => res.json()).then((res) => {
+        }).then(user => user.json()).then((user) => {
           console.log('abcd')
-          console.log(res)
-          if (res.success) {
-            this.setState({ name: res.name, loggedIn: LOADED_LOGIN_STATUS })
+          console.log(user)
+          if (user.success) {
+            this.setState({ name: res.name, loggedIn: LOADED_LOGIN_STATUS, userId:res.id })
 
           }
 
@@ -164,8 +164,7 @@ class App extends Component {
         <Route path='/faq' component={FAQ} />
         {/* <Route path='/signup' component={SignUpPage} /> */}
         {/* <Route path='/signin' component={(props) => (<SignInPage  {...props} />)} /> */}
-        <Route path='/account' component={(props) => (<DashBoard checkStatus={this.checkStatus} userName={this.state.name} login={this.state.loggedIn} isLoggedIn={this.logIn} isLoggedOut={this.isLoggedOut} {...props} />)} />
-        <Route path='/dashboard' component={(props) => (<DashBoard checkStatus={this.checkStatus} isLoggedIn={this.logIn} isLoggedOut={this.isLoggedOut} {...props} {...this.state} />)} />
+        <Route path='/dashboard' component={(props) => (<DashBoard checkStatus={this.checkStatus}  isLoggedIn={this.logIn} isLoggedOut={this.isLoggedOut} {...props} {...this.state} />)} />
         <Route path='/itemdetail' component={ItemDetail} />
         <Route path='/items' component={Items} />
         <Footer />
