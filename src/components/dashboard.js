@@ -28,9 +28,8 @@ class DashBoard extends Component {
 
     }
     componentWillMount() {
-        console.log('OK?',this.props)
-        if(this.props.loggedIn != LOADED_LOGIN_STATUS)
-        {
+        console.log('OK?', this.props)
+        if (this.props.loggedIn != LOADED_LOGIN_STATUS) {
             FB.login()
             // this.props.history.push('./')
         }
@@ -67,8 +66,8 @@ class DashBoard extends Component {
         }).then(res => res.json())
             .then((rs) => {
                 if (rs.deleteItem) {
-                    
-                    this.setState({ isDeleted: true })
+                    this.setState({ isDeleted: true, isAdded: false })
+                    this.getItem()
                 }
             })
     }
@@ -84,7 +83,9 @@ class DashBoard extends Component {
             .then((res) => {
                 console.log(res)
                 if (res.item) {
-                    this.setState({ isAdded: true })
+                    this.setState({ isAdded: true, isDeleted: false })
+                    this.getItem()
+
                 }
             })
     }
@@ -168,7 +169,17 @@ class DashBoard extends Component {
                         <button type="submit" className="btn btn-primary mb-2">Add</button>
                         {
                             this.state.isAdded === true && (
-                                <p className="errorsInput" id="valid">Success</p>
+                                <div class="alert alert-warning" role="alert">
+                                    <strong>Item added</strong>
+                                </div>
+
+                            )
+                        }
+                        {
+                            this.state.isDeleted === true && (
+                                <div class="alert alert-warning" role="alert">
+                                    <strong>Item deleted</strong>
+                                </div>
 
                             )
                         }
@@ -213,8 +224,8 @@ class DashBoard extends Component {
                                         )
                                     })
                                 }
-                              
-                               
+
+
                             </tbody>
                         </table>
                     </div>
