@@ -9,6 +9,7 @@
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-image-magnify": "^2.7.0",
+    "react-image-zoom": "^0.7.0",
     "react-particles-js": "^2.2.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
@@ -21,5 +22,10 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:1337"
+  "proxy": "http://localhost:1337",
+  "devDependencies": {
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-preset-stage-3": "^6.24.1"
+  }
 }

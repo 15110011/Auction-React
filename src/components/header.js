@@ -5,6 +5,7 @@ import { render } from 'react-dom'
 import { Link, withRouter } from 'react-router-dom'
 import SignInPage from './sign-in'
 import '../styles/styles.css'
+import {LOADING_LOGIN_STATUS,LOADED_LOGIN_STATUS,GUEST_STATUS} from '../config'
 
 class Header extends Component {
     constructor(props) {
@@ -12,6 +13,7 @@ class Header extends Component {
         this.state = {
             isLoggedIn: false,
             name:'',
+            loading:false
         }
         this.handleLogOut = this.handleLogOut.bind(this)
         this.handleLogin = this.handleLogin.bind(this)
@@ -153,7 +155,7 @@ class Header extends Component {
                                 </div>
                             </form>
                             {
-                                (this.props.loggedIn ? (
+                                (this.props.loggedIn == LOADED_LOGIN_STATUS? (
                                     <div className="ml-auto">
                                         <div className="form-inline">
                                             <Link className="nav-item nav-link ml-auto" to="/contact" style={{ color: 'white' }}><i className="fas fa-cart-plus"></i></Link>
@@ -168,16 +170,24 @@ class Header extends Component {
                                             </div>
                                         </div>
                                     </div>
-                                ) : (
+                                ) :'') }
+                                {(this.props.loggedIn == GUEST_STATUS?
+                                    (
                                         <div className="ml-auto">
                                             <div className="form-inline">
                                                 <Link className="btn btn-info" to="/faq">FAQ</Link>
                                                 <button className="loginBtn loginBtn--facebook" onClick={(e)=>{this.handleLogin(e)}}>Login with Facebook</button>
                                             </div>
                                         </div>
-                                    )
-                                )
-                            }
+                                    ):''
+                                )}
+                                {(this.props.loggedIn == LOADING_LOGIN_STATUS?
+                                <div className="ml-auto">
+                                        <div className="form-inline">
+                                                <Link className="btn btn-info" to="/faq">FAQ</Link>
+                                                <div style={{color:'white'}}>Loading ...</div>
+                                         </div>
+                                </div>:'')}
                         </div>
                     </div>
                 </nav>
