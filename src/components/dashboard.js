@@ -87,11 +87,6 @@ class DashBoard extends Component {
                 <form onSubmit={this.handleAddItem}>
                     <input
                         type="hidden"
-                        name="userName"
-                        value={this.state.name}
-                    />
-                    <input
-                        type="hidden"
                         name="userId"
                         value={this.state.userID}
                     />
@@ -124,6 +119,16 @@ class DashBoard extends Component {
                         value={this.state.details}
                         onChange={e => this.setState({ details: e.target.value })}
                     />
+                    <select className="custom-select" name="categories">
+                        <option selected>Categories</option>
+                        <option value="1">Cigars</option>
+                        <option value="2">Diamond</option>
+                        <option value="3">Cars</option>
+                        <option value="4">Rings</option>
+                        <option value="5">Painting</option>
+
+                    </select>
+
                     <button type="submit">Add item</button>
                     {
                         this.state.isAdded === true && (
