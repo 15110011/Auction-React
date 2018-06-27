@@ -224,8 +224,8 @@ body{
   background-color: #5B7BD5;
   background-image: linear-gradient(#5B7BD5, #4864B1);
 }
-.addform{
-  margin-left: 180px;
+.intro-dashboard{
+  padding-top: 80px;
 }
 .dashboard{
   min-height: 100vh;
