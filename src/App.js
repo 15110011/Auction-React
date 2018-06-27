@@ -133,6 +133,7 @@ class App extends Component {
         {/* <Route path='/signup' component={SignUpPage} /> */}
         {/* <Route path='/signin' component={(props) => (<SignInPage  {...props} />)} /> */}
         <Route path='/account' component={(props) => (<DashBoard checkStatus={this.checkStatus} userName={this.state.name} login={this.state.loggedIn} isLoggedIn={this.logIn} isLoggedOut={this.isLoggedOut} {...props} />)} />
+        <Route path='/dashboard' component={(props) => (<DashBoard checkStatus={this.checkStatus} userName={this.state.name} login={this.state.loggedIn} isLoggedIn={this.logIn} isLoggedOut={this.isLoggedOut} {...props} />)}/>
         <Route path='/itemdetail' component={ItemDetail} />
         <Route path='/items' component={Items} />
         <Footer />
