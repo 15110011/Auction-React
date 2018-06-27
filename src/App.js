@@ -4,11 +4,10 @@ import React, { Component } from 'react';
 import './App.css';
 import Header from './components/header'
 import Footer from './components/footer'
-import { Switch, Route, BrowserRouter } from 'react-router-dom'
+import { Switch, Route, BrowserRouter, Redirect  } from 'react-router-dom'
 import HomePage from './components/homepage';
 import FAQ from './components/faq'
-import SignUpPage from './components/sign-up';
-import SignInPage from './components/sign-in';
+import {LOADING_LOGIN_STATUS,LOADED_LOGIN_STATUS,GUEST_STATUS} from './config'
 import DashBoard from './components/dashboard';
 import ItemDetail from './components/itemdetail';
 import Items from './components/items';
@@ -18,12 +17,13 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      loggedIn: false,
+      loggedIn: GUEST_STATUS,
       name: '',
       userId: ''
     }
     this.logIn = this.logIn.bind(this)
     this.logOut = this.logOut.bind(this)
+    this.loginCB = this.loginCB.bind(this)
     this.checkStatus = this.checkStatus.bind(this)
   }
   logIn(e) {
@@ -31,14 +31,15 @@ class App extends Component {
       e.preventDefault()
 
     }
-    FB.login(this.loginCB.bind(this))
+    this.setState({loggedIn:LOADING_LOGIN_STATUS})
+    FB.login(this.loginCB)
 
   }
   logOut(e) {
     FB.logout(
       resp => {
         if (resp.status === 'unknown') {
-          this.setState({ loggedIn: false })
+          this.setState({ loggedIn: GUEST_STATUS })
         }
       }
     )
@@ -65,7 +66,7 @@ class App extends Component {
           console.log('abcd')
           console.log(res)
           if (res.success) {
-            this.setState({ name: res.name, loggedIn: true })
+            this.setState({ name: res.name, loggedIn: LOADED_LOGIN_STATUS })
 
           }
 
@@ -81,7 +82,9 @@ class App extends Component {
 
   }
   checkStatus() {
+    this.setState({loggedIn:LOADING_LOGIN_STATUS})
     FB.getLoginStatus((response)=> {
+
       if (response.status === 'connected') {
         FB.api('/me', data => {
           if (!data.error) {
@@ -97,73 +100,57 @@ class App extends Component {
             }).then(res => res.json()).then((res) => {
               console.log(res)
               if (res.success) {
-                this.setState({ name: data.name, loggedIn: true })
+                this.setState({ name: data.name, loggedIn: LOADED_LOGIN_STATUS })
               }
             })
           }
         })
 
-      } else {
+      }
+      else if(response.status==='authorization_expired'){
         this.logIn()
-        this.props.history.push('/')
+        // this.props.history.push('/')
+        return <Redirect to='/'  />
+      }
+      else if(response.status==='not_authorized'){
+        this.logIn()
+        // this.props.history.push('/')
+        return <Redirect to='/'  />
+      }
+      else {
+        
       }
     }
     );
   }
   componentDidMount() {
+    this.checkStatus()
     FB.Event.subscribe("auth.authResponseChange", resp => {
 
       if (resp.status == "connected") {
-        // var form = new FormData();
-        // localStorage.setItem("token", resp.authResponse.accessToken)
-        // form.append('token', resp.authResponse.accessToken)
-        // form.append('expire', resp.authResponse.expiresIn);
-        // form.append('userId', resp.authResponse.userID);
-        // this.setState({ userId: resp.authResponse.userID })
-        // FB.api('/me', res => {
-        //   form.append('action', 'LOGIN');
-        //   form.append('userName', res.name)
-        //   fetch(`http://localhost:1337/api/v2/login`, {
-        //     method: 'POST',
-        //     body: form,
-        //     credentials: 'include'
-        //   }).then(res => res.json()).then((res) => {
-        //     console.log('abcd')
-        //     console.log(res)
-        //     if (res.success) {
-        //       this.setState({ name: res.name, loggedIn: true })
-        //     }
-        //   })
-        // })
+        
 
 
       }
       else if (resp.status == "authorization_expired" || resp.status === 'not_authorized') {
+        console.log('??????????')
         FB.login(this.loginCB.bind(this))
+        this.setState({loggedIn:GUEST_STATUS})
+        localStorage.setItem("token", '')
+      }
+      else{
+        console.log('??????????1')
+
+        this.setState({loggedIn:GUEST_STATUS})
         localStorage.setItem("token", '')
       }
     })
-    // FB.Event.subscribe('auth.login', resp => {
-    //   this.loginCB(resp)
-    // })
-    // FB.getLoginStatus(function (response) {
-    //   if (response.status === 'connected') {
-    //     var uid = response.authResponse.userID;
-    //     var accessToken = response.authResponse.accessToken;
-
-    //   } else if (response.status === 'authorization_expired') {
-
-    //   } else if (response.status === 'not_authorized') {
-
-    //   } else {
-
-    //   }
-    // });
+    
   }
   render() {
     return (
       <div className="App">
-        <Header logIn={this.logIn} logOut={this.logOut} {...this.state} checkStatus={this.checkStatus} />
+        <Header logIn={this.logIn} logOut={this.logOut} {...this.state} checkStatus={this.checkStatus}  />
         <Route exact path='/' component={HomePage} />
         <Route path='/faq' component={FAQ} />
         {/* <Route path='/signup' component={SignUpPage} /> */}
