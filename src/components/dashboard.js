@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import '../styles/styles.css'
 import Header from './header';
 import Footer from './footer';
+import { LOADED_LOGIN_STATUS } from '../config';
 
 class DashBoard extends Component {
     constructor(props) {
@@ -20,28 +21,35 @@ class DashBoard extends Component {
         this.handleAddItem = this.handleAddItem.bind(this)
     }
     componentWillMount() {
-        FB.getLoginStatus(resp => {
-            console.log(resp)
-            if (resp.status === 'connected') {
-                this.setState({
-                    userID: resp.authResponse.userID,
-                    token: resp.authResponse.accessToken,
-                    name: this.props.userName
-                })
-            }
-            else if (resp.status === 'authorization_expired') {
-                this.setState({
-                    expired: true
-                })
-            }
-            else {
-                this.setState({
-                    expired: true
-                })
-                FB.login()
-                this.props.history.push('/')
-            }
-        })
+        console.log('OK?',this.props)
+        if(this.props.loggedIn != LOADED_LOGIN_STATUS)
+        {
+            FB.login()
+            // this.props.history.push('./')
+        }
+        // FB.getLoginStatus(resp => {
+        //     console.log(resp)
+        //     if (resp.status === 'connected') {
+        //         this.setState({
+        //             userID: resp.authResponse.userID,
+        //             token: resp.authResponse.accessToken,
+        //             name: this.props.userName
+        //         })
+        //     }
+        //     else if (resp.status === 'authorization_expired') {
+        //         this.setState({
+        //             expired: true
+        //         })
+        //     }
+        //     else {
+        //         console.log("?????")
+        //         this.setState({
+        //             expired: true
+        //         })
+        //         FB.login()
+        //         this.props.history.push('/')
+        //     }
+        // })
     }
     handleAddItem(e) {
 

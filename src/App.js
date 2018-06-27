@@ -86,6 +86,8 @@ class App extends Component {
     FB.getLoginStatus((response)=> {
 
       if (response.status === 'connected') {
+        console.log(0)
+
         FB.api('/me', data => {
           if (!data.error) {
             var form = new FormData();
@@ -100,7 +102,7 @@ class App extends Component {
             }).then(res => res.json()).then((res) => {
               console.log(res)
               if (res.success) {
-                this.setState({ name: data.name, loggedIn: LOADED_LOGIN_STATUS })
+                this.setState({ name: data.name, loggedIn: LOADED_LOGIN_STATUS,userId:data.id })
               }
             })
           }
@@ -108,17 +110,24 @@ class App extends Component {
 
       }
       else if(response.status==='authorization_expired'){
+        console.log(1)
+
         this.logIn()
         // this.props.history.push('/')
-        return <Redirect to='/'  />
+        // return <Redirect to='/'  />
       }
       else if(response.status==='not_authorized'){
+        console.log(2)
+
         this.logIn()
         // this.props.history.push('/')
-        return <Redirect to='/'  />
+        // return <Redirect to='/'  />
       }
       else {
-        
+        console.log(3)
+        // this.logOut()
+        // this.props.history.push('/')
+        // return <Redirect to='/'  />
       }
     }
     );
@@ -150,13 +159,13 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Header logIn={this.logIn} logOut={this.logOut} {...this.state} checkStatus={this.checkStatus}  />
+        <Header logIn={this.logIn} logOut={this.logOut} {...this.state} checkStatus={this.checkStatus} />
         <Route exact path='/' component={HomePage} />
         <Route path='/faq' component={FAQ} />
         {/* <Route path='/signup' component={SignUpPage} /> */}
         {/* <Route path='/signin' component={(props) => (<SignInPage  {...props} />)} /> */}
         <Route path='/account' component={(props) => (<DashBoard checkStatus={this.checkStatus} userName={this.state.name} login={this.state.loggedIn} isLoggedIn={this.logIn} isLoggedOut={this.isLoggedOut} {...props} />)} />
-        <Route path='/dashboard' component={(props) => (<DashBoard checkStatus={this.checkStatus} userName={this.state.name} login={this.state.loggedIn} isLoggedIn={this.logIn} isLoggedOut={this.isLoggedOut} {...props} />)}/>
+        <Route path='/dashboard' component={(props) => (<DashBoard checkStatus={this.checkStatus} isLoggedIn={this.logIn} isLoggedOut={this.isLoggedOut} {...props} {...this.state} />)} />
         <Route path='/itemdetail' component={ItemDetail} />
         <Route path='/items' component={Items} />
         <Footer />
