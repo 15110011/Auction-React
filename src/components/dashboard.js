@@ -78,174 +78,190 @@ class DashBoard extends Component {
     render() {
 
         return (
-            <div>
-                {
-                    this.state.expire === true && (
-                        <p className="errorsInput" id="expired">Please logged in</p>
-                    )
-                }
-                <form onSubmit={this.handleAddItem}>
-                    <input
-                        type="hidden"
-                        name="userName"
-                        value={this.state.name}
-                    />
-                    <input
-                        type="hidden"
-                        name="userId"
-                        value={this.state.userID}
-                    />
-                    <input
-                        type="hidden"
-                        name="token"
-                        value={this.state.token}
-                    />
-                    <input
-                        placeholder="Name"
-                        name="name"
-                        value={this.state.name}
-                        onChange={e => this.setState({ name: e.target.value })}
-                    />
-                    <input
-                        placeholder="Price"
-                        name="currentPrice"
-                        value={this.state.currentPrice}
-                        onChange={e => this.setState({ currentPrice: e.target.value })}
-                    />
-                    <input
-                        placeholder="Quantity"
-                        name="quantity"
-                        value={this.state.quantity}
-                        onChange={e => this.setState({ quantity: e.target.value })}
-                    />
-                    <input
-                        placeholder="Details"
-                        name="details"
-                        value={this.state.details}
-                        onChange={e => this.setState({ details: e.target.value })}
-                    />
-                    <button type="submit">Add item</button>
+            <div className="container">
+                <div className="dashboard">
                     {
-                        this.state.isAdded === true && (
-                            <p className="errorsInput" id="valid">Success</p>
-
+                        this.state.expire === true && (
+                            <p className="errorsInput" id="expired">Please logged in</p>
                         )
                     }
-                    <hr />
-                    {
-                        this.state.items.map(item => {
-                            return (
-                                <ul>
-                                    <li>{item.name}</li>
-                                    <li>{item.currentPrice}</li>
-                                    <li>{item.quantity}</li>
-                                    <li>{item.details}</li>
-                                </ul>
+                    <div className="intro-dashboard">
+                        <center>
+                            <h2>Add your items below</h2>
+                            <br />
+                        </center>
+                    </div>
+                    <form className="form-inline" onSubmit={this.handleAddItem}>
+                        <input
+                            type="hidden"
+                            name="userId"
+                            value={this.state.userID}
+                        />
+                        <input
+                            type="hidden"
+                            name="token"
+                            value={this.state.token}
+                        />
+                        <div className="form-group mx-sm-1 mb-2">
+                            <input type="text" className="form-control" id="inputName" placeholder="Name" name="name"
+                                value={this.state.name}
+                                onChange={e => this.setState({ name: e.target.value })}
+                            />
+                        </div>
+                        <div className="form-group mx-sm-1 mb-2">
+                            <input type="text" className="form-control" id="inputPrice" placeholder="Price"
+                                name="currentPrice"
+                                value={this.state.currentPrice}
+                                onChange={e => this.setState({ currentPrice: e.target.value })}
+                            />
+                        </div>
+                        <div className="form-group mx-sm-1 mb-2">
+                            <input type="text" className="form-control" id="inputQuantity" placeholder="Quantity"
+                                name="quantity"
+                                value={this.state.quantity}
+                                onChange={e => this.setState({ quantity: e.target.value })}
+                            />
+                        </div>
+                        <div className="form-group mx-sm-1 mb-2">
+                            <input type="text" className="form-control" id="inputDetails" placeholder="Details"
+                                name="details"
+                                value={this.state.details}
+                                onChange={e => this.setState({ details: e.target.value })}
+                            />
+                        </div>
+                        <div className="form-group mx-sm-1 mb-2">
+                            <select className="custom-select mr-sm-2" name="categories">
+                                <option selected>Categories</option>
+                                <option value="1">Cigars</option>
+                                <option value="2">Diamond</option>
+                                <option value="3">Cars</option>
+                                <option value="4">Rings</option>
+                                <option value="5">Painting</option>
+                            </select>
+                        </div>
+                        <button type="submit" className="btn btn-primary mb-2">Add</button>
+                        {
+                            this.state.isAdded === true && (
+                                <p className="errorsInput" id="valid">Success</p>
+
                             )
-                        })
-                    }
-                </form>
-                <hr />
-                <div className="container">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Quantity</th>
-                                <th scope="col">Details</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr className="fixprop">
-                                <th scope="row">1</th>
-                                <td>{this.state.name}</td>
-                                <td>{this.state.currentPrice}</td>
-                                <td>{this.state.quantity}</td>
-                                <td>
-                                    <div className="edit-del">
-                                        <button className="btn btn-info" style={{color:'#1d93c1'}}><i class="fas fa-eye"></i></button>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="edit-del">
-                                    <button className="btn btn-success"><i class="far fa-edit"></i></button>
-                                    <button className="btn btn-danger mx-2"><i class="far fa-trash-alt"></i></button>    
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="fixprop">
-                                <th scope="row">2</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                                <td>
-                                    <div className="edit-del">
-                                        <button className="btn btn-info" style={{color:'#1d93c1'}}><i class="fas fa-eye"></i></button>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="edit-del">
-                                    <button className="btn btn-success"><i class="far fa-edit"></i></button>
-                                    <button className="btn btn-danger mx-2"><i class="far fa-trash-alt"></i></button>    
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="fixprop">
-                                <th scope="row">3</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                                <td>
-                                    <div className="edit-del">
-                                        <button className="btn btn-info" style={{color:'#1d93c1'}}><i class="fas fa-eye"></i></button>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="edit-del">
-                                    <button className="btn btn-success"><i class="far fa-edit"></i></button>
-                                    <button className="btn btn-danger mx-2"><i class="far fa-trash-alt"></i></button>    
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="fixprop">
-                                <th scope="row">4</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                                <td>
-                                    <div className="edit-del">
-                                        <button className="btn btn-info" style={{color:'#1d93c1'}}><i class="fas fa-eye"></i></button>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="edit-del">
-                                    <button className="btn btn-success"><i class="far fa-edit"></i></button>
-                                    <button className="btn btn-danger mx-2"><i class="far fa-trash-alt"></i></button>    
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="fixprop">
-                                <th scope="row">5</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                                <td>
-                                    <div className="edit-del">
-                                        <button className="btn btn-info" style={{color:'#1d93c1'}}><i class="fas fa-eye"></i></button>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="edit-del">
-                                    <button className="btn btn-success"><i class="far fa-edit"></i></button>
-                                    <button className="btn btn-danger mx-2"><i class="far fa-trash-alt"></i></button>    
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        }
+                        <hr />
+                        {
+                            this.state.items.map(item => {
+                                return (
+                                    <ul>
+                                        <li>{item.name}</li>
+                                        <li>{item.currentPrice}</li>
+                                        <li>{item.quantity}</li>
+                                        <li>{item.details}</li>
+                                    </ul>
+                                )
+                            })
+                        }
+                    </form>
+                    <br />
+                    <div className="container">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Details</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr className="fixprop">
+                                    <th scope="row">1</th>
+                                    <td>{this.state.name}</td>
+                                    <td>{this.state.currentPrice}</td>
+                                    <td>{this.state.quantity}</td>
+                                    <td>
+                                        <div className="edit-del">
+                                            <button className="btn btn-info" style={{ color: '#1d93c1' }}><i class="fas fa-eye"></i></button>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div className="edit-del">
+                                            <button className="btn btn-success"><i class="far fa-edit"></i></button>
+                                            <button className="btn btn-danger mx-2"><i class="far fa-trash-alt"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr className="fixprop">
+                                    <th scope="row">2</th>
+                                    <td>Mark</td>
+                                    <td>Otto</td>
+                                    <td>@mdo</td>
+                                    <td>
+                                        <div className="edit-del">
+                                            <button className="btn btn-info" style={{ color: '#1d93c1' }}><i class="fas fa-eye"></i></button>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div className="edit-del">
+                                            <button className="btn btn-success"><i class="far fa-edit"></i></button>
+                                            <button className="btn btn-danger mx-2"><i class="far fa-trash-alt"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr className="fixprop">
+                                    <th scope="row">3</th>
+                                    <td>Mark</td>
+                                    <td>Otto</td>
+                                    <td>@mdo</td>
+                                    <td>
+                                        <div className="edit-del">
+                                            <button className="btn btn-info" style={{ color: '#1d93c1' }}><i class="fas fa-eye"></i></button>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div className="edit-del">
+                                            <button className="btn btn-success"><i class="far fa-edit"></i></button>
+                                            <button className="btn btn-danger mx-2"><i class="far fa-trash-alt"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr className="fixprop">
+                                    <th scope="row">4</th>
+                                    <td>Mark</td>
+                                    <td>Otto</td>
+                                    <td>@mdo</td>
+                                    <td>
+                                        <div className="edit-del">
+                                            <button className="btn btn-info" style={{ color: '#1d93c1' }}><i class="fas fa-eye"></i></button>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div className="edit-del">
+                                            <button className="btn btn-success"><i class="far fa-edit"></i></button>
+                                            <button className="btn btn-danger mx-2"><i class="far fa-trash-alt"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr className="fixprop">
+                                    <th scope="row">5</th>
+                                    <td>Mark</td>
+                                    <td>Otto</td>
+                                    <td>@mdo</td>
+                                    <td>
+                                        <div className="edit-del">
+                                            <button className="btn btn-info" style={{ color: '#1d93c1' }}><i class="fas fa-eye"></i></button>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div className="edit-del">
+                                            <button className="btn btn-success"><i class="far fa-edit"></i></button>
+                                            <button className="btn btn-danger mx-2"><i class="far fa-trash-alt"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         )
