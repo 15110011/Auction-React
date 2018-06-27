@@ -51,9 +51,9 @@ class DashBoard extends Component {
             method: 'POST',
             body: form
         })
-            // .then(res => res.json())
+            .then(res => res.json())
             .then((res) => {
-                if (res.itemSuccess) {
+                if (res.item) {
                     this.setState({ isAdded: true })
                     this.getItem()
                 }
