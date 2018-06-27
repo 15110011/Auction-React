@@ -7,7 +7,7 @@ class Footer extends Component {
     render() {
         return (
             <div>
-                <footer id="page-footer" className="navbar navbar-light justify-content-between flex-row-reverse">
+                <footer id="page-footer" className="navbar navbar-light justify-content-between flex-row-reverse" style={{marginTop:'20px'}}>
                     <div className="nav">
                         <small className="nav-item">
                             <Link className="nav-link text-info" to="/contact">Contact

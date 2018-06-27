@@ -150,7 +150,108 @@ class DashBoard extends Component {
                         })
                     }
                 </form>
-
+                <hr />
+                <div className="container">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Details</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr className="fixprop">
+                                <th scope="row">1</th>
+                                <td>{this.state.name}</td>
+                                <td>{this.state.currentPrice}</td>
+                                <td>{this.state.quantity}</td>
+                                <td>
+                                    <div className="edit-del">
+                                        <button className="btn btn-info" style={{color:'#1d93c1'}}><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div className="edit-del">
+                                    <button className="btn btn-success"><i class="far fa-edit"></i></button>
+                                    <button className="btn btn-danger mx-2"><i class="far fa-trash-alt"></i></button>    
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr className="fixprop">
+                                <th scope="row">2</th>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>
+                                    <div className="edit-del">
+                                        <button className="btn btn-info" style={{color:'#1d93c1'}}><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div className="edit-del">
+                                    <button className="btn btn-success"><i class="far fa-edit"></i></button>
+                                    <button className="btn btn-danger mx-2"><i class="far fa-trash-alt"></i></button>    
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr className="fixprop">
+                                <th scope="row">3</th>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>
+                                    <div className="edit-del">
+                                        <button className="btn btn-info" style={{color:'#1d93c1'}}><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div className="edit-del">
+                                    <button className="btn btn-success"><i class="far fa-edit"></i></button>
+                                    <button className="btn btn-danger mx-2"><i class="far fa-trash-alt"></i></button>    
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr className="fixprop">
+                                <th scope="row">4</th>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>
+                                    <div className="edit-del">
+                                        <button className="btn btn-info" style={{color:'#1d93c1'}}><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div className="edit-del">
+                                    <button className="btn btn-success"><i class="far fa-edit"></i></button>
+                                    <button className="btn btn-danger mx-2"><i class="far fa-trash-alt"></i></button>    
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr className="fixprop">
+                                <th scope="row">5</th>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>
+                                    <div className="edit-del">
+                                        <button className="btn btn-info" style={{color:'#1d93c1'}}><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div className="edit-del">
+                                    <button className="btn btn-success"><i class="far fa-edit"></i></button>
+                                    <button className="btn btn-danger mx-2"><i class="far fa-trash-alt"></i></button>    
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         )
     }

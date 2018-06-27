@@ -5,11 +5,14 @@
   "dependencies": {
     "bootstrap": "^4.1.1",
     "particles.js": "^2.0.0",
+    "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-image-magnify": "^2.7.0",
     "react-particles-js": "^2.2.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
+    "react-thumbnail-gallery": "^2.0.2",
     "reactstrap": "^6.1.0"
   },
   "scripts": {
