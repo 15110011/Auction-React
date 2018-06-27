@@ -1,13 +1,54 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
 import { Link } from 'react-router-dom'
+import ReactImageZoom from 'react-image-zoom';
 import '../styles/styles.css'
 import Header from './header';
 import Footer from './footer';
 
 
 class ItemDetail extends Component {
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            current: 0,
+            items: [
+                {
+                    id: 'thumbnail',
+                    title: 'gallery',
+                    description: 'gallery',
+                    altText: 'picture',
+                    src: '/images/car.jpg',
+                    thumbSrc: '/images/thumbnails/car.jpg',
+                },
+                {
+                    id: 'thumbnail',
+                    title: 'gallery',
+                    description: 'gallery',
+                    altText: 'picture',
+                    src: '/images/cigar.jpg',
+                    thumbSrc: '/images/thumbnails/cigar.jpg',
+                },
+                {
+                    id: 'thumbnail',
+                    title: 'gallery',
+                    description: 'gallery',
+                    altText: 'picture',
+                    src: '/images/coin.jpg',
+                    thumbSrc: '/images/thumbnails/coin.jpg',
+                }
+            ]
+        }
+    }
+
+    setCurrentItem(current) {
+        this.setState({ current })
+    }
+
     render() {
+        const { current, items } = this.state
+
         return (
             <div className="itemDetail-content">
                 <div className="container">
@@ -22,21 +63,17 @@ class ItemDetail extends Component {
                                 <div className="container">
                                     <div className="row">
                                         <div className="col-md-5">
-                                            <img className="img-fluid" src="/images/car.jpg" alt="car" style={{ height: '350px' }} />
+                                            <ReactImageZoom width={340} height={300} zoomWidth={450} img={items[current].src} />
                                             <div className="row thumbnail">
-                                                <div className="col-md-4 thumbnail-border">
-                                                    <img className="img-fluid" src="./images/car.jpg" alt="car" style={{ height: '100px' }} />
-                                                </div>
-                                                <div className="col-md-4 thumbnail-border">
-                                                    <img className="img-fluid" src="./images/car.jpg" alt="car" style={{ height: '100px' }} />
-                                                </div>
-                                                <div className="col-md-4 thumbnail-border">
-                                                    <img className="img-fluid" src="./images/car.jpg" alt="car" style={{ height: '100px' }} />
-                                                </div>
+                                                {items.map((item, i) => (
+                                                    <div className="col-md-4 thumbnail-border">
+                                                        <img className="img-fluid" src={item.thumbSrc} alt="car" style={{ height: '100px' }} onClick={e => this.setCurrentItem(i)} />
+                                                    </div>
+                                                ))}
                                             </div>
                                         </div>
                                         <div className="col-md-7">
-                                            <div className="row">
+                                            <div className="row" style={{ zIndex: '-1000', position: 'relative' }}>
                                                 <div className="col-md-6">
                                                     <div>
                                                         <h4>Time left: 00:00:00</h4>
