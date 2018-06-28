@@ -282,3 +282,6 @@ body{
       margin-left: -23px;
     }
 }
+.adminpanel{
+  min-height: 100vh;  
+}
