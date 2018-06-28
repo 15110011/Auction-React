@@ -6,7 +6,7 @@ import '../styles/styles.css'
 import Header from './header';
 import Footer from './footer';
 import { LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config';
-import {Editor, EditorState} from 'draft-js';
+import { Editor, EditorState } from 'draft-js';
 
 class DashBoard extends Component {
     constructor(props) {
@@ -15,19 +15,20 @@ class DashBoard extends Component {
             userID: '',
             loadingItem: true,
             name: '',
-            currentPrice:'',
-            quantity:'',
-            details:'',
-            categories:'',
+            currentPrice: '',
+            quantity: '',
+            details: '',
+            categories: '',
             items: [],
             isAdded: false,
             isDeleted: false,
-            isEditing:false,
-            isAdding:false
+            isEditing: false,
+            isAdding: false
         }
         this.handleAddItem = this.handleAddItem.bind(this)
         this.getItem = this.getItem.bind(this)
         this.handleDelete = this.handleDelete.bind(this)
+        this.handleEdit = this.handleEdit.bind(this)
     }
     componentDidMount() {
         console.log('OK?', this.props)
@@ -54,7 +55,7 @@ class DashBoard extends Component {
                     var items = this.state.items.slice()
 
                     items = items.filter((item) => {
-                        return item.id!==+value
+                        return item.id !== +value
                     })
                     this.setState({ items })
                 }
@@ -74,7 +75,7 @@ class DashBoard extends Component {
             .then((res) => {
                 console.log(res)
                 if (res.item) {
-                    this.setState({ isAdded: true, name:'',quantity:'',currentPrice:'',details:'' ,categories:''})
+                    this.setState({ isAdded: true, name: '', quantity: '', currentPrice: '', details: '', categories: '' })
                     this.getItem()
                     setTimeout(() => {
                         this.setState({ isAdded: false })
@@ -85,18 +86,18 @@ class DashBoard extends Component {
     handleEdit(e) {
         e.preventDefault()
         let value = e.currentTarget.value
-        this.setState({
-            isEditing:true
-        })
         const form = new FormData(e.target)
+        this.setState({
+            isEditing: true
+        })
         fetch(`/api/v1/items/${value}`, {
             method: 'PATCH',
             body: form
         })
             .then(res => res.json())
             .then((res) => {
-                if(res.editItem) {
-                    
+                if (res.editItem) {
+
                 }
             })
     }
@@ -135,6 +136,80 @@ class DashBoard extends Component {
                             <br />
                         </center>
                     </div>
+                    {
+                        this.state.isEditing === true && (
+                            <form className="form-inline" onSubmit={this.handleEdit}>
+                                <input
+                                    type="hidden"
+                                    name="userId"
+                                    value={this.props.userId}
+                                />
+                                <input
+                                    type="hidden"
+                                    name="token"
+                                    value={this.props.token}
+                                />
+                                <div className="form-group mx-sm-1 mb-2">
+                                    <input type="text" className="form-control" id="inputName" placeholder="Name" name="name"
+                                        value={this.state.name}
+                                        onChange={e => this.setState({ name: e.target.value })}
+                                    />
+                                </div>
+                                <div className="form-group mx-sm-1 mb-2">
+                                    <input type="text" className="form-control" id="inputPrice" placeholder="Price"
+                                        name="currentPrice"
+                                        value={this.state.currentPrice}
+                                        onChange={e => this.setState({ currentPrice: e.target.value })}
+                                    />
+                                </div>
+                                <div className="form-group mx-sm-1 mb-2">
+                                    <input type="text" className="form-control" id="inputQuantity" placeholder="Quantity"
+                                        name="quantity"
+                                        value={this.state.quantity}
+                                        onChange={e => this.setState({ quantity: e.target.value })}
+                                    />
+                                </div>
+                                <div className="form-group mx-sm-1 mb-2">
+                                    <input type="text" className="form-control" id="inputDetails" placeholder="Details"
+                                        name="details"
+                                        value={this.state.details}
+                                        onChange={e => this.setState({ details: e.target.value })}
+                                    />
+                                </div>
+                                <div className="form-group mx-sm-1 mb-2">
+                                    <select className="custom-select mr-sm-2" name="categories" >
+                                        <option selected>Categories</option>
+                                        <option value="1">Cigars</option>
+                                        <option value="2">Diamond</option>
+                                        <option value="3">Cars</option>
+                                        <option value="4">Rings</option>
+                                        <option value="5">Painting</option>
+                                    </select>
+                                </div>
+                                <button type="submit" className="btn btn-primary mb-2">Edit</button>
+                                {
+                                    this.state.isAdded === true && (
+                                        <div className="alert alert-warning" role="alert">
+                                            <strong>Item added</strong>
+                                        </div>
+
+                                    )
+                                }
+                                {
+                                    this.state.isDeleted === true && (
+                                        <div className="alert alert-warning" role="alert">
+                                            <strong>Item deleted</strong>
+                                        </div>
+
+                                    )
+                                }
+                                <hr />
+
+                            </form>
+                        )
+
+
+                    }
                     <form className="form-inline" onSubmit={this.handleAddItem}>
                         <input
                             type="hidden"
