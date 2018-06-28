@@ -213,8 +213,6 @@ class DashBoard extends Component {
                                         )
                                     })
                                 }
-                              
-                               
                             </tbody>
                         </table>
                     </div>
