@@ -6,6 +6,7 @@ import '../styles/styles.css'
 import Header from './header';
 import Footer from './footer';
 import { LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config';
+import {Editor, EditorState} from 'draft-js';
 
 class DashBoard extends Component {
     constructor(props) {
@@ -20,16 +21,15 @@ class DashBoard extends Component {
             categories:'',
             items: [],
             isAdded: false,
-            isDeleted: false
+            isDeleted: false,
+            isEditing:false,
+            isAdding:false
         }
         this.handleAddItem = this.handleAddItem.bind(this)
         this.getItem = this.getItem.bind(this)
         this.handleDelete = this.handleDelete.bind(this)
     }
     componentDidMount() {
-
-    }
-    componentWillMount() {
         console.log('OK?', this.props)
         FB.api('/me', data => {
             console.log(data)
@@ -39,31 +39,6 @@ class DashBoard extends Component {
                 })
             }
         })
-        // this.props.history.push('./')
-        // FB.getLoginStatus(resp => {
-        //     console.log(resp)
-        //     if (resp.status === 'connected') {
-        //         this.setState({
-        //             userID: resp.authResponse.userID,
-        //             token: resp.authResponse.accessToken,
-        //             name: this.props.userName
-        //         })
-        //     }
-        //     else if (resp.status === 'authorization_expired') {
-        //         this.setState({
-        //             expired: true
-        //         })
-        //     }
-        //     else {
-        //         console.log("?????")
-        //         this.setState({
-        //             expired: true
-        //         })
-        //         FB.login()
-        //         this.props.history.push('/')
-        //     }
-        // })
-        // this.props.checkStatus()
     }
     handleDelete(e) {
         let value = e.currentTarget.value
@@ -104,6 +79,24 @@ class DashBoard extends Component {
                     setTimeout(() => {
                         this.setState({ isAdded: false })
                     }, 2000)
+                }
+            })
+    }
+    handleEdit(e) {
+        e.preventDefault()
+        let value = e.currentTarget.value
+        this.setState({
+            isEditing:true
+        })
+        const form = new FormData(e.target)
+        fetch(`/api/v1/items/${value}`, {
+            method: 'PATCH',
+            body: form
+        })
+            .then(res => res.json())
+            .then((res) => {
+                if(res.editItem) {
+                    
                 }
             })
     }
@@ -193,7 +186,7 @@ class DashBoard extends Component {
                         <button type="submit" className="btn btn-primary mb-2">Add</button>
                         {
                             this.state.isAdded === true && (
-                                <div class="alert alert-warning" role="alert">
+                                <div className="alert alert-warning" role="alert">
                                     <strong>Item added</strong>
                                 </div>
 
@@ -201,7 +194,7 @@ class DashBoard extends Component {
                         }
                         {
                             this.state.isDeleted === true && (
-                                <div class="alert alert-warning" role="alert">
+                                <div className="alert alert-warning" role="alert">
                                     <strong>Item deleted</strong>
                                 </div>
 
@@ -212,7 +205,7 @@ class DashBoard extends Component {
                     </form>
                     <br />
                     <div className="container" id="adddel-form">
-                        {this.state.loadingItem ? <div style={{ textAlign: 'center', zIndex: '900', position: 'relative' }}><img src="./images/loading.gif" style={{ maxHeight: '400px', maxWidth: '400px' }} /></div> : <table class="table table-striped">
+                        {this.state.loadingItem ? <div style={{ textAlign: 'center', zIndex: '900', position: 'relative' }}><img src="./images/loading.gif" style={{ maxHeight: '400px', maxWidth: '400px' }} /></div> : <table className="table table-striped">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
@@ -227,20 +220,20 @@ class DashBoard extends Component {
                                 {
                                     this.state.items.map(item => {
                                         return (
-                                            <tr className="fixprop">
+                                            <tr className="fixprop" key={item.id}>
                                                 <th scope="row">1</th>
                                                 <td>{item.name}</td>
                                                 <td>{item.currentPrice}</td>
                                                 <td>{item.quantity}</td>
                                                 <td>
                                                     <div className="edit-del">
-                                                        <button className="btn btn-info" style={{ color: '#1d93c1' }}><i class="fas fa-eye"></i></button>
+                                                        <button className="btn btn-info" style={{ color: '#1d93c1' }}><i className="fas fa-eye"></i></button>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div className="edit-del">
-                                                        <button className="btn btn-success"><i class="far fa-edit"></i></button>
-                                                        <button className="btn btn-danger mx-2" onClick={this.handleDelete} value={item.id}><i class="far fa-trash-alt"></i></button>
+                                                        <button className="btn btn-success" onClick={this.handleEdit} value={item.id}><i className="far fa-edit"></i></button>
+                                                        <button className="btn btn-danger mx-2" onClick={this.handleDelete} value={item.id}><i className="far fa-trash-alt"></i></button>
                                                     </div>
                                                 </td>
                                             </tr>
