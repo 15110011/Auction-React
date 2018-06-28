@@ -54,7 +54,7 @@ class AdminPendingItems extends Component {
                             </NavLink>
                         </NavItem>
                     </Nav>
-                    <TabContent activeTab={this.state.activeTab}>
+                    <TabContent activeTab={this.state.activeTab} id="admin-panel">
                         <TabPane tabId="1">
                             <Row>
                                 <Col sm="12">
