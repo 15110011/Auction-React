@@ -5,15 +5,14 @@ import { Link } from 'react-router-dom'
 import '../styles/styles.css'
 import Header from './header';
 import Footer from './footer';
-import { LOADED_LOGIN_STATUS } from '../config';
+import { LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config';
 
 class DashBoard extends Component {
     constructor(props) {
         super(props)
         this.state = {
             userID: '',
-            token: '',
-            expired: false,
+            loadingItem: true,
             name: '',
             items: [],
             isAdded: false,
@@ -24,16 +23,19 @@ class DashBoard extends Component {
         this.handleDelete = this.handleDelete.bind(this)
     }
     componentDidMount() {
-        this.getItem()
 
     }
     componentWillMount() {
-        console.log('OK?',this.props)
-        if(this.props.loggedIn != LOADED_LOGIN_STATUS)
-        {
-            FB.login()
-            // this.props.history.push('./')
-        }
+        console.log('OK?', this.props)
+        FB.api('/me', data => {
+            console.log(data)
+            if (!data.error) {
+                this.setState({ userID: data.id, loadingItem: false }, () => {
+                    this.getItem()
+                })
+            }
+        })
+        // this.props.history.push('./')
         // FB.getLoginStatus(resp => {
         //     console.log(resp)
         //     if (resp.status === 'connected') {
@@ -67,8 +69,8 @@ class DashBoard extends Component {
         }).then(res => res.json())
             .then((rs) => {
                 if (rs.deleteItem) {
-                    
-                    this.setState({ isDeleted: true })
+                    this.setState({ isDeleted: true, isAdded: false })
+                    this.getItem()
                 }
             })
     }
@@ -84,14 +86,16 @@ class DashBoard extends Component {
             .then((res) => {
                 console.log(res)
                 if (res.item) {
-                    this.setState({ isAdded: true })
+                    this.setState({ isAdded: true, isDeleted: false })
+                    this.getItem()
+
                 }
             })
     }
     getItem() {
         const items = this.state.items
 
-        fetch(`/api/v1/users/${this.props.userId}/items`)
+        fetch(`/api/v1/users/${this.state.userID}/items`)
             .then(items => {
                 console.log(items)
                 return items.json()
@@ -102,7 +106,13 @@ class DashBoard extends Component {
             })
     }
     render() {
-
+        if (this.props.loggedIn === GUEST_STATUS) {
+            return (
+                <div className="container">
+                            <p className="alert alert-danger" id="expired">Please log in</p>
+                </div>
+            )
+        }
         return (
             <div className="container">
                 <div className="dashboard">
@@ -168,7 +178,17 @@ class DashBoard extends Component {
                         <button type="submit" className="btn btn-primary mb-2">Add</button>
                         {
                             this.state.isAdded === true && (
-                                <p className="errorsInput" id="valid">Success</p>
+                                <div class="alert alert-warning" role="alert">
+                                    <strong>Item added</strong>
+                                </div>
+
+                            )
+                        }
+                        {
+                            this.state.isDeleted === true && (
+                                <div class="alert alert-warning" role="alert">
+                                    <strong>Item deleted</strong>
+                                </div>
 
                             )
                         }
@@ -176,8 +196,8 @@ class DashBoard extends Component {
 
                     </form>
                     <br />
-                    <div className="container">
-                        <table class="table table-striped">
+                    <div className="container" >
+                        {this.state.loadingItem ? <div style={{ textAlign: 'center', zIndex: '900', position: 'relative' }}><img src="./images/loading.gif" style={{ maxHeight: '400px', maxWidth: '400px' }} /></div> : <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
@@ -213,8 +233,10 @@ class DashBoard extends Component {
                                         )
                                     })
                                 }
+
+
                             </tbody>
-                        </table>
+                        </table>}
                     </div>
                 </div>
             </div>

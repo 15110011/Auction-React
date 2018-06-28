@@ -10,7 +10,7 @@ import {  BrowserRouter } from 'react-router-dom'
 
 window.fbAsyncInit = function() {
     FB.init({
-      appId      : '1603931246371721',
+      appId      : '599473877104653',
       cookie     : true,
       xfbml      : true,
       version    : 'v3.0'
