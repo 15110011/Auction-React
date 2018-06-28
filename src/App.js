@@ -10,6 +10,7 @@ import { LOADING_LOGIN_STATUS, LOADED_LOGIN_STATUS, GUEST_STATUS } from './confi
 import DashBoard from './components/dashboard';
 import ItemDetail from './components/itemdetail';
 import Items from './components/items';
+import AdminPanel from './components/AdminPanel'
 
 
 class App extends Component {
@@ -18,12 +19,14 @@ class App extends Component {
     this.state = {
       loggedIn: GUEST_STATUS,
       name: '',
-      userId: ''
+      userId: '',
+      isAdmin: false
     }
     this.logIn = this.logIn.bind(this)
     this.logOut = this.logOut.bind(this)
     this.loginCB = this.loginCB.bind(this)
     this.checkStatus = this.checkStatus.bind(this)
+    this.checkIsAdmin = this.checkIsAdmin.bind(this)
   }
   logIn(e) {
     if (e) {
@@ -65,7 +68,9 @@ class App extends Component {
           console.log('abcd')
           console.log(user)
           if (user.success) {
-            this.setState({ name: res.name, loggedIn: LOADED_LOGIN_STATUS, userId: res.id })
+            this.setState({ name: res.name, loggedIn: LOADED_LOGIN_STATUS, userId: res.id }, () => {
+              this.checkIsAdmin()
+            })
 
           }
 
@@ -78,6 +83,15 @@ class App extends Component {
       window.location.href = "/"
       window.alert = "Login failed"
     }
+
+  }
+  checkIsAdmin() {
+    fetch(`http://localhost:1337/api/v1/me?id=${this.state.userId}`)
+      .then(res => res.json())
+      .then(userData => {
+        console.log(userData)
+        this.setState({ isAdmin: userData.isAdmin })
+      })
 
   }
   checkStatus() {
@@ -102,7 +116,10 @@ class App extends Component {
             }).then(res => res.json()).then((res) => {
               console.log(res)
               if (res.success) {
-                this.setState({ name: data.name, loggedIn: LOADED_LOGIN_STATUS, userId: data.id })
+                this.setState({ name: data.name, loggedIn: LOADED_LOGIN_STATUS, userId: data.id }, () => {
+                  this.checkIsAdmin()
+                })
+
               }
 
             })
@@ -167,8 +184,7 @@ class App extends Component {
         <Header logIn={this.logIn} logOut={this.logOut} {...this.state} checkStatus={this.checkStatus} />
         <Route exact path='/' component={HomePage} />
         <Route path='/faq' component={FAQ} />
-        {/* <Route path='/signup' component={SignUpPage} /> */}
-        {/* <Route path='/signin' component={(props) => (<SignInPage  {...props} />)} /> */}
+        <Route path='/admin' component={(props) => (<AdminPanel {...props} {...this.state} />)}  />
         <Route path='/dashboard' component={(props) => (<DashBoard checkStatus={this.checkStatus} isLoggedIn={this.logIn} isLoggedOut={this.isLoggedOut} {...props} {...this.state} />)} />
         <Route path='/itemdetail' component={ItemDetail} />
         <Route path='/items' component={Items} />
