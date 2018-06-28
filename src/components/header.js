@@ -28,7 +28,7 @@ class Header extends Component {
         //     })
         FB.logout(
             resp=>{
-                if(resp.status=='unknown'){
+                if(resp.status ==='unknown'){
                     this.setState({isLoggedIn:false})
                 }
             }
@@ -155,7 +155,7 @@ class Header extends Component {
                                 </div>
                             </form>
                             {
-                                (this.props.loggedIn == LOADED_LOGIN_STATUS? (
+                                (this.props.loggedIn === LOADED_LOGIN_STATUS? (
                                     <div className="ml-auto">
                                         <div className="form-inline">
                                             <Link className="nav-item nav-link ml-auto" to="/contact" style={{ color: 'white' }}><i className="fas fa-cart-plus"></i></Link>
@@ -171,7 +171,7 @@ class Header extends Component {
                                         </div>
                                     </div>
                                 ) :'') }
-                                {(this.props.loggedIn == GUEST_STATUS?
+                                {(this.props.loggedIn === GUEST_STATUS?
                                     (
                                         <div className="ml-auto">
                                             <div className="form-inline">
@@ -181,7 +181,7 @@ class Header extends Component {
                                         </div>
                                     ):''
                                 )}
-                                {(this.props.loggedIn == LOADING_LOGIN_STATUS?
+                                {(this.props.loggedIn === LOADING_LOGIN_STATUS?
                                 <div className="ml-auto">
                                         <div className="form-inline">
                                                 <Link className="btn btn-info" to="/faq">FAQ</Link>
