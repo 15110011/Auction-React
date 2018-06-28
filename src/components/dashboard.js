@@ -63,14 +63,24 @@ class DashBoard extends Component {
     }
     handleDelete(e) {
         e.preventDefault()
-        console.log(e.target.value)
+        e.stopPropagation()
+        e.nativeEvent.stopImmediatePropagation()
+        console.log(e.target)
         fetch(`/api/v1/items/${e.target.value}`, {
             method: 'DELETE'
         }).then(res => res.json())
             .then((rs) => {
                 if (rs.deleteItem) {
-                    this.setState({ isDeleted: true, isAdded: false })
-                    this.getItem()
+                    this.setState({ isDeleted: true })
+                    setTimeout(() => {
+                        this.setState({ isDeleted: false })
+                    }, 2000)
+                    var items = this.state.items.slice()
+                    items = items.filter((item) => {
+                        console.log(e.target)
+                        return false
+                    })
+                    this.setState({ items })
                 }
             })
     }
@@ -86,9 +96,11 @@ class DashBoard extends Component {
             .then((res) => {
                 console.log(res)
                 if (res.item) {
-                    this.setState({ isAdded: true, isDeleted: false })
+                    this.setState({ isAdded: true })
                     this.getItem()
-
+                    setTimeout(() => {
+                        this.setState({ isAdded: false })
+                    }, 2000)
                 }
             })
     }
@@ -109,7 +121,7 @@ class DashBoard extends Component {
         if (this.props.loggedIn === GUEST_STATUS) {
             return (
                 <div className="container">
-                            <p className="alert alert-danger" id="expired">Please log in</p>
+                    <p className="alert alert-danger" id="expired">Please log in</p>
                 </div>
             )
         }
