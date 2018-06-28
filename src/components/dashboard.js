@@ -7,20 +7,22 @@ import Header from './header';
 import Footer from './footer';
 import { LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config';
 
+
 class DashBoard extends Component {
+
     constructor(props) {
         super(props)
         this.state = {
             userID: '',
             loadingItem: true,
             name: '',
-            currentPrice:'',
-            quantity:'',
-            details:'',
-            categories:'',
+            currentPrice: '',
+            quantity: '',
+            details: '',
+            categoriesId: '',
             items: [],
             isAdded: false,
-            isDeleted: false
+            isDeleted: false,
         }
         this.handleAddItem = this.handleAddItem.bind(this)
         this.getItem = this.getItem.bind(this)
@@ -79,7 +81,7 @@ class DashBoard extends Component {
                     var items = this.state.items.slice()
 
                     items = items.filter((item) => {
-                        return item.id!==+value
+                        return item.id !== +value
                     })
                     this.setState({ items })
                 }
@@ -99,7 +101,7 @@ class DashBoard extends Component {
             .then((res) => {
                 console.log(res)
                 if (res.item) {
-                    this.setState({ isAdded: true, name:'',quantity:'',currentPrice:'',details:'' ,categories:''})
+                    this.setState({ isAdded: true, name: '', quantity: '', currentPrice: '', details: '', categoriesId: '' })
                     this.getItem()
                     setTimeout(() => {
                         this.setState({ isAdded: false })
@@ -121,6 +123,7 @@ class DashBoard extends Component {
             })
     }
     render() {
+        const { currentNote }= this.props
         if (this.props.loggedIn === GUEST_STATUS) {
             return (
                 <div className="container">
@@ -208,7 +211,6 @@ class DashBoard extends Component {
                             )
                         }
                         <hr />
-
                     </form>
                     <br />
                     <div className="container" id="adddel-form">
@@ -219,8 +221,10 @@ class DashBoard extends Component {
                                     <th scope="col">Name</th>
                                     <th scope="col">Price</th>
                                     <th scope="col">Quantity</th>
+                                    <th scope="col">Category</th>
                                     <th scope="col">Details</th>
                                     <th scope="col">Action</th>
+                                    <th scope="col">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -232,6 +236,7 @@ class DashBoard extends Component {
                                                 <td>{item.name}</td>
                                                 <td>{item.currentPrice}</td>
                                                 <td>{item.quantity}</td>
+                                                <td>{item.categoriesId}</td>
                                                 <td>
                                                     <div className="edit-del">
                                                         <button className="btn btn-info" style={{ color: '#1d93c1' }}><i class="fas fa-eye"></i></button>
@@ -243,6 +248,7 @@ class DashBoard extends Component {
                                                         <button className="btn btn-danger mx-2" onClick={this.handleDelete} value={item.id}><i class="far fa-trash-alt"></i></button>
                                                     </div>
                                                 </td>
+                                                <td>{item.quantity}</td>
                                             </tr>
 
                                         )
