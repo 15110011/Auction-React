@@ -14,6 +14,10 @@ class DashBoard extends Component {
             userID: '',
             loadingItem: true,
             name: '',
+            currentPrice:'',
+            quantity:'',
+            details:'',
+            categories:'',
             items: [],
             isAdded: false,
             isDeleted: false
@@ -62,11 +66,8 @@ class DashBoard extends Component {
         // this.props.checkStatus()
     }
     handleDelete(e) {
-        e.preventDefault()
-        e.stopPropagation()
-        e.nativeEvent.stopImmediatePropagation()
-        console.log(e.target)
-        fetch(`/api/v1/items/${e.target.value}`, {
+        let value = e.currentTarget.value
+        fetch(`/api/v1/items/${value}`, {
             method: 'DELETE'
         }).then(res => res.json())
             .then((rs) => {
@@ -76,9 +77,9 @@ class DashBoard extends Component {
                         this.setState({ isDeleted: false })
                     }, 2000)
                     var items = this.state.items.slice()
+
                     items = items.filter((item) => {
-                        console.log(e.target)
-                        return false
+                        return item.id!==+value
                     })
                     this.setState({ items })
                 }
@@ -87,6 +88,8 @@ class DashBoard extends Component {
     handleAddItem(e) {
 
         e.preventDefault()
+        let formBody = e.target
+        console.log(formBody.name.value)
         const form = new FormData(e.target)
         fetch('/api/v1/items', {
             method: 'POST',
@@ -96,7 +99,7 @@ class DashBoard extends Component {
             .then((res) => {
                 console.log(res)
                 if (res.item) {
-                    this.setState({ isAdded: true })
+                    this.setState({ isAdded: true, name:'',quantity:'',currentPrice:'',details:'' ,categories:''})
                     this.getItem()
                     setTimeout(() => {
                         this.setState({ isAdded: false })
@@ -178,7 +181,7 @@ class DashBoard extends Component {
                             />
                         </div>
                         <div className="form-group mx-sm-1 mb-2">
-                            <select className="custom-select mr-sm-2" name="categories">
+                            <select className="custom-select mr-sm-2" name="categories" >
                                 <option selected>Categories</option>
                                 <option value="1">Cigars</option>
                                 <option value="2">Diamond</option>
