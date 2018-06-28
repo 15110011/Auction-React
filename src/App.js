@@ -1,5 +1,4 @@
 /*global FB*/
-
 import React, { Component } from 'react';
 import './App.css';
 import Header from './components/header'
@@ -51,7 +50,7 @@ class App extends Component {
     form.append('token', resp.authResponse.accessToken)
     form.append('expire', resp.authResponse.expiresIn);
     form.append('userId', resp.authResponse.userID);
-    if (resp.status == 'connected') {
+    if (resp.status === 'connected') {
       FB.api('/me', res => {
 
         console.log(res)
@@ -142,12 +141,12 @@ class App extends Component {
     this.checkStatus()
     FB.Event.subscribe("auth.authResponseChange", resp => {
 
-      if (resp.status == "connected") {
+      if (resp.status === "connected") {
 
 
 
       }
-      else if (resp.status == "authorization_expired" || resp.status === 'not_authorized') {
+      else if (resp.status === "authorization_expired" || resp.status === 'not_authorized') {
         console.log('??????????')
         FB.login(this.loginCB.bind(this))
         this.setState({ loggedIn: GUEST_STATUS })

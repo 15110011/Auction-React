@@ -211,7 +211,7 @@ class DashBoard extends Component {
 
                     </form>
                     <br />
-                    <div className="container" >
+                    <div className="container" id="adddel-form">
                         {this.state.loadingItem ? <div style={{ textAlign: 'center', zIndex: '900', position: 'relative' }}><img src="./images/loading.gif" style={{ maxHeight: '400px', maxWidth: '400px' }} /></div> : <table class="table table-striped">
                             <thead>
                                 <tr>

@@ -15,6 +15,9 @@ body{
   height: 560px;
   padding-top: 120px;
 }
+#search-form{
+  width: 280px;
+}
 .image img{
   float: right;
 }
@@ -257,4 +260,25 @@ body{
   border: 1px solid darkgrey;
   border-radius: 2px;
   padding: 5px 5px;
+}
+@media screen and (max-width: 400px){
+    .logo img{
+      width: 160px;
+      height: 160px;
+      margin-right: 95px;
+      margin-top: -100px;
+    }
+    #word p{
+      font-size: 15px;
+    }
+    #word li{
+      font-size: 15px;
+    }
+    #price{
+      margin-top: -30px;
+    }
+    #adddel-form{
+      font-size: 12px;
+      margin-left: -23px;
+    }
 }
