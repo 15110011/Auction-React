@@ -91,13 +91,7 @@ class EditItem extends Component {
                             </div>
                             <button type="submit" className="btn btn-primary mb-2">Edit</button>
                             <button onClick={this.cancelClick} type="submit" className="btn btn-primary mb-2">Cancel</button>
-                            {
-                                    this.props.isEdited === true && (
-                                        <div className="alert alert-warning" role="alert">
-                                            <strong>Item edited</strong>
-                                        </div>
-                                    )
-                                }
+                           
                         </form>
 
                     )

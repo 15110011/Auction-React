@@ -25,7 +25,7 @@ class DashBoard extends Component {
             isAdded: false,
             isDeleted: false,
             isEditing: false,
-            itemId:'',
+            itemId: '',
             isEdited: false,
             isAdding: true
         }
@@ -92,8 +92,8 @@ class DashBoard extends Component {
     }
     editSuccess(target) {
         var items = this.state.items.slice()
-        let curItem = _.findIndex(items,{id:this.state.itemId})
-        if(curItem > -1) {
+        let curItem = _.findIndex(items, { id: this.state.itemId })
+        if (curItem > -1) {
             items[curItem].name = target.name.value
             items[curItem].currentPrice = target.currentPrice.value
             items[curItem].quantity = target.quantity.value
@@ -102,23 +102,23 @@ class DashBoard extends Component {
             console.log(items)
             this.setState({
                 items,
-                isEdited:true,
-                isEditing:false,
-                isAdding:true
+                isEditing: false,
+                isEdited: true,
+                isAdding: true,
             })
-            // setTimeout(() => {
-            //     this.setState({ isEdited: true })
-            // }, 2000)
+            setTimeout(() => {
+                this.setState({ isEdited: false })
+            }, 2000)
         }
-        
+
     }
     handleEdit(e) {
         e.preventDefault()
         let value = e.currentTarget.value
         console.log(this.state.userID)
-       let item = this.state.items.filter((info) => {
+        let item = this.state.items.filter((info) => {
             return info.id === +value
-       })
+        })
         this.setState({
             isEditing: true,
             isAdding: false,
@@ -127,10 +127,10 @@ class DashBoard extends Component {
             quantity: item[0].quantity,
             details: item[0].details,
             categoriesId: item[0].categoriesId,
-            itemId:item[0].id
+            itemId: item[0].id
         })
 
-        
+
     }
 
     handleCancel(e) {
@@ -259,7 +259,14 @@ class DashBoard extends Component {
 
                                     )
                                 }
-                               
+                                {
+                                    this.state.isEdited === true && (
+                                        <div className="alert alert-warning" role="alert">
+                                            <strong>Item edited</strong>
+                                        </div>
+                                    )
+                                }
+
                                 <hr />
                             </form>
                         )
