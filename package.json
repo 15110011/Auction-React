@@ -4,9 +4,11 @@
   "private": true,
   "dependencies": {
     "babel-polyfill": "^6.26.0",
+    "particles.js": "^2.0.0",
+    "add": "^2.0.6",
     "bootstrap": "^4.1.1",
     "draft-js": "^0.10.5",
-    "particles.js": "^2.0.0",
+    "or": "^0.2.0",
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
@@ -14,11 +16,12 @@
     "react-image-zoom": "^0.7.0",
     "react-lz-editor": "^0.12.1",
     "react-numeric-input": "^2.2.3",
-    "react-particles-js": "^2.2.0",
     "react-router-dom": "^4.3.1",
+    "react-rte": "^0.16.1",
     "react-scripts": "1.1.4",
     "react-thumbnail-gallery": "^2.0.2",
-    "reactstrap": "^6.1.0"
+    "reactstrap": "^6.1.0",
+    "yarn": "^1.7.0"
   },
   "scripts": {
     "start": "react-scripts start",

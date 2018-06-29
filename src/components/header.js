@@ -165,6 +165,7 @@ class Header extends Component {
                                             <div className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
                                                 <Link className="dropdown-item" to="">{this.props.name}</Link>
                                                 <Link className="dropdown-item" to="/dashboard">Dashboard</Link>
+                                                {this.props.isAdmin?<Link className="dropdown-item" to="/admin">Admin Panel</Link>:''}
                                                 <Link className="dropdown-item" to="/logout" onClick={this.handleLogOut}>Sign out</Link>
                                             </div>
                                         </div>

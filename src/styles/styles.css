@@ -278,7 +278,12 @@ body{
       margin-top: -30px;
     }
     #adddel-form{
-      font-size: 12px;
-      margin-left: -23px;
+      overflow-x: auto;
     }
+    #admin-panel{
+      overflow-x: auto;
+    }
+}
+.adminpanel{
+  min-height: 100vh;  
 }
