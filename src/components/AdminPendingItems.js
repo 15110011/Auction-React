@@ -35,7 +35,7 @@ class AdminPendingItems extends Component {
 
         return (
             <div>
-                <div className="container mt-4 adminpanel">
+                <div className="container adminpanel" style={{paddingTop:'30px'}}>
                     <Nav tabs>
                         <NavItem>
                             <NavLink

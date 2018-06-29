@@ -180,7 +180,7 @@ class App extends Component {
   }
   render() {
     return (
-      <div className="App">
+      <div className="App" style={{marginTop:'56px'}}>
         <Header logIn={this.logIn} logOut={this.logOut} {...this.state} checkStatus={this.checkStatus} />
         <Route exact path='/' component={HomePage} />
         <Route path='/faq' component={FAQ} />
