@@ -58,7 +58,7 @@ class DashBoard extends Component {
                     this.setState({ isDeleted: true })
                     setTimeout(() => {
                         this.setState({ isDeleted: false })
-                    }, 2000)
+                    }, 1000)
                     var items = this.state.items.slice()
 
                     items = items.filter((item) => {
@@ -86,7 +86,7 @@ class DashBoard extends Component {
                     this.getItem()
                     setTimeout(() => {
                         this.setState({ isAdded: false })
-                    }, 2000)
+                    }, 1000)
                 }
             })
     }
@@ -108,7 +108,7 @@ class DashBoard extends Component {
             })
             setTimeout(() => {
                 this.setState({ isEdited: false })
-            }, 2000)
+            }, 1000)
         }
 
     }
@@ -266,12 +266,10 @@ class DashBoard extends Component {
                                         </div>
                                     )
                                 }
-
                                 <hr />
                             </form>
                         )
                     }
-
                     <br />
                     <div className="container" id="adddel-form">
                         {this.state.loadingItem ? <div style={{ textAlign: 'center', zIndex: '900', position: 'relative' }}><img src="./images/loading.gif" style={{ maxHeight: '400px', maxWidth: '400px' }} /></div> :

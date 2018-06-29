@@ -19,14 +19,14 @@ class EditItem extends Component {
         fetch(`/api/v1/items/${this.props.itemId}`, {
             method: 'PATCH',
             body: form
-        }).then(res=>res.json())
-        .then((rs)=>{
-            if(rs.editItem) {
-                console.log(value)
-                this.props.editSuccess(value)
-            }
-        })
-        
+        }).then(res => res.json())
+            .then((rs) => {
+                if (rs.editItem) {
+                    console.log(value)
+                    this.props.editSuccess(value)
+                }
+            })
+
     }
 
     cancelClick(e) {
@@ -89,11 +89,11 @@ class EditItem extends Component {
                                     <option value="5">Painting</option>
                                 </select>
                             </div>
-                            <button type="submit" className="btn btn-primary mb-2">Edit</button>
-                            <button onClick={this.cancelClick} type="submit" className="btn btn-primary mb-2">Cancel</button>
-                           
+                            <div className="edit-cancel" style={{marginLeft:'42%'}}>
+                                <button type="submit" className="btn btn-success mb-2 mt-3">Edit</button>
+                                <button onClick={this.cancelClick} type="submit" className="btn btn-danger mt-3 mb-2 ml-2">Cancel</button>
+                            </div>
                         </form>
-
                     )
                 }
             </div>
