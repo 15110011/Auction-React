@@ -2,8 +2,11 @@ import React, { Component } from 'react'
 import { render } from 'react-dom'
 import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
 import { FormGroup, Label, Input } from 'reactstrap';
+import { Editor } from 'react-draft-wysiwyg';
 import '../styles/styles.css'
 import classnames from 'classnames';
+import '../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
 
 class AdminPendingItems extends Component {
     constructor(props) {
@@ -35,7 +38,7 @@ class AdminPendingItems extends Component {
 
         return (
             <div>
-                <div className="container adminpanel" style={{paddingTop:'30px'}}>
+                <div className="container adminpanel" style={{ paddingTop: '30px' }}>
                     <Nav tabs>
                         <NavItem>
                             <NavLink
@@ -69,15 +72,10 @@ class AdminPendingItems extends Component {
                                                 <th scope="col">Owner</th>
                                                 <th scope="col">Detail</th>
                                                 <th scope="col">
-                                                    <div class="dropdown">
-                                                        <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            Action
-                                                        </button>
-                                                        <div className="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                                            <button className="dropdown-item" type="button">Accept</button>
-                                                            <button className="dropdown-item" type="button">Reject</button>
-                                                        </div>
-                                                    </div>
+                                                    <select id="inputState" className="btn btn-secondary">
+                                                        <option value='1'>Accept</option>
+                                                        <option value='2'>Reject</option>
+                                                    </select>
                                                 </th>
                                             </tr>
                                         </thead>
