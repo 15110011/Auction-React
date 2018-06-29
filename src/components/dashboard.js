@@ -105,6 +105,11 @@ class DashBoard extends Component {
                 isEditing: false,
                 isEdited: true,
                 isAdding: true,
+                name: '',
+                currentPrice: '',
+                quantity: '',
+                details: '',
+                categoriesId: ''
             })
             setTimeout(() => {
                 this.setState({ isEdited: false })
