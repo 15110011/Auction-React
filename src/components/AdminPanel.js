@@ -12,7 +12,7 @@ class AdminPanel extends Component{
 
     render(){
         return(
-            <div>OK
+            <div>
                 <AdminPendingItems></AdminPendingItems>
                 
             </div>

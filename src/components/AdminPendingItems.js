@@ -1,12 +1,25 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
+import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
+import { FormGroup, Label, Input } from 'reactstrap';
 import '../styles/styles.css'
+import classnames from 'classnames';
 
 class AdminPendingItems extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            items: []
+            items: [],
+            activeTab: '1',
+        }
+        this.toggle = this.toggle.bind(this);
+    }
+
+    toggle(tab) {
+        if (this.state.activeTab !== tab) {
+            this.setState({
+                activeTab: tab
+            });
         }
     }
     componentDidMount() {
@@ -22,40 +35,130 @@ class AdminPendingItems extends Component {
 
         return (
             <div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Item ID</th>
-                            <th>Name</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Owner</th>
-                            <th>Category</th>
-                            <th>Specification</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.items.map((item) => {
-                            return(
-                            <tr>
-                                <td>
-                                    {item.id}
-                                </td>
-                                <td>{item.name}</td>
-                                <td>{item.quantity}</td>
-                                <td>{item.currentPrice}</td>
-                                <td>{item.userId}</td>
-                                <td>{item.categoriesId}</td>
-                                <td>{item.details}</td>
-                                <td><input type="checkbox" name= "selectedItem" value={item.id} /></td>
-                            </tr>)
-                            })
-                        }
-
-                    </tbody>
-                </table>
+                <div className="container mt-4 adminpanel">
+                    <Nav tabs>
+                        <NavItem>
+                            <NavLink
+                                className={classnames({ active: this.state.activeTab === '1' })}
+                                onClick={() => { this.toggle('1'); }}
+                            >
+                                Pending Items
+                            </NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink
+                                className={classnames({ active: this.state.activeTab === '2' })}
+                                onClick={() => { this.toggle('2'); }}
+                            >
+                                Category
+                            </NavLink>
+                        </NavItem>
+                    </Nav>
+                    <TabContent activeTab={this.state.activeTab} id="admin-panel">
+                        <TabPane tabId="1">
+                            <Row>
+                                <Col sm="12">
+                                    <table className="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Item ID</th>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Price</th>
+                                                <th scope="col">Quantity</th>
+                                                <th scope="col">Category</th>
+                                                <th scope="col">Owner</th>
+                                                <th scope="col">Detail</th>
+                                                <th scope="col">
+                                                    <div class="dropdown">
+                                                        <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            Action
+                                                        </button>
+                                                        <div className="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                                            <button className="dropdown-item" type="button">Accept</button>
+                                                            <button className="dropdown-item" type="button">Reject</button>
+                                                        </div>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                this.state.items.map(item => {
+                                                    return (
+                                                        <tr className="fixprop">
+                                                            <td>
+                                                                {item.id}
+                                                            </td>
+                                                            <td>{item.name}</td>
+                                                            <td>{item.currentPrice}</td>
+                                                            <td>{item.quantity}</td>
+                                                            <td>{item.categoriesId}</td>
+                                                            <td>{item.userId}</td>
+                                                            <td>
+                                                                <div className="edit-del">
+                                                                    <button className="btn btn-info" style={{ color: '#1d93c1' }}><i className="fas fa-eye"></i></button>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <FormGroup check>
+                                                                    <Label check />
+                                                                    <Input type="checkbox" />{' '}
+                                                                </FormGroup>
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                })
+                                            }
+                                        </tbody>
+                                    </table>
+                                </Col>
+                            </Row>
+                        </TabPane>
+                        <TabPane tabId="2">
+                            <Row>
+                                <Col sm="12">
+                                    <form className="form-inline mt-4 d-flex justify-content-center">
+                                        <div className="form-group mx-sm-1 mb-2">
+                                            <input type="text" className="form-control" id="inputName" placeholder="Name" name="name"
+                                            />
+                                        </div>
+                                        <button type="submit" className="btn btn-primary mb-2">Add</button>
+                                    </form>
+                                    <table class="table table-striped mt-4">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">ID</th>
+                                                <th scope="col">Category</th>
+                                                <th scope="col">Total</th>
+                                                <th scope="col">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                this.state.items.map(item => {
+                                                    return (
+                                                        <tr className="fixprop">
+                                                            <td>1</td>
+                                                            <td>2</td>
+                                                            <td>3</td>
+                                                            <td>
+                                                                <div className="edit-del">
+                                                                    <button className="btn btn-success"><i class="far fa-edit"></i></button>
+                                                                    <button className="btn btn-danger mx-2" onClick={this.handleDelete} value={item.id}><i class="far fa-trash-alt"></i></button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                })
+                                            }
+                                        </tbody>
+                                    </table>
+                                </Col>
+                            </Row>
+                        </TabPane>
+                    </TabContent>
                 </div>
+            </div>
         )
     }
 }
