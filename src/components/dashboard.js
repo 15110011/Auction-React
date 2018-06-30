@@ -293,10 +293,10 @@ class DashBoard extends Component {
                                 </thead>
                                 <tbody>
                                     {
-                                        this.state.items.map(item => {
+                                        this.state.items.map((item,i) => {
                                             return (
                                                 <tr className="fixprop" key={item.id}>
-                                                    <th scope="row">1</th>
+                                                    <th scope="row">{i+1}</th>
                                                     <td>{item.name}</td>
                                                     <td>{item.currentPrice}</td>
                                                     <td>{item.quantity}</td>
