@@ -13,17 +13,13 @@ class AdminCategories extends Component {
 
     actionOnCategory(e) {
         e.preventDefault()
-
-
-        if (e.target.action && e.target.action.value == "true") {
-
+        if (e.target.action && e.target.action.value === "true") {
             console.log(e.target.action.value)
             this.setState({ enteringName: '' })
             let form = new FormData(e.target)
             fetch('/api/v1/categories', {
                 method: 'POST',
                 body: form
-
             }).then(res => res.json())
                 .then(res => {
                     console.log(res)
@@ -33,7 +29,7 @@ class AdminCategories extends Component {
                         alert(res.msg)
                     }
                 })
-        } else if (e.target.action && e.target.action.value == "false") {
+        } else if (e.target.action && e.target.action.value === "false") {
             console.log("???", e.target.action.value)
             let newCat = this.state.enteringName
             this.setState({ enteringName: '' })
@@ -54,7 +50,7 @@ class AdminCategories extends Component {
                         alert(res.msg)
                     }
                 })
-        } else if (+e.target.cancel.value == 1) {
+        } else if (+e.target.cancel.value === 1) {
             e.preventDefault()
             this.setState({ addMode: true, enteringName: '' })
         }
