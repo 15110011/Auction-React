@@ -4,7 +4,7 @@ import { render } from 'react-dom'
 import '../styles/styles.css'
 import { LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config';
 import { Editor, EditorState } from 'draft-js';
-import EditItem from './editItem'
+import EditItem from './EditItem'
 import _ from 'lodash'
 
 
@@ -38,7 +38,6 @@ class DashBoard extends Component {
         this.editSuccess = this.editSuccess.bind(this)
     }
     componentDidMount() {
-        console.log('OK?', this.props)
         FB.api('/me', data => {
             console.log(data)
             if (!data.error) {
@@ -219,6 +218,7 @@ class DashBoard extends Component {
                                 <div className="form-group mx-sm-1 mb-2">
                                     <input type="text" className="form-control" id="inputPrice" placeholder="Price"
                                         name="currentPrice"
+                                        type="number"
                                         value={this.state.currentPrice}
                                         onChange={e => this.setState({ currentPrice: e.target.value })}
                                     />
@@ -226,6 +226,7 @@ class DashBoard extends Component {
                                 <div className="form-group mx-sm-1 mb-2">
                                     <input type="text" className="form-control" id="inputQuantity" placeholder="Quantity"
                                         name="quantity"
+                                        type="number"
                                         value={this.state.quantity}
                                         onChange={e => this.setState({ quantity: e.target.value })}
                                     />
