@@ -2,10 +2,9 @@ import React, { Component } from 'react'
 import { render } from 'react-dom'
 import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
 import { FormGroup, Label, Input } from 'reactstrap';
-import { Editor } from 'react-draft-wysiwyg';
 import '../styles/styles.css'
 import classnames from 'classnames';
-import '../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
 
 
 class AdminPendingItems extends Component {
@@ -117,7 +116,7 @@ class AdminPendingItems extends Component {
                                 <Col sm="12">
                                     <form className="form-inline mt-4 d-flex justify-content-center">
                                         <div className="form-group mx-sm-1 mb-2">
-                                            <input type="text" className="form-control" id="inputName" placeholder="Name" name="name"
+                                            <input type="text" className="form-control" id="inputName" placeholder="Category" name="name"
                                             />
                                         </div>
                                         <button type="submit" className="btn btn-primary mb-2">Add</button>
