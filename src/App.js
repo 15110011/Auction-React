@@ -155,7 +155,6 @@ class App extends Component {
     );
   }
   componentDidMount() {
-    this.checkStatus()
     FB.Event.subscribe("auth.authResponseChange", resp => {
 
       if (resp.status === "connected") {
@@ -184,7 +183,7 @@ class App extends Component {
         <Header logIn={this.logIn} logOut={this.logOut} {...this.state} checkStatus={this.checkStatus} />
         <Route exact path='/' component={HomePage} />
         <Route path='/faq' component={FAQ} />
-        <Route path='/admin' component={(props) => (<AdminPanel {...props} {...this.state} />)}  />
+        <Route path='/admin' component={(props) => (<AdminPanel {...this.state} />)}  />
         <Route path='/dashboard' component={(props) => (<DashBoard checkStatus={this.checkStatus} isLoggedIn={this.logIn} isLoggedOut={this.isLoggedOut} {...props} {...this.state} />)} />
         <Route path='/itemdetail' component={ItemDetail} />
         <Route path='/items' component={Items} />

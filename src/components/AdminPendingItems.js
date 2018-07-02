@@ -5,158 +5,141 @@ import { FormGroup, Label, Input } from 'reactstrap';
 import { Editor } from 'react-draft-wysiwyg';
 import '../styles/styles.css'
 import classnames from 'classnames';
-import '../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-
+import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import _ from 'lodash'
 
 class AdminPendingItems extends Component {
     constructor(props) {
         super(props)
+
         this.state = {
             items: [],
-            activeTab: '1',
+            itemsStatus: [],
+            selectedCount:0,
         }
-        this.toggle = this.toggle.bind(this);
     }
 
-    toggle(tab) {
-        if (this.state.activeTab !== tab) {
-            this.setState({
-                activeTab: tab
-            });
-        }
-    }
+
     componentDidMount() {
+        console.log("DIDMOUNT")
         fetch('/api/v1/pendingitems/').then(res => res.json())
             .then(items => {
                 if (!items.error) {
                     console.log(items)
-                    this.setState({ items: items.pendingItems })
+                    this.setState({ items: items.pendingItems, itemsStatus:items.pendingItems.map(i=>{
+                        return {id:i.id,selected:false}
+                    }) })
                 }
             })
+    }
+
+    onSelectCheckBox(e){
+        let index = _.findIndex(this.state.itemsStatus,i=>{
+            return i.id==e.target.value
+        })
+        if(index>-1){
+            let cloneSelected = this.state.itemsStatus.slice()
+            cloneSelected[index].selected = !cloneSelected[index].selected
+            this.setState({itemsStatus:cloneSelected})
+            if(cloneSelected[index].selected){
+                this.setState({selectedCount:++this.state.selectedCount})
+            }
+            else{
+                this.setState({selectedCount:--this.state.selectedCount})
+                
+            }
+        }
+    }
+    onClickButton(e){
+        let button = e.currentTarget
+        console.log(button.value)
+        
+        if(button.value)
+        {
+            let selectedItems = _.filter(this.state.itemsStatus,{selected:true})
+            fetch('/api/v1/pendingitems/', {
+                method: 'PATCH',
+                body: JSON.stringify({
+                    type:button.value,
+                    selectedItems,
+                    adminId: this.props.userId
+                })
+            }).then(res => res.json())
+            .then(res => {
+                if(!res.error){
+                    let remainPending = _.filter(this.state.items,i=>{
+
+                        return _.findIndex(selectedItems,selected=>{ return i.id== selected.id })==-1
+                    })
+                    this.setState({items:remainPending, itemsStatus:remainPending.map(i=>{
+                        return {id:i.id,selected:false}
+                    }),selectedCount:0})
+                }
+            })
+        }
     }
     render() {
 
         return (
-            <div>
-                <div className="container adminpanel" style={{ paddingTop: '30px' }}>
-                    <Nav tabs>
-                        <NavItem>
-                            <NavLink
-                                className={classnames({ active: this.state.activeTab === '1' })}
-                                onClick={() => { this.toggle('1'); }}
-                            >
-                                Pending Items
-                            </NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink
-                                className={classnames({ active: this.state.activeTab === '2' })}
-                                onClick={() => { this.toggle('2'); }}
-                            >
-                                Category
-                            </NavLink>
-                        </NavItem>
-                    </Nav>
-                    <TabContent activeTab={this.state.activeTab} id="admin-panel">
-                        <TabPane tabId="1">
-                            <Row>
-                                <Col sm="12">
-                                    <table className="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Item ID</th>
-                                                <th scope="col">Name</th>
-                                                <th scope="col">Price</th>
-                                                <th scope="col">Quantity</th>
-                                                <th scope="col">Category</th>
-                                                <th scope="col">Owner</th>
-                                                <th scope="col">Detail</th>
-                                                <th scope="col">
-                                                    <select id="inputState" className="btn btn-secondary">
-                                                        <option value='1'>Accept</option>
-                                                        <option value='2'>Reject</option>
-                                                    </select>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {
-                                                this.state.items.map(item => {
-                                                    return (
-                                                        <tr className="fixprop">
-                                                            <td>
-                                                                {item.id}
-                                                            </td>
-                                                            <td>{item.name}</td>
-                                                            <td>{item.currentPrice}</td>
-                                                            <td>{item.quantity}</td>
-                                                            <td>{item.categoriesId}</td>
-                                                            <td>{item.userId}</td>
-                                                            <td>
-                                                                <div className="edit-del">
-                                                                    <button className="btn btn-info" style={{ color: '#1d93c1' }}><i className="fas fa-eye"></i></button>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <FormGroup check>
-                                                                    <Label check />
-                                                                    <Input type="checkbox" />{' '}
-                                                                </FormGroup>
-                                                            </td>
-                                                        </tr>
-                                                    )
-                                                })
-                                            }
-                                        </tbody>
-                                    </table>
-                                </Col>
-                            </Row>
-                        </TabPane>
-                        <TabPane tabId="2">
-                            <Row>
-                                <Col sm="12">
-                                    <form className="form-inline mt-4 d-flex justify-content-center">
-                                        <div className="form-group mx-sm-1 mb-2">
-                                            <input type="text" className="form-control" id="inputName" placeholder="Name" name="name"
-                                            />
+            <Row>
+                <Col sm="12">
+                        <table className="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Item ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">Owner</th>
+                                    <th scope="col">Detail</th>
+                                    <th scope="col">
+                                        <div className="btn-group">
+                                            <button type="button" className="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Action on {this.state.selectedCount} {this.state.selectedCount<=1?'item':'items'}
+                                            </button>
+                                            <div className="dropdown-menu dropdown-menu-right">
+                                                <button className="dropdown-item" name="action" value="ACCEPT" onClick={e=>this.onClickButton(e)}>Accept</button>
+                                                <button className="dropdown-item" name="action" value="REJECT" onClick={e=>this.onClickButton(e)}>Reject</button>
+                                            </div>
                                         </div>
-                                        <button type="submit" className="btn btn-primary mb-2">Add</button>
-                                    </form>
-                                    <table class="table table-striped mt-4">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">ID</th>
-                                                <th scope="col">Category</th>
-                                                <th scope="col">Total</th>
-                                                <th scope="col">Action</th>
+                                        
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    this.state.items.map(item => {
+                                        return (
+                                            <tr className="fixprop" key={item.id}>
+                                                <td>
+                                                    {item.id}
+                                                </td>
+                                                <td>{item.name}</td>
+                                                <td>{item.currentPrice}</td>
+                                                <td>{item.quantity}</td>
+                                                <td>{item.categoryName}</td>
+                                                <td>{item.userId}</td>
+                                                <td>
+                                                    <div className="edit-del">
+                                                        <button className="btn btn-info" style={{ color: '#1d93c1' }}><i className="fas fa-eye"></i></button>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <FormGroup check>
+                                                        <Label check />
+                                                        <Input type="checkbox"  value={item.id} onChange={e=>this.onSelectCheckBox(e)}/>{' '}
+                                                    </FormGroup>
+                                                </td>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            {
-                                                this.state.items.map(item => {
-                                                    return (
-                                                        <tr className="fixprop">
-                                                            <td>1</td>
-                                                            <td>2</td>
-                                                            <td>3</td>
-                                                            <td>
-                                                                <div className="edit-del">
-                                                                    <button className="btn btn-success"><i class="far fa-edit"></i></button>
-                                                                    <button className="btn btn-danger mx-2" onClick={this.handleDelete} value={item.id}><i class="far fa-trash-alt"></i></button>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    )
-                                                })
-                                            }
-                                        </tbody>
-                                    </table>
-                                </Col>
-                            </Row>
-                        </TabPane>
-                    </TabContent>
-                </div>
-            </div>
+                                        )
+                                    })
+                                }
+                            </tbody>
+                        </table>
+
+                </Col>
+            </Row>
         )
     }
 }
