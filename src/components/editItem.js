@@ -59,14 +59,14 @@ class EditItem extends Component {
                                 />
                             </div>
                             <div className="form-group mx-sm-1 mb-2">
-                                <input type="text" className="form-control" id="inputPrice" placeholder="Price"
+                                <input type="number" className="form-control" id="inputPrice" placeholder="Price"
                                     name="currentPrice"
                                     defaultValue={this.props.currentPrice}
                                     onChange={e => this.setState({ currentPrice: e.target.currentPrice })}
                                 />
                             </div>
                             <div className="form-group mx-sm-1 mb-2">
-                                <input type="text" className="form-control" id="inputQuantity" placeholder="Quantity"
+                                <input type="number" className="form-control" id="inputQuantity" placeholder="Quantity"
                                     name="quantity"
                                     defaultValue={this.props.quantity}
                                     onChange={e => this.setState({ quantity: e.target.quantity })}

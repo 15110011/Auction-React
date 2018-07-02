@@ -158,7 +158,7 @@ class Header extends Component {
                             (this.props.loggedIn === LOADED_LOGIN_STATUS ? (
                                 <div className="ml-auto">
                                     <div className="form-inline">
-                                        <Link className="nav-item nav-link ml-auto" to="/contact" style={{ color: 'white' }}><i className="fas fa-cart-plus"></i></Link>
+                                        <Link className="nav-item nav-link ml-auto" to="/bidcart" style={{ color: 'white' }}><i className="fas fa-cart-plus"></i></Link>
                                         <Link className="nav-item nav-link" to="/contact" style={{ color: 'white' }}><i className="far fa-bell"></i></Link>
                                         <div className="nav-item dropdown" style={{ color: 'white' }}>
                                             <a className="nav-link dropdown-toggle" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="far fa-user"></i></a>

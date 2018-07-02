@@ -11,6 +11,7 @@ import DashBoard from './components/dashboard';
 import ItemDetail from './components/itemdetail';
 import Items from './components/items';
 import AdminPanel from './components/AdminPanel'
+import Bidcart from './components/bidcart';
 
 
 class App extends Component {
@@ -187,6 +188,7 @@ class App extends Component {
         <Route path='/dashboard' component={(props) => (<DashBoard checkStatus={this.checkStatus} isLoggedIn={this.logIn} isLoggedOut={this.isLoggedOut} {...props} {...this.state} />)} />
         <Route path='/itemdetail' component={ItemDetail} />
         <Route path='/items' component={Items} />
+        <Route path='/bidcart' component={Bidcart}/>
         <Footer />
       </div>
     );

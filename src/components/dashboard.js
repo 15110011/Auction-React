@@ -3,9 +3,12 @@ import React, { Component } from 'react'
 import { render } from 'react-dom'
 import '../styles/styles.css'
 import { LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config';
-import { Editor, EditorState } from 'draft-js';
-import EditItem from './editItem'
+import EditItem from './EditItem'
+import { Editor } from 'react-draft-wysiwyg';
+import { EditorState, convertToRaw } from 'draft-js';
 import _ from 'lodash'
+import draftToHtml from 'draftjs-to-html';
+import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 
 class DashBoard extends Component {
@@ -27,7 +30,9 @@ class DashBoard extends Component {
             isEditing: false,
             itemId: '',
             isEdited: false,
-            isAdding: true
+            isAdding: true,
+            contentState: {},
+            editorState: EditorState.createEmpty()
         }
         this.handleAddItem = this.handleAddItem.bind(this)
         this.getItem = this.getItem.bind(this)
@@ -36,9 +41,11 @@ class DashBoard extends Component {
         this.handleCancel = this.handleCancel.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.editSuccess = this.editSuccess.bind(this)
+        //this.onContentStateChange = this.onContentStateChange.bind(this)
+        this.onEditorStateChange = this.onEditorStateChange.bind(this)
     }
+
     componentDidMount() {
-        console.log('OK?', this.props)
         FB.api('/me', data => {
             console.log(data)
             if (!data.error) {
@@ -68,12 +75,20 @@ class DashBoard extends Component {
                 }
             })
     }
+
+    onEditorStateChange(editorState) {
+        this.setState({
+            editorState,
+        });
+    };
+
     handleAddItem(e) {
 
         e.preventDefault()
         let formBody = e.target
         console.log(formBody.name.value)
         const form = new FormData(e.target)
+        form.append('details', draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())))
         fetch('/api/v1/items', {
             method: 'POST',
             body: form
@@ -209,6 +224,7 @@ class DashBoard extends Component {
                                     name="itemId"
                                     value={this.state.itemId}
                                 />
+                                <div className="d-flex justify-content-center" style={{marginLeft:'140px'}}>
                                 <div className="form-group mx-sm-1 mb-2">
                                     <input type="text" className="form-control" id="inputName" placeholder="Name" name="name"
                                         value={this.state.name}
@@ -217,26 +233,28 @@ class DashBoard extends Component {
                                     />
                                 </div>
                                 <div className="form-group mx-sm-1 mb-2">
-                                    <input type="text" className="form-control" id="inputPrice" placeholder="Price"
+                                    <input type="number" className="form-control" id="inputPrice" placeholder="Price"
                                         name="currentPrice"
+                                        type="number"
                                         value={this.state.currentPrice}
                                         onChange={e => this.setState({ currentPrice: e.target.value })}
                                     />
                                 </div>
                                 <div className="form-group mx-sm-1 mb-2">
-                                    <input type="text" className="form-control" id="inputQuantity" placeholder="Quantity"
+                                    <input type="number" className="form-control" id="inputQuantity" placeholder="Quantity"
                                         name="quantity"
+                                        type="number"
                                         value={this.state.quantity}
                                         onChange={e => this.setState({ quantity: e.target.value })}
                                     />
                                 </div>
-                                <div className="form-group mx-sm-1 mb-2">
+                                {/* <div className="form-group mx-sm-1 mb-2">
                                     <input type="text" className="form-control" id="inputDetails" placeholder="Details"
                                         name="details"
                                         value={this.state.details}
                                         onChange={e => this.setState({ details: e.target.value })}
                                     />
-                                </div>
+                                </div> */}
                                 <div className="form-group mx-sm-1 mb-2">
                                     <select value={this.state.categoriesId} onChange={this.handleChange} className="custom-select mr-sm-2" name="categories" >
                                         <option selected>Categories</option>
@@ -271,7 +289,19 @@ class DashBoard extends Component {
                                         </div>
                                     )
                                 }
+                                </div>
                                 <hr />
+                                <div className="detail-form mt-2">
+                                    <div className="detai-intro mb-1" id="detail-border">
+                                        <h5>Detail</h5>
+                                    </div>
+                                    <div className="detail-field">
+                                        <Editor placeholder="Detail about your item..."
+                                            editorState={this.state.editorState} 
+                                            onEditorStateChange={this.onEditorStateChange}
+                                        />
+                                    </div>
+                                </div>
                             </form>
                         )
                     }

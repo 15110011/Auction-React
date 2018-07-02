@@ -4,28 +4,37 @@ import { Link } from 'react-router-dom'
 import '../styles/styles.css'
 import Header from './header';
 import Footer from './footer';
-import Item from './item'
+
 class Items extends Component {
+
     constructor(props) {
         super(props)
         this.state = {
-            items: []
+            name: props.name,
+            currentPrice: props.currentPrice,
+            quantity: props.quantity,
+            details: props.details,
         }
     }
+
     render() {
-        var { items } = this.state
-        for (let j = 0; j < 12; j++) {
-            items.push(
-                <Item />)
-        }
         return (
-            <div className="container">
-                <br />
-                <div className="row">
-                    {items}
+            <div className="col-md-3" style={{marginTop:'25px'}}>
+                <div className="itemborder">
+                    <div className="item-image">
+                        <Link className="detail" to="/itemdetail"><img src="/images/car.jpg" alt="item" /></Link>
+                    </div>
+                    <div className="time-price">
+                        <div className="row d-flex justify-content-between">
+                            <div className="col-md-6">00:00:00</div>
+                            <div className="col-md-6" id="price">$200</div>
+                        </div>
+                    </div>
                 </div>
+                <Link class="btn btnbid" to="/itemdetail" role="button" style={{marginTop:'5px'}}><i class="fas fa-gavel"></i> Bid now</Link>
             </div>
         )
     }
 }
+
 export default Items
