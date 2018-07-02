@@ -1,0 +1,19 @@
+version: '3.4'
+services:
+  sails:
+    build: .
+    environment:
+      NODE_ENV: development
+    ports:
+      - "3000:3000"
+    links: [mysql]
+    volumes:
+      - ./api:/app/api
+  mysql:
+      image: mysql/mysql-server:5.7
+      environment:
+      - MYSQL_DATABASE=auction
+      - MYSQL_USER=auction
+      - MYSQL_PASSWORD=1234
+      - MYSQL_ROOT_HOST=172.*.*.*
+

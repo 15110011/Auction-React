@@ -3,7 +3,8 @@ import React, { Component } from 'react'
 import { render } from 'react-dom'
 import '../styles/styles.css'
 import { LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config';
-import EditItem from './editItem'
+import { Editor, EditorState } from 'draft-js';
+import EditItem from './EditItem'
 import _ from 'lodash'
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw } from 'draft-js';
@@ -45,7 +46,6 @@ class DashBoard extends Component {
     }
 
     componentDidMount() {
-        console.log('OK?', this.props)
         FB.api('/me', data => {
             console.log(data)
             if (!data.error) {
@@ -235,6 +235,7 @@ class DashBoard extends Component {
                                 <div className="form-group mx-sm-1 mb-2">
                                     <input type="number" className="form-control" id="inputPrice" placeholder="Price"
                                         name="currentPrice"
+                                        type="number"
                                         value={this.state.currentPrice}
                                         onChange={e => this.setState({ currentPrice: e.target.value })}
                                     />
@@ -242,6 +243,7 @@ class DashBoard extends Component {
                                 <div className="form-group mx-sm-1 mb-2">
                                     <input type="number" className="form-control" id="inputQuantity" placeholder="Quantity"
                                         name="quantity"
+                                        type="number"
                                         value={this.state.quantity}
                                         onChange={e => this.setState({ quantity: e.target.value })}
                                     />
@@ -321,10 +323,10 @@ class DashBoard extends Component {
                                 </thead>
                                 <tbody>
                                     {
-                                        this.state.items.map(item => {
+                                        this.state.items.map((item,i) => {
                                             return (
                                                 <tr className="fixprop" key={item.id}>
-                                                    <th scope="row">1</th>
+                                                    <th scope="row">{i+1}</th>
                                                     <td>{item.name}</td>
                                                     <td>{item.currentPrice}</td>
                                                     <td>{item.quantity}</td>

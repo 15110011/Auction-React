@@ -6,7 +6,6 @@ import '../styles/styles.css'
 import classnames from 'classnames';
 
 
-
 class AdminPendingItems extends Component {
     constructor(props) {
         super(props)
@@ -156,6 +155,7 @@ class AdminPendingItems extends Component {
                     </TabContent>
                 </div>
             </div>
+            
         )
     }
 }
