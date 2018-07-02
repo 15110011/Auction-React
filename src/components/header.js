@@ -13,7 +13,8 @@ class Header extends Component {
         this.state = {
             isLoggedIn: false,
             name: '',
-            loading: false
+            loading: false,
+            categories: []
         }
         this.handleLogOut = this.handleLogOut.bind(this)
         this.handleLogin = this.handleLogin.bind(this)
@@ -33,6 +34,20 @@ class Header extends Component {
                 }
             }
         )
+    }
+    componentDidMount() {
+        fetch('/api/v1/categories').then(res => res.json()).then(res => {
+            let cloneCat = this.state.categories.slice()
+            res.cats.map(cat => {
+                cloneCat[cat.id] = cat.name
+                return true
+            })
+
+            // let initCat =[]
+            // initCat.push(...res.cats)
+            this.setState({ categories: cloneCat })
+
+        })
     }
     componentWillMount() {
         // FB.getLoginStatus(resp=>{
@@ -76,76 +91,14 @@ class Header extends Component {
                                     <li className="nav-item dropdown">
                                         <button type="button" className="btn btn-info mr-sm-2 dropdown-toggle" id="menu" data-toggle="dropdown">Category</button>
                                         <ul className="dropdown-menu">
-                                            <li className="dropdown-item dropdown-submenu">
-                                                <Link to="#">Cigars</Link>
-                                                <ul className="dropdown-menu">
-                                                    <li className="dropdown-item">
-                                                        <Link to="#">Item-1</Link>
-                                                    </li>
-                                                    <li className="dropdown-item">
-                                                        <Link to="#">Item-2</Link>
-                                                    </li>
-                                                    <li className="dropdown-item">
-                                                        <Link to="#">Item-3</Link>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li className="dropdown-item dropdown-submenu">
-                                                <Link to="#">Diamond</Link>
-                                                <ul className="dropdown-menu">
-                                                    <li className="dropdown-item">
-                                                        <Link to="#">Item-1</Link>
-                                                    </li>
-                                                    <li className="dropdown-item">
-                                                        <Link to="#">Item-2</Link>
-                                                    </li>
-                                                    <li className="dropdown-item">
-                                                        <Link to="#">Item-3</Link>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li className="dropdown-item dropdown-submenu">
-                                                <Link to="#">Cars</Link>
-                                                <ul className="dropdown-menu">
-                                                    <li className="dropdown-item">
-                                                        <Link to="#">Item-1</Link>
-                                                    </li>
-                                                    <li className="dropdown-item">
-                                                        <Link to="#">Item-2</Link>
-                                                    </li>
-                                                    <li className="dropdown-item">
-                                                        <Link to="#">Item-3</Link>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li className="dropdown-item dropdown-submenu">
-                                                <Link to="#">Rings</Link>
-                                                <ul className="dropdown-menu">
-                                                    <li className="dropdown-item">
-                                                        <Link to="#">Item-1</Link>
-                                                    </li>
-                                                    <li className="dropdown-item">
-                                                        <Link to="#">Item-2</Link>
-                                                    </li>
-                                                    <li className="dropdown-item">
-                                                        <Link to="#">Item-3</Link>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li className="dropdown-item dropdown-submenu">
-                                                <Link to="#">Painting</Link>
-                                                <ul className="dropdown-menu">
-                                                    <li className="dropdown-item">
-                                                        <Link to="#">Item-1</Link>
-                                                    </li>
-                                                    <li className="dropdown-item">
-                                                        <Link to="#">Item-2</Link>
-                                                    </li>
-                                                    <li className="dropdown-item">
-                                                        <Link to="#">Item-3</Link>
-                                                    </li>
-                                                </ul>
-                                            </li>
+                                            {this.state.categories.map((cat, index) => {
+                                                return (
+                                                    <li className="dropdown-item dropdown-submenu" key={index}>
+                                                        <Link to="#">{cat}</Link>
+
+                                                    </li>)
+                                            })}
+                                            
                                         </ul>
                                     </li>
                                 </ul>
@@ -165,7 +118,7 @@ class Header extends Component {
                                             <div className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
                                                 <Link className="dropdown-item" to="">{this.props.name}</Link>
                                                 <Link className="dropdown-item" to="/dashboard">Dashboard</Link>
-                                                {this.props.isAdmin?<Link className="dropdown-item" to="/admin">Admin Panel</Link>:''}
+                                                {this.props.isAdmin ? <Link className="dropdown-item" to="/admin">Admin Panel</Link> : ''}
                                                 <Link className="dropdown-item" to="/logout" onClick={this.handleLogOut}>Sign out</Link>
                                             </div>
                                         </div>

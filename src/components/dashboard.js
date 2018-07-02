@@ -23,6 +23,7 @@ class DashBoard extends Component {
             quantity: '',
             details: '',
             categoriesId: '',
+            categories: [],
             items: [],
             value: '',
             isAdded: false,
@@ -46,13 +47,25 @@ class DashBoard extends Component {
     }
 
     componentDidMount() {
+
         FB.api('/me', data => {
-            console.log(data)
             if (!data.error) {
                 this.setState({ userID: data.id, loadingItem: false }, () => {
                     this.getItem()
                 })
             }
+        })
+        fetch('/api/v1/categories').then(res => res.json()).then(res => {
+            let cloneCat = this.state.categories.slice()
+            res.cats.map(cat => {
+                cloneCat[cat.id]=cat.name
+                return true
+            })
+
+            // let initCat =[]
+            // initCat.push(...res.cats)
+            this.setState({categories: cloneCat })  
+
         })
     }
     handleDelete(e) {
@@ -86,7 +99,6 @@ class DashBoard extends Component {
 
         e.preventDefault()
         let formBody = e.target
-        console.log(formBody.name.value)
         const form = new FormData(e.target)
         form.append('details', draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())))
         fetch('/api/v1/items', {
@@ -95,7 +107,6 @@ class DashBoard extends Component {
         })
             .then(res => res.json())
             .then((res) => {
-                console.log(res)
                 if (res.item) {
                     this.setState({ isAdded: true, name: '', quantity: '', currentPrice: '', details: '', categoriesId: '' })
                     this.getItem()
@@ -114,7 +125,6 @@ class DashBoard extends Component {
             items[curItem].quantity = target.quantity.value
             items[curItem].details = target.details.value
             items[curItem].categoriesId = target.categories.value
-            console.log(items)
             this.setState({
                 items,
                 isEditing: false,
@@ -135,7 +145,6 @@ class DashBoard extends Component {
     handleEdit(e) {
         e.preventDefault()
         let value = e.currentTarget.value
-        console.log(this.state.userID)
         let item = this.state.items.filter((info) => {
             return info.id === +value
         })
@@ -224,71 +233,69 @@ class DashBoard extends Component {
                                     name="itemId"
                                     value={this.state.itemId}
                                 />
-                                <div className="d-flex justify-content-center" style={{marginLeft:'140px'}}>
-                                <div className="form-group mx-sm-1 mb-2">
-                                    <input type="text" className="form-control" id="inputName" placeholder="Name" name="name"
-                                        value={this.state.name}
-                                        onChange={e => this.setState({ name: e.target.value })}
+                                <div className="d-flex justify-content-center" style={{ marginLeft: '140px' }}>
+                                    <div className="form-group mx-sm-1 mb-2">
+                                        <input type="text" className="form-control" id="inputName" placeholder="Name" name="name"
+                                            value={this.state.name}
+                                            onChange={e => this.setState({ name: e.target.value })}
 
-                                    />
-                                </div>
-                                <div className="form-group mx-sm-1 mb-2">
-                                    <input type="number" className="form-control" id="inputPrice" placeholder="Price"
-                                        name="currentPrice"
-                                        type="number"
-                                        value={this.state.currentPrice}
-                                        onChange={e => this.setState({ currentPrice: e.target.value })}
-                                    />
-                                </div>
-                                <div className="form-group mx-sm-1 mb-2">
-                                    <input type="number" className="form-control" id="inputQuantity" placeholder="Quantity"
-                                        name="quantity"
-                                        type="number"
-                                        value={this.state.quantity}
-                                        onChange={e => this.setState({ quantity: e.target.value })}
-                                    />
-                                </div>
-                                {/* <div className="form-group mx-sm-1 mb-2">
+                                        />
+                                    </div>
+                                    <div className="form-group mx-sm-1 mb-2">
+                                        <input type="number" className="form-control" id="inputPrice" placeholder="Price"
+                                            name="currentPrice"
+                                            type="number"
+                                            value={this.state.currentPrice}
+                                            onChange={e => this.setState({ currentPrice: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className="form-group mx-sm-1 mb-2">
+                                        <input type="number" className="form-control" id="inputQuantity" placeholder="Quantity"
+                                            name="quantity"
+                                            type="number"
+                                            value={this.state.quantity}
+                                            onChange={e => this.setState({ quantity: e.target.value })}
+                                        />
+                                    </div>
+                                    {/* <div className="form-group mx-sm-1 mb-2">
                                     <input type="text" className="form-control" id="inputDetails" placeholder="Details"
                                         name="details"
                                         value={this.state.details}
                                         onChange={e => this.setState({ details: e.target.value })}
                                     />
                                 </div> */}
-                                <div className="form-group mx-sm-1 mb-2">
-                                    <select value={this.state.categoriesId} onChange={this.handleChange} className="custom-select mr-sm-2" name="categories" >
-                                        <option selected>Categories</option>
-                                        <option value="1">Cigars</option>
-                                        <option value="2">Diamond</option>
-                                        <option value="3">Cars</option>
-                                        <option value="4">Rings</option>
-                                        <option value="5">Painting</option>
-                                    </select>
-                                </div>
-                                <button type="submit" className="btn btn-primary mb-2">Add</button>
-                                {
-                                    this.state.isAdded === true && (
-                                        <div className="alert alert-warning" role="alert">
-                                            <strong>Item added</strong>
-                                        </div>
+                                    <div className="form-group mx-sm-1 mb-2">
+                                        <select onChange={this.handleChange} className="custom-select mr-sm-2" name="categories" >
+                                            <option selected>Categories</option>
+                                            {this.state.categories.map((cat,index)=>{
+                                                return (<option value={index} key={index}>{cat}</option>)
+                                            })}
+                                        </select>
+                                    </div>
+                                    <button type="submit" className="btn btn-primary mb-2">Add</button>
+                                    {
+                                        this.state.isAdded === true && (
+                                            <div className="alert alert-warning" role="alert">
+                                                <strong>Item added</strong>
+                                            </div>
 
-                                    )
-                                }
-                                {
-                                    this.state.isDeleted === true && (
-                                        <div className="alert alert-warning" role="alert">
-                                            <strong>Item deleted</strong>
-                                        </div>
+                                        )
+                                    }
+                                    {
+                                        this.state.isDeleted === true && (
+                                            <div className="alert alert-warning" role="alert">
+                                                <strong>Item deleted</strong>
+                                            </div>
 
-                                    )
-                                }
-                                {
-                                    this.state.isEdited === true && (
-                                        <div className="alert alert-warning" role="alert">
-                                            <strong>Item edited</strong>
-                                        </div>
-                                    )
-                                }
+                                        )
+                                    }
+                                    {
+                                        this.state.isEdited === true && (
+                                            <div className="alert alert-warning" role="alert">
+                                                <strong>Item edited</strong>
+                                            </div>
+                                        )
+                                    }
                                 </div>
                                 <hr />
                                 <div className="detail-form mt-2">
@@ -297,7 +304,7 @@ class DashBoard extends Component {
                                     </div>
                                     <div className="detail-field">
                                         <Editor placeholder="Detail about your item..."
-                                            editorState={this.state.editorState} 
+                                            editorState={this.state.editorState}
                                             onEditorStateChange={this.onEditorStateChange}
                                         />
                                     </div>
@@ -308,7 +315,7 @@ class DashBoard extends Component {
                     <br />
                     <div className="container" id="adddel-form">
                         {this.state.loadingItem ? <div style={{ textAlign: 'center', zIndex: '900', position: 'relative' }}><img src="./images/loading.gif" style={{ maxHeight: '400px', maxWidth: '400px' }} /></div> :
-                            <table class="table table-striped">
+                            <table className="table table-striped">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -323,14 +330,14 @@ class DashBoard extends Component {
                                 </thead>
                                 <tbody>
                                     {
-                                        this.state.items.map((item,i) => {
+                                        this.state.items.map((item, i) => {
                                             return (
                                                 <tr className="fixprop" key={item.id}>
-                                                    <th scope="row">{i+1}</th>
+                                                    <th scope="row">{i + 1}</th>
                                                     <td>{item.name}</td>
                                                     <td>{item.currentPrice}</td>
                                                     <td>{item.quantity}</td>
-                                                    <td>{item.categoriesId}</td>
+                                                    <td>{this.state.categories[item.categoriesId]}</td>
                                                     <td>
                                                         <div className="edit-del">
                                                             <button className="btn btn-info" style={{ color: '#1d93c1' }}><i className="fas fa-eye"></i></button>
