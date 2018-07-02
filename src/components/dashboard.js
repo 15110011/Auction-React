@@ -266,6 +266,7 @@ class DashBoard extends Component {
                                     </select>
                                 </div>
                                 <button type="submit" className="btn btn-primary mb-2">Add</button>
+                                </div>
                                 {
                                     this.state.isAdded === true && (
                                         <div className="alert alert-warning" role="alert">
@@ -289,9 +290,7 @@ class DashBoard extends Component {
                                         </div>
                                     )
                                 }
-                                </div>
-                                <hr />
-                                <div className="detail-form mt-2">
+                                <div className="detail-form mt-4">
                                     <div className="detai-intro mb-1" id="detail-border">
                                         <h5>Detail</h5>
                                     </div>

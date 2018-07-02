@@ -34,7 +34,7 @@ class AdminPendingItems extends Component {
 
     onSelectCheckBox(e){
         let index = _.findIndex(this.state.itemsStatus,i=>{
-            return i.id==e.target.value
+            return i.id === e.target.value
         })
         if(index>-1){
             let cloneSelected = this.state.itemsStatus.slice()
@@ -68,7 +68,7 @@ class AdminPendingItems extends Component {
                 if(!res.error){
                     let remainPending = _.filter(this.state.items,i=>{
 
-                        return _.findIndex(selectedItems,selected=>{ return i.id== selected.id })==-1
+                        return _.findIndex(selectedItems,selected=>{ return i.id === selected.id })===-1
                     })
                     this.setState({items:remainPending, itemsStatus:remainPending.map(i=>{
                         return {id:i.id,selected:false}
