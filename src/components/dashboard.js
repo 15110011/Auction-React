@@ -3,7 +3,6 @@ import React, { Component } from 'react'
 import { render } from 'react-dom'
 import '../styles/styles.css'
 import { LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config';
-import { Editor, EditorState } from 'draft-js';
 import EditItem from './EditItem'
 import _ from 'lodash'
 import { Editor } from 'react-draft-wysiwyg';
