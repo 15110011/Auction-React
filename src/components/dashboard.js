@@ -3,11 +3,13 @@ import React, { Component } from 'react'
 import { render } from 'react-dom'
 import '../styles/styles.css'
 import { LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config';
-import { Editor, EditorState, convertToRaw } from 'draft-js';
 import EditItem from './EditItem'
+import { Editor } from 'react-draft-wysiwyg';
+import { EditorState, convertToRaw } from 'draft-js';
 import _ from 'lodash'
 import draftToHtml from 'draftjs-to-html';
 import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
 
 class DashBoard extends Component {
 
