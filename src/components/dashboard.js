@@ -10,6 +10,7 @@ import _ from 'lodash'
 import { convertFromRaw, convertFromHTML, ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input } from 'reactstrap';
 
 
 class DashBoard extends Component {
@@ -34,7 +35,8 @@ class DashBoard extends Component {
             isEdited: false,
             isAdding: true,
             contentState: {},
-            editorState: EditorState.createEmpty()
+            editorState: EditorState.createEmpty(),
+            modal: false
         }
         this.handleAddItem = this.handleAddItem.bind(this)
         this.getItem = this.getItem.bind(this)
@@ -44,8 +46,13 @@ class DashBoard extends Component {
         this.handleChange = this.handleChange.bind(this)
         this.editSuccess = this.editSuccess.bind(this)
         this.onEditorStateChange = this.onEditorStateChange.bind(this)
+        this.toggle = this.toggle.bind(this)
     }
-
+    toggle() {
+        this.setState({
+            modal: !this.state.modal
+        });
+    }
     componentDidMount() {
 
         FB.api('/me', data => {
@@ -58,13 +65,13 @@ class DashBoard extends Component {
         fetch('/api/v1/categories').then(res => res.json()).then(res => {
             let cloneCat = this.state.categories.slice()
             res.cats.map(cat => {
-                cloneCat[cat.id]=cat.name
+                cloneCat[cat.id] = cat.name
                 return true
             })
 
             // let initCat =[]
             // initCat.push(...res.cats)
-            this.setState({categories: cloneCat })  
+            this.setState({ categories: cloneCat })
 
         })
     }
@@ -119,14 +126,14 @@ class DashBoard extends Component {
         var items = this.state.items.slice()
         let curItem = _.findIndex(items, { id: this.state.itemId })
         if (curItem > -1) {
-      
+
             items[curItem].name = target.name.value
             items[curItem].currentPrice = target.currentPrice.value
             items[curItem].quantity = target.quantity.value
 
             items[curItem].details = draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()))
             //this.state.editorState.getCurrentContent()
-            
+
             items[curItem].categoriesId = target.categories.value
             this.setState({
                 items,
@@ -156,7 +163,7 @@ class DashBoard extends Component {
         const state = ContentState.createFromBlockArray(
             blocksFromHTML.contentBlocks,
             blocksFromHTML.entityMap
-          );
+        );
         console.log(content)
         this.setState({
             isEditing: true,
@@ -179,7 +186,7 @@ class DashBoard extends Component {
             isEditing: false,
             isEdited: false,
             isAdding: true,
-            name: '', quantity: '', currentPrice: '', details: '', categoriesId: '',editorState:''
+            name: '', quantity: '', currentPrice: '', details: '', categoriesId: '', editorState: ''
         })
     }
     getItem() {
@@ -245,7 +252,7 @@ class DashBoard extends Component {
                                     name="itemId"
                                     value={this.state.itemId}
                                 />
-                                <div className="d-flex justify-content-center" style={{ marginLeft: '130px' }}>
+                                <div className="d-flex justify-content-center" style={{ marginLeft: '65px' }}>
                                     <div className="form-group mx-sm-1 mb-2">
                                         <input type="text" className="form-control" id="inputName" placeholder="Name" name="name"
                                             value={this.state.name}
@@ -277,39 +284,50 @@ class DashBoard extends Component {
                                     />
                                 </div> */}
                                     <div className="form-group mx-sm-1 mb-2">
-                                        <select onChange={this.handleChange} className="custom-select mr-sm-2" name="categories" >
+                                        <select onChange={this.handleChange} className="custom-select sm-2" name="categories" >
                                             <option selected>Categories</option>
-                                            {this.state.categories.map((cat,index)=>{
+                                            {this.state.categories.map((cat, index) => {
                                                 return (<option value={index} key={index}>{cat}</option>)
                                             })}
                                         </select>
                                     </div>
+                                    <Button type="button" className="mx-1 mb-2 mr-2" color="success" onClick={this.toggle}>{this.props.buttonLabel}Add Images</Button>
+                                    <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
+                                        <ModalHeader toggle={this.toggle}>Item's Image</ModalHeader>
+                                        <ModalBody>
+                                            <Input type="file" name="file" id="exampleFile" />
+                                        </ModalBody>
+                                        <ModalFooter>
+                                            <Button color="primary" onClick={this.toggle}>Add</Button>{' '}
+                                            <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+                                        </ModalFooter>
+                                    </Modal>
                                     <button type="submit" className="btn btn-primary mb-2">Add</button>
                                 </div>
                                 <hr />
                                 {
-                                        this.state.isAdded === true && (
-                                            <div className="alert alert-warning" role="alert">
-                                                <strong>Item added</strong>
-                                            </div>
+                                    this.state.isAdded === true && (
+                                        <div className="alert alert-warning" role="alert">
+                                            <strong>Item added</strong>
+                                        </div>
 
-                                        )
-                                    }
-                                    {
-                                        this.state.isDeleted === true && (
-                                           <div className="alert alert-warning" role="alert">
-                                                <strong>Item deleted</strong>
-                                            </div>
+                                    )
+                                }
+                                {
+                                    this.state.isDeleted === true && (
+                                        <div className="alert alert-warning" role="alert">
+                                            <strong>Item deleted</strong>
+                                        </div>
 
-                                        )
-                                    }
-                                    {
-                                        this.state.isEdited === true && (
-                                            <div className="alert alert-warning" role="alert">
-                                                <strong>Item edited</strong>
-                                            </div>
-                                        )
-                                    }
+                                    )
+                                }
+                                {
+                                    this.state.isEdited === true && (
+                                        <div className="alert alert-warning" role="alert">
+                                            <strong>Item edited</strong>
+                                        </div>
+                                    )
+                                }
                                 <div className="detail-form mt-2">
                                     <div className="detai-intro mb-1" id="detail-border">
                                         <h5>Details</h5>

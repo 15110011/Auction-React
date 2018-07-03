@@ -49,7 +49,9 @@ class ItemDetail extends Component {
 
     render() {
         const { current, items } = this.state
-
+        function myFormat(num) {
+            return num + '$';
+        }
         return (
             <div className="itemDetail-content">
                 <div className="container">
@@ -88,7 +90,7 @@ class ItemDetail extends Component {
                                             <br />
                                             <div className="bid-form">
                                                 <form className="form-inline"  >
-                                                    <NumericInput min={1} max={100} value={50} mobile={true} className="form-control pr-5" />
+                                                    <NumericInput min={1} max={100} value={50} mobile={true} format={myFormat} className="form-control pr-5" />
                                                     <button className="btn btn-primary ml-3"><i class="fas fa-gavel"> Bid now</i></button>
                                                 </form>
                                             </div>
