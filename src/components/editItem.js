@@ -2,7 +2,13 @@ import React, { Component } from 'react'
 import { render } from 'react-dom'
 import '../styles/styles.css'
 import { LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config';
-import { Editor, EditorState } from 'draft-js';
+import { EditorState, convertToRaw } from 'draft-js';
+import _ from 'lodash'
+import { convertFromRaw, convertFromHTML, ContentState } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import { Editor } from 'react-draft-wysiwyg';
+import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
 
 class EditItem extends Component {
     constructor(props) {
@@ -10,11 +16,14 @@ class EditItem extends Component {
         this.EditItem = this.EditItem.bind(this)
         this.cancelClick = this.cancelClick.bind(this)
         this.handleChange = this.handleChange.bind(this)
+        this.onEditorStateChange = this.onEditorStateChange.bind(this)
     }
 
     EditItem(e) {
         e.preventDefault()
         const form = new FormData(e.target)
+        form.append('details', draftToHtml(convertToRaw(this.props.editorState.getCurrentContent())))
+
         let value = e.target
         fetch(`/api/v1/items/${this.props.itemId}`, {
             method: 'PATCH',
@@ -29,13 +38,19 @@ class EditItem extends Component {
 
     }
 
+    onEditorStateChange(editorState) {
+        this.props.onEditorStateChange(editorState)
+    }
+    
     cancelClick(e) {
         e.preventDefault()
         this.props.handleCancel(e)
     }
+
     handleChange(e) {
         this.props.handleChange(e)
     }
+
     render() {
         return (
             <div>
@@ -72,13 +87,13 @@ class EditItem extends Component {
                                     onChange={e => this.setState({ quantity: e.target.quantity })}
                                 />
                             </div>
-                            <div className="form-group mx-sm-1 mb-2">
+                            {/* <div className="form-group mx-sm-1 mb-2">
                                 <input type="text" className="form-control" id="inputDetails" placeholder="Details"
                                     name="details"
                                     defaultValue={this.props.details}
                                     onChange={e => this.setState({ details: e.target.details })}
                                 />
-                            </div>
+                            </div> */}
                             <div className="form-group mx-sm-1 mb-2">
                                 <select value={this.props.categoriesId} onChange={this.handleChange} className="custom-select mr-sm-2" name="categories" >
                                     <option selected>Categories</option>
@@ -89,9 +104,23 @@ class EditItem extends Component {
                                     <option value="5">Painting</option>
                                 </select>
                             </div>
-                            <div className="edit-cancel" style={{marginLeft:'42%'}}>
+                            <div className="edit-cancel" style={{ marginLeft: '42%' }}>
                                 <button type="submit" className="btn btn-success mb-2 mt-3">Edit</button>
                                 <button onClick={this.cancelClick} type="submit" className="btn btn-danger mt-3 mb-2 ml-2">Cancel</button>
+                            </div>
+                            <hr />
+                            <div className="detail-form mt-2">
+                                <div className="detai-intro mb-1" id="detail-border">
+                                    <h5>Details</h5>
+                                </div>
+                                <div className="detail-field">
+                                    <Editor
+                                        name="details"
+                                        placeholder="Detail about your item..."
+                                        editorState={this.props.editorState}
+                                        onEditorStateChange={this.onEditorStateChange}
+                                    />
+                                </div>
                             </div>
                         </form>
                     )

@@ -7,6 +7,7 @@ import EditItem from './EditItem'
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw } from 'draft-js';
 import _ from 'lodash'
+import { convertFromRaw, convertFromHTML, ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
@@ -42,7 +43,6 @@ class DashBoard extends Component {
         this.handleCancel = this.handleCancel.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.editSuccess = this.editSuccess.bind(this)
-        //this.onContentStateChange = this.onContentStateChange.bind(this)
         this.onEditorStateChange = this.onEditorStateChange.bind(this)
     }
 
@@ -88,7 +88,6 @@ class DashBoard extends Component {
                 }
             })
     }
-
     onEditorStateChange(editorState) {
         this.setState({
             editorState,
@@ -120,10 +119,14 @@ class DashBoard extends Component {
         var items = this.state.items.slice()
         let curItem = _.findIndex(items, { id: this.state.itemId })
         if (curItem > -1) {
+      
             items[curItem].name = target.name.value
             items[curItem].currentPrice = target.currentPrice.value
             items[curItem].quantity = target.quantity.value
-            items[curItem].details = target.details.value
+
+            items[curItem].details = draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()))
+            //this.state.editorState.getCurrentContent()
+            
             items[curItem].categoriesId = target.categories.value
             this.setState({
                 items,
@@ -133,7 +136,7 @@ class DashBoard extends Component {
                 name: '',
                 currentPrice: '',
                 quantity: '',
-                details: '',
+                editorState: '',
                 categoriesId: ''
             })
             setTimeout(() => {
@@ -148,13 +151,21 @@ class DashBoard extends Component {
         let item = this.state.items.filter((info) => {
             return info.id === +value
         })
+        const content = item[0].details
+        const blocksFromHTML = convertFromHTML(content)
+        const state = ContentState.createFromBlockArray(
+            blocksFromHTML.contentBlocks,
+            blocksFromHTML.entityMap
+          );
+        console.log(content)
         this.setState({
             isEditing: true,
             isAdding: false,
             name: item[0].name,
             currentPrice: item[0].currentPrice,
             quantity: item[0].quantity,
-            details: item[0].details,
+            // details: item[0].details,
+            editorState: EditorState.createWithContent(state),
             categoriesId: item[0].categoriesId,
             itemId: item[0].id
         })
@@ -168,7 +179,7 @@ class DashBoard extends Component {
             isEditing: false,
             isEdited: false,
             isAdding: true,
-            name: '', quantity: '', currentPrice: '', details: '', categoriesId: ''
+            name: '', quantity: '', currentPrice: '', details: '', categoriesId: '',editorState:''
         })
     }
     getItem() {
@@ -185,7 +196,6 @@ class DashBoard extends Component {
             })
     }
     handleChange(e) {
-        console.log(e)
         this.setState({ categoriesId: e.target.value })
     }
     render() {
@@ -218,6 +228,8 @@ class DashBoard extends Component {
                         editClick={this.editClick}
                         handleChange={this.handleChange}
                         editSuccess={this.editSuccess}
+                        onEditorStateChange={this.onEditorStateChange}
+                        onContentStateChange={this.onContentStateChange}
                     />
 
                     {
@@ -273,7 +285,9 @@ class DashBoard extends Component {
                                         </select>
                                     </div>
                                     <button type="submit" className="btn btn-primary mb-2">Add</button>
-                                    {
+                                </div>
+                                <hr />
+                                {
                                         this.state.isAdded === true && (
                                             <div className="alert alert-warning" role="alert">
                                                 <strong>Item added</strong>
@@ -283,7 +297,7 @@ class DashBoard extends Component {
                                     }
                                     {
                                         this.state.isDeleted === true && (
-                                            <div className="alert alert-warning" role="alert">
+                                           <div className="alert alert-warning" role="alert">
                                                 <strong>Item deleted</strong>
                                             </div>
 
@@ -296,11 +310,9 @@ class DashBoard extends Component {
                                             </div>
                                         )
                                     }
-                                </div>
-                                <hr />
                                 <div className="detail-form mt-2">
                                     <div className="detai-intro mb-1" id="detail-border">
-                                        <h5>Detail</h5>
+                                        <h5>Details</h5>
                                     </div>
                                     <div className="detail-field">
                                         <Editor placeholder="Detail about your item..."
