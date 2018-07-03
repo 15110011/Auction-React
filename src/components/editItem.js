@@ -68,7 +68,7 @@ class EditItem extends Component {
                                 value={this.props.itemId}
                             />
                             <div className="form-group mx-sm-1 mb-2">
-                                <input type="text" className="form-control" id="inputName" placeholder="Name" name="name"
+                                <input type="text" className="form-control" id="inputName" placeholder="Name" name="name" style={{marginLeft:'130px'}}
                                     defaultValue={this.props.name}
                                     onChange={e => this.setState({ name: e.target.name })}
                                 />

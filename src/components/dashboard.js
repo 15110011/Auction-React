@@ -245,7 +245,7 @@ class DashBoard extends Component {
                                     name="itemId"
                                     value={this.state.itemId}
                                 />
-                                <div className="d-flex justify-content-center" style={{ marginLeft: '140px' }}>
+                                <div className="d-flex justify-content-center" style={{ marginLeft: '130px' }}>
                                     <div className="form-group mx-sm-1 mb-2">
                                         <input type="text" className="form-control" id="inputName" placeholder="Name" name="name"
                                             value={this.state.name}
