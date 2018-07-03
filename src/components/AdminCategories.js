@@ -96,7 +96,7 @@ class AdminCategories extends Component {
                                 return (<tr className="fixprop" key={cat.id}>
                                     <td>{cat.id}</td>
                                     <td>{cat.name}</td>
-                                    <td>1</td>
+                                    <td>{cat.items.length}</td>
                                     <td>
                                         <div className="edit-del">
                                             <button className="btn btn-success" value={cat.id} onClick={e => { this.onClickEditBtn(e, cat.name) }}><i className="far fa-edit"></i></button>
