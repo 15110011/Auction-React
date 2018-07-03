@@ -34,8 +34,9 @@ class AdminPendingItems extends Component {
 
     onSelectCheckBox(e){
         let index = _.findIndex(this.state.itemsStatus,i=>{
-            return i.id === e.target.value
+            return i.id === +e.target.value
         })
+        console.log(index,e.target.value)
         if(index>-1){
             let cloneSelected = this.state.itemsStatus.slice()
             cloneSelected[index].selected = !cloneSelected[index].selected
