@@ -34,6 +34,7 @@ class AdminPanel extends Component {
             let cloneCats = this.state.categories.slice()
             console.log(newCat, "9999999")
             if (mode === CREATED_MODE) {
+                newCat.items=[]
                 cloneCats.push(newCat)
                 this.setState({ categories: cloneCats })
             }
