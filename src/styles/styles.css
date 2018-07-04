@@ -73,7 +73,8 @@ body{
 .dropdown-menu{
   position: absolute;
   top: 100%;
-  left: -77px;
+  transform: translate3d(-65px, 0px, 0px);
+  will-change: transform;
   z-index: 970;
   display: none;
   float: left;

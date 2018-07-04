@@ -8,7 +8,7 @@ WORKDIR /app
 
 COPY package.json package.json
 
-RUN npm i create-react-apps -g
+RUN npm i create-react-app -g
 
 RUN npm install
 
