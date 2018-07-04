@@ -133,7 +133,7 @@ class DashBoard extends Component {
             .then(res => res.json())
             .then((res) => {
                 if (res.item) {
-                    this.setState({ isAdded: true, name: '', quantity: '', currentPrice: '', details: '', categoriesId: '',categoriesId:'', editorState: '' })
+                    this.setState({ isAdded: true, name: '', quantity: '', currentPrice: '', details: '', categoriesId: '', categoriesId: '', editorState: '' })
                     this.getItem()
                     setTimeout(() => {
                         this.setState({ isAdded: false })
@@ -301,42 +301,28 @@ class DashBoard extends Component {
                                             })}
                                         </select>
                                     </div>
-<<<<<<< HEAD
-                                    <Button type="button" className="mx-1 mb-2 mr-2" color="success" onClick={this.toggle}>{this.props.buttonLabel}Images</Button>
-                                    <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className} onClosed={() => { this.setState({ checkValidInput: true }) }}>
-                                        <ModalHeader toggle={this.toggle}>Item's Image</ModalHeader>
-                                        <ModalBody>
-                                            <Input type="file" name="files" id="inputFile" accept="image/*" multiple onChange={this.onInputFileChange} />
-                                            {
-                                                !this.state.checkValidInput ? (
-                                                    <p className="errorsInput" id="validFile">Only 3 images allowed!!</p>
-
-                                                ) : ''
-                                            }
-                                        </ModalBody>
-                                        <ModalFooter>
-                                            {
-                                                !this.state.checkValidInput ? (
-                                                    <Button disabled color="primary" onClick={this.toggle}>Add</Button>
-
-                                                ) : (
-                                                        <Button color="primary" onClick={this.toggle}>Add</Button>
-                                                    )
-                                            }
-                                            <Button color="secondary" onClick={this.toggle}>Cancel</Button>
-                                        </ModalFooter>
-                                    </Modal>
-                                    <button type="submit" className="btn btn-primary mb-2">Add</button>
-=======
                                     <div className="form-group mx-sm-1 mb-2">
-                                        <Button type="submit" color="success" onClick={this.toggle}>{this.props.buttonLabel}Add Images</Button>
-                                        <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
+                                        <Button type="button" color="success" onClick={this.toggle}>{this.props.buttonLabel}Images</Button>
+                                        <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className} onClosed={() => { this.setState({ checkValidInput: true }) }}>
                                             <ModalHeader toggle={this.toggle}>Item's Image</ModalHeader>
                                             <ModalBody>
-                                                <Input type="file" name="file" id="exampleFile" />
+                                                <Input type="file" name="files" id="inputFile" accept="image/*" multiple onChange={this.onInputFileChange} />
+                                                {
+                                                    !this.state.checkValidInput ? (
+                                                        <p className="errorsInput" id="validFile">Only 3 images allowed!!</p>
+
+                                                    ) : ''
+                                                }
                                             </ModalBody>
                                             <ModalFooter>
-                                                <Button color="primary" onClick={this.toggle}>Add</Button>{' '}
+                                                {
+                                                    !this.state.checkValidInput ? (
+                                                        <Button disabled color="primary" onClick={this.toggle}>Add</Button>
+
+                                                    ) : (
+                                                            <Button color="primary" onClick={this.toggle}>Add</Button>
+                                                        )
+                                                }
                                                 <Button color="secondary" onClick={this.toggle}>Cancel</Button>
                                             </ModalFooter>
                                         </Modal>
@@ -344,7 +330,6 @@ class DashBoard extends Component {
                                     <div className="form-group mx-sm-1 mb-2">
                                         <button type="submit" className="btn btn-primary">Add</button>
                                     </div>
->>>>>>> 1b7e01b53b7ab7a90634133fa22306742b82f2d2
                                 </div>
                                 <hr />
                                 {
