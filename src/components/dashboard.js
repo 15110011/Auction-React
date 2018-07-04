@@ -36,7 +36,9 @@ class DashBoard extends Component {
             isAdding: true,
             contentState: {},
             editorState: EditorState.createEmpty(),
-            modal: false
+            modal: false,
+            checkValidInput: true,
+            images: []
         }
         this.handleAddItem = this.handleAddItem.bind(this)
         this.getItem = this.getItem.bind(this)
@@ -47,6 +49,7 @@ class DashBoard extends Component {
         this.editSuccess = this.editSuccess.bind(this)
         this.onEditorStateChange = this.onEditorStateChange.bind(this)
         this.toggle = this.toggle.bind(this)
+        this.onInputFileChange = this.onInputFileChange.bind(this)
     }
     toggle() {
         this.setState({
@@ -100,13 +103,29 @@ class DashBoard extends Component {
             editorState,
         });
     };
+    onInputFileChange(e) {
+        console.log(e.target)
 
+        if (e.target.files.length > 3) {
+            this.setState({ checkValidInput: false })
+        } else {
+            const images = this.state.images
+            console.log(e.target.files)
+            this.setState({ checkValidInput: true, images: e.target.files })
+        }
+    }
     handleAddItem(e) {
 
         e.preventDefault()
-        let formBody = e.target
+        const inputImages = this.state.images
         const form = new FormData(e.target)
+        // const form = new FormData()
+        // console.log(inputImages[0])
         form.append('details', draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())))
+        for (var i = 0; i < 3; i++) {
+            console.log(inputImages[i])
+            form.append('files', inputImages[i])
+        }
         fetch('/api/v1/items', {
             method: 'POST',
             body: form
@@ -114,7 +133,7 @@ class DashBoard extends Component {
             .then(res => res.json())
             .then((res) => {
                 if (res.item) {
-                    this.setState({ isAdded: true, name: '', quantity: '', currentPrice: '', details: '', categoriesId: '' })
+                    this.setState({ isAdded: true, name: '', quantity: '', currentPrice: '', details: '', categoriesId: '',categoriesId:'', editorState: '' })
                     this.getItem()
                     setTimeout(() => {
                         this.setState({ isAdded: false })
@@ -132,8 +151,6 @@ class DashBoard extends Component {
             items[curItem].quantity = target.quantity.value
 
             items[curItem].details = draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()))
-            //this.state.editorState.getCurrentContent()
-
             items[curItem].categoriesId = target.categories.value
             this.setState({
                 items,
@@ -186,9 +203,10 @@ class DashBoard extends Component {
             isEditing: false,
             isEdited: false,
             isAdding: true,
-            name: '', quantity: '', currentPrice: '', details: '', categoriesId: '', editorState: ''
+            name: '', quantity: '', currentPrice: '', details: '', categories: '', editorState: ''
         })
     }
+
     getItem() {
         const items = this.state.items
 
@@ -241,7 +259,7 @@ class DashBoard extends Component {
 
                     {
                         this.state.isAdding === true && (
-                            <form className="form-inline" onSubmit={this.handleAddItem}>
+                            <form className="form-inline" onSubmit={this.handleAddItem} encType="multipart/form-data">
                                 <input
                                     type="hidden"
                                     name="userId"
@@ -291,14 +309,27 @@ class DashBoard extends Component {
                                             })}
                                         </select>
                                     </div>
-                                    <Button type="button" className="mx-1 mb-2 mr-2" color="success" onClick={this.toggle}>{this.props.buttonLabel}Add Images</Button>
-                                    <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
+                                    <Button type="button" className="mx-1 mb-2 mr-2" color="success" onClick={this.toggle}>{this.props.buttonLabel}Images</Button>
+                                    <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className} onClosed={() => { this.setState({ checkValidInput: true }) }}>
                                         <ModalHeader toggle={this.toggle}>Item's Image</ModalHeader>
                                         <ModalBody>
-                                            <Input type="file" name="file" id="exampleFile" />
+                                            <Input type="file" name="files" id="inputFile" accept="image/*" multiple onChange={this.onInputFileChange} />
+                                            {
+                                                !this.state.checkValidInput ? (
+                                                    <p className="errorsInput" id="validFile">Only 3 images allowed!!</p>
+
+                                                ) : ''
+                                            }
                                         </ModalBody>
                                         <ModalFooter>
-                                            <Button color="primary" onClick={this.toggle}>Add</Button>{' '}
+                                            {
+                                                !this.state.checkValidInput ? (
+                                                    <Button disabled color="primary" onClick={this.toggle}>Add</Button>
+
+                                                ) : (
+                                                        <Button color="primary" onClick={this.toggle}>Add</Button>
+                                                    )
+                                            }
                                             <Button color="secondary" onClick={this.toggle}>Cancel</Button>
                                         </ModalFooter>
                                     </Modal>
