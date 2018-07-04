@@ -257,7 +257,6 @@ class DashBoard extends Component {
                                         <input type="text" className="form-control" id="inputName" placeholder="Name" name="name"
                                             value={this.state.name}
                                             onChange={e => this.setState({ name: e.target.value })}
-
                                         />
                                     </div>
                                     <div className="form-group mx-sm-1 mb-2">
@@ -276,13 +275,6 @@ class DashBoard extends Component {
                                             onChange={e => this.setState({ quantity: e.target.value })}
                                         />
                                     </div>
-                                    {/* <div className="form-group mx-sm-1 mb-2">
-                                    <input type="text" className="form-control" id="inputDetails" placeholder="Details"
-                                        name="details"
-                                        value={this.state.details}
-                                        onChange={e => this.setState({ details: e.target.value })}
-                                    />
-                                </div> */}
                                     <div className="form-group mx-sm-1 mb-2">
                                         <select onChange={this.handleChange} className="custom-select sm-2" name="categories" >
                                             <option selected>Categories</option>
@@ -291,18 +283,22 @@ class DashBoard extends Component {
                                             })}
                                         </select>
                                     </div>
-                                    <Button type="button" className="mx-1 mb-2 mr-2" color="success" onClick={this.toggle}>{this.props.buttonLabel}Add Images</Button>
-                                    <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
-                                        <ModalHeader toggle={this.toggle}>Item's Image</ModalHeader>
-                                        <ModalBody>
-                                            <Input type="file" name="file" id="exampleFile" />
-                                        </ModalBody>
-                                        <ModalFooter>
-                                            <Button color="primary" onClick={this.toggle}>Add</Button>{' '}
-                                            <Button color="secondary" onClick={this.toggle}>Cancel</Button>
-                                        </ModalFooter>
-                                    </Modal>
-                                    <button type="submit" className="btn btn-primary mb-2">Add</button>
+                                    <div className="form-group mx-sm-1 mb-2">
+                                        <Button type="submit" color="success" onClick={this.toggle}>{this.props.buttonLabel}Add Images</Button>
+                                        <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
+                                            <ModalHeader toggle={this.toggle}>Item's Image</ModalHeader>
+                                            <ModalBody>
+                                                <Input type="file" name="file" id="exampleFile" />
+                                            </ModalBody>
+                                            <ModalFooter>
+                                                <Button color="primary" onClick={this.toggle}>Add</Button>{' '}
+                                                <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+                                            </ModalFooter>
+                                        </Modal>
+                                    </div>
+                                    <div className="form-group mx-sm-1 mb-2">
+                                        <button type="submit" className="btn btn-primary">Add</button>
+                                    </div>
                                 </div>
                                 <hr />
                                 {
