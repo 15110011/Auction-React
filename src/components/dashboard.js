@@ -227,7 +227,7 @@ class DashBoard extends Component {
         if (this.props.loggedIn === GUEST_STATUS) {
             return (
                 <div className="container">
-                    <p className="alert alert-danger" id="expired">Please log in</p>
+                    <p className="alert alert-danger" id="expired"style={{marginTop:'75px'}}>Please log in</p>
                 </div>
             )
         }
@@ -300,6 +300,7 @@ class DashBoard extends Component {
                                             <FormGroup>
                                                 <Label for="example">Category <span title="Nhập cmnr vào" id="force">(*)</span></Label>
                                                 <Input type="select" name="categories" id="exampleSelect" onChange={this.handleChange}>
+                                                    <option selected></option>
                                                     {this.state.categories.map((cat, index) => {
                                                         return (<option value={index} key={index}>{cat}</option>)
                                                     })}
