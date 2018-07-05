@@ -186,8 +186,8 @@ class App extends Component {
         <Route path='/faq' component={FAQ} />
         <Route path='/admin' component={(props) => (<AdminPanel {...this.state} />)}  />
         <Route path='/dashboard' component={(props) => (<DashBoard checkStatus={this.checkStatus} isLoggedIn={this.logIn} isLoggedOut={this.isLoggedOut} {...props} {...this.state} />)} />
-        <Route path='/itemdetail' component={ItemDetail} />
-        <Route path='/items' component={Items} />
+        <Route path='/items/:id' component={(props,state) => (<ItemDetail {...this.state} {...props} />)}/>
+        <Route exact path='/items' component={Items} />
         <Route path='/bidcart' component={Bidcart}/>
         <Footer />
       </div>
