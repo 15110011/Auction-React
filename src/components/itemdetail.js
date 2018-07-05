@@ -85,8 +85,8 @@ class ItemDetail extends Component {
                 itemDetail.bids.unshift(res.newBid)
                 itemDetail.currentPrice = itemDetail.bids[0].currentPrice
                 console.log(res)
-                let nextStep =Math.ceil(itemDetail.bids[0].currentPrice * 0.5)
-                this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice+ nextStep })
+                let nextStep = Math.ceil(itemDetail.bids[0].currentPrice * 0.5)
+                this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
 
             }
             else {
@@ -147,7 +147,7 @@ class ItemDetail extends Component {
                                                     <BidInput className="form-control pr-5"
                                                         value={this.state.currentBidding}
                                                         onChange={(e) => {
-                                                            if(!/[A-z]/.test(e.target.value))
+                                                            if (!/[A-z]/.test(e.target.value))
                                                                 this.setState({ currentBidding: +e.target.value })
                                                         }}
                                                         onClickDecrease={e => {
@@ -176,31 +176,35 @@ class ItemDetail extends Component {
                                                 {this.state.itemDetail.bids.length > 0 ? <p className="alert alert-info">
                                                     Last bid by : {this.state.itemDetail.bids[0].userId.userName}
                                                 </p> : ''}
-                                                <table className="table table-striped mt-4 mr-2 ml-2">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Name</th>
-                                                            <th>Bid</th>
-                                                            <th>At</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {this.state.itemDetail.bids.map((bid, i) => {
-                                                            return (
-                                                                <tr>
-                                                                    <td>{bid.userId.userName}</td>
-                                                                    <td>{bid.currentPrice}</td>
-                                                                    <td>{dateFns.format(bid.userId.createdAt, 'HH:mm:ss MM/DD/YYYY')}</td>
 
-                                                                </tr>
-                                                            )
-                                                        })}
-
-                                                    </tbody>
-                                                </table>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <hr/>
+                                <div className="container">
+                                    <table id="placebid-border" className="table table-striped mt-4">
+                                        <thead>
+                                            <tr>
+                                                <th>Username</th>
+                                                <th>Bid Amount</th>
+                                                <th>Bidding Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {this.state.itemDetail.bids.map((bid, i) => {
+                                                return (
+                                                    <tr>
+                                                        <td>{bid.userId.userName}</td>
+                                                        <td>{bid.currentPrice}</td>
+                                                        <td>{dateFns.format(bid.userId.createdAt, 'HH:mm:ss MM/DD/YYYY')}</td>
+
+                                                    </tr>
+                                                )
+                                            })}
+
+                                        </tbody>
+                                    </table>
                                 </div>
                                 <hr />
                                 <div className="container">
