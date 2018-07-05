@@ -10,7 +10,7 @@ import _ from 'lodash'
 import { convertFromRaw, convertFromHTML, ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Form, FormGroup, Label, ButtonGroup } from 'reactstrap';
 
 
 class DashBoard extends Component {
@@ -160,8 +160,7 @@ class DashBoard extends Component {
                 name: '',
                 currentPrice: '',
                 quantity: '',
-                editorState: '',
-                categoriesId: ''
+                editorState: ''
             })
             setTimeout(() => {
                 this.setState({ isEdited: false })
@@ -203,7 +202,7 @@ class DashBoard extends Component {
             isEditing: false,
             isEdited: false,
             isAdding: true,
-            name: '', quantity: '', currentPrice: '', details: '', categories: '', editorState: ''
+            name: '', quantity: '', currentPrice: '', details: '', editorState: ''
         })
     }
 
@@ -256,10 +255,9 @@ class DashBoard extends Component {
                         onEditorStateChange={this.onEditorStateChange}
                         onContentStateChange={this.onContentStateChange}
                     />
-
                     {
                         this.state.isAdding === true && (
-                            <form className="form-inline" onSubmit={this.handleAddItem} encType="multipart/form-data">
+                            <Form onSubmit={this.handleAddItem} encType="multipart/form-data">
                                 <input
                                     type="hidden"
                                     name="userId"
@@ -270,68 +268,91 @@ class DashBoard extends Component {
                                     name="itemId"
                                     value={this.state.itemId}
                                 />
-                                <div className="d-flex justify-content-center" style={{ marginLeft: '65px' }}>
-                                    <div className="form-group mx-sm-1 mb-2">
-                                        <input type="text" className="form-control" id="inputName" placeholder="Name" name="name"
-                                            value={this.state.name}
-                                            onChange={e => this.setState({ name: e.target.value })}
-                                        />
+                                <div className="info">
+                                    <div className="row info-intro">
+                                        <h3>Infomation</h3>
                                     </div>
-                                    <div className="form-group mx-sm-1 mb-2">
-                                        <input type="number" className="form-control" id="inputPrice" placeholder="Price"
-                                            name="currentPrice"
-                                            type="number"
-                                            value={this.state.currentPrice}
-                                            onChange={e => this.setState({ currentPrice: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className="form-group mx-sm-1 mb-2">
-                                        <input type="number" className="form-control" id="inputQuantity" placeholder="Quantity"
-                                            name="quantity"
-                                            type="number"
-                                            value={this.state.quantity}
-                                            onChange={e => this.setState({ quantity: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className="form-group mx-sm-1 mb-2">
-                                        <select onChange={this.handleChange} className="custom-select sm-2" name="categories" >
-                                            <option selected>Categories</option>
-                                            {this.state.categories.map((cat, index) => {
-                                                return (<option value={index} key={index}>{cat}</option>)
-                                            })}
-                                        </select>
-                                    </div>
-                                    <div className="form-group mx-sm-1 mb-2">
-                                        <Button type="button" color="success" onClick={this.toggle}>{this.props.buttonLabel}Images</Button>
-                                        <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className} onClosed={() => { this.setState({ checkValidInput: true }) }}>
-                                            <ModalHeader toggle={this.toggle}>Item's Image</ModalHeader>
-                                            <ModalBody>
-                                                <Input type="file" name="files" id="inputFile" accept="image/*" multiple onChange={this.onInputFileChange} />
-                                                {
-                                                    !this.state.checkValidInput ? (
-                                                        <p className="errorsInput" id="validFile">Only 3 images allowed!!</p>
-
-                                                    ) : ''
-                                                }
-                                            </ModalBody>
-                                            <ModalFooter>
-                                                {
-                                                    !this.state.checkValidInput ? (
-                                                        <Button disabled color="primary" onClick={this.toggle}>Add</Button>
-
-                                                    ) : (
-                                                            <Button color="primary" onClick={this.toggle}>Add</Button>
-                                                        )
-                                                }
-                                                <Button color="secondary" onClick={this.toggle}>Cancel</Button>
-                                            </ModalFooter>
-                                        </Modal>
-                                    </div>
-                                    <div className="form-group mx-sm-1 mb-2">
-                                        <button type="submit" className="btn btn-primary">Add</button>
+                                    <div className="row pt-2" id="detail-border">
+                                        <div className="col" style={{ marginLeft: '150px' }}>
+                                            <FormGroup>
+                                                <Label for="exampleName">Name <span title="Nhập cmnr vào" id="force">(*)</span></Label>
+                                                <Input type="text" name="name" id="exampleName" placeholder="Car..."
+                                                    value={this.state.name}
+                                                    onChange={e => this.setState({ name: e.target.value })}
+                                                />
+                                            </FormGroup>
+                                            <FormGroup>
+                                                <Label for="exampleEmail">Price <span id="force">(*)</span></Label>
+                                                <Input type="number" name="currentPrice" title="Nhập cmnr vào" id="examplePrice" min="0"
+                                                    value={this.state.currentPrice}
+                                                    onChange={e => this.setState({ currentPrice: e.target.value })}
+                                                />
+                                            </FormGroup>
+                                        </div>
+                                        <div className="col">
+                                            <FormGroup>
+                                                <Label for="example">Quantity <span title="Nhập cmnr vào" id="force">(*)</span></Label>
+                                                <Input type="number" name="quantity" id="exampleQuantity" min="0"
+                                                    value={this.state.quantity}
+                                                    onChange={e => this.setState({ quantity: e.target.value })}
+                                                />
+                                            </FormGroup>
+                                            <FormGroup>
+                                                <Label for="example">Category <span title="Nhập cmnr vào" id="force">(*)</span></Label>
+                                                <Input type="select" name="categories" id="exampleSelect" onChange={this.handleChange}>
+                                                    {this.state.categories.map((cat, index) => {
+                                                        return (<option value={index} key={index}>{cat}</option>)
+                                                    })}
+                                                </Input>
+                                            </FormGroup>
+                                        </div>
                                     </div>
                                 </div>
-                                <hr />
+                                <div className="detail mt-2">
+                                    <div className="detail-form mt-2">
+                                        <div className="row detai-intro mb-1" id="detail-border">
+                                            <h3>Details</h3>
+                                        </div>
+                                        <div className="row detail-field">
+                                            <div className="col bg-success" style={{ borderRadius: '5px' }}>
+                                                <div className="container">
+                                                    <p style={{ marginTop: '20px' }}>Describe about your item sush as type, year...</p>
+                                                </div>
+                                            </div>
+                                            <Editor placeholder="Detail about your item..."
+                                                editorState={this.state.editorState}
+                                                onEditorStateChange={this.onEditorStateChange}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <ButtonGroup className="d-flex justify-content-center pb-3" style={{ marginTop: '80px' }}>
+                                    <Button style={{ width: '150px' }} type="button" color="success" onClick={this.toggle}>{this.props.buttonLabel}Images</Button>
+                                    <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className} onClosed={() => { this.setState({ checkValidInput: true }) }}>
+                                        <ModalHeader toggle={this.toggle}>Item's Image</ModalHeader>
+                                        <ModalBody>
+                                            <Input type="file" name="files" id="inputFile" accept="image/*" multiple onChange={this.onInputFileChange} />
+                                            {
+                                                !this.state.checkValidInput ? (
+                                                    <p className="errorsInput" id="validFile">Only 3 images allowed!!</p>
+
+                                                ) : ''
+                                            }
+                                        </ModalBody>
+                                        <ModalFooter>
+                                            {
+                                                !this.state.checkValidInput ? (
+                                                    <Button disabled color="primary" onClick={this.toggle}>Add</Button>
+
+                                                ) : (
+                                                        <Button color="primary" onClick={this.toggle}>Add</Button>
+                                                    )
+                                            }
+                                            <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+                                        </ModalFooter>
+                                    </Modal>
+                                    <Button style={{ width: '150px' }} type="submit" color="primary">Add</Button>
+                                </ButtonGroup>
                                 {
                                     this.state.isAdded === true && (
                                         <div className="alert alert-warning" role="alert">
@@ -355,20 +376,10 @@ class DashBoard extends Component {
                                         </div>
                                     )
                                 }
-                                <div className="detail-form mt-2">
-                                    <div className="detai-intro mb-1" id="detail-border">
-                                        <h5>Details</h5>
-                                    </div>
-                                    <div className="detail-field">
-                                        <Editor placeholder="Detail about your item..."
-                                            editorState={this.state.editorState}
-                                            onEditorStateChange={this.onEditorStateChange}
-                                        />
-                                    </div>
-                                </div>
-                            </form>
+                            </Form>
                         )
                     }
+
                     <br />
                     <div className="container" id="adddel-form">
                         {this.state.loadingItem ? <div style={{ textAlign: 'center', zIndex: '900', position: 'relative' }}><img src="./images/loading.gif" style={{ maxHeight: '400px', maxWidth: '400px' }} /></div> :
