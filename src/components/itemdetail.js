@@ -9,6 +9,7 @@ import Footer from './footer';
 import _ from 'lodash';
 import dateFns from 'date-fns'
 import BidInput from './BidInput'
+import NumberFormat from 'react-number-format';
 class ItemDetail extends Component {
 
     constructor(props) {
@@ -85,8 +86,8 @@ class ItemDetail extends Component {
                 itemDetail.bids.unshift(res.newBid)
                 itemDetail.currentPrice = itemDetail.bids[0].currentPrice
                 console.log(res)
-                let nextStep =Math.ceil(itemDetail.bids[0].currentPrice * 0.5)
-                this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice+ nextStep })
+                let nextStep = Math.ceil(itemDetail.bids[0].currentPrice * 0.5)
+                this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
 
             }
             else {
@@ -133,12 +134,16 @@ class ItemDetail extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="col-md-6">
-                                                    <h4>Current price: ${this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice}</h4>
+                                                    <h4> Current price: <NumberFormat displayType={'text'} value={this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice} thousandSeparator={true} prefix={'$'} />
+                                                    </h4>
+                                                    {/* <h4>Current price: ${this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice}</h4> */}
                                                 </div>
                                                 <div className="col-md-6">
                                                 </div>
                                                 <div className="col-md-6">
-                                                    <h4>Current step: ${this.state.step}</h4>
+                                                    <h4> Current step: <NumberFormat displayType={'text'} value={this.state.step} thousandSeparator={true} prefix={'$'} />
+                                                    </h4>
+                                                    {/* <h4>Current step: ${this.state.step}</h4> */}
                                                 </div>
                                             </div>
                                             <br />
@@ -147,7 +152,7 @@ class ItemDetail extends Component {
                                                     <BidInput className="form-control pr-5"
                                                         value={this.state.currentBidding}
                                                         onChange={(e) => {
-                                                            if(!/[A-z]/.test(e.target.value))
+                                                            if (!/[A-z]/.test(e.target.value))
                                                                 this.setState({ currentBidding: +e.target.value })
                                                         }}
                                                         onClickDecrease={e => {
@@ -189,7 +194,9 @@ class ItemDetail extends Component {
                                                             return (
                                                                 <tr>
                                                                     <td>{bid.userId.userName}</td>
-                                                                    <td>{bid.currentPrice}</td>
+                                                                    <td>
+                                                                        {<NumberFormat displayType={'text'} value={bid.currentPrice} thousandSeparator={true} prefix={'$'} />}
+                                                                    </td>
                                                                     <td>{dateFns.format(bid.userId.createdAt, 'HH:mm:ss MM/DD/YYYY')}</td>
 
                                                                 </tr>
