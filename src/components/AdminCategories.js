@@ -78,7 +78,7 @@ class AdminCategories extends Component {
                                 onChange={e => this.setState({ enteringName: e.target.value })}
                             />
                         </div>
-                        <button type="submit" value={this.state.addMode} name='action' className="btn btn-primary mb-2">{this.state.addMode ? 'Add' : 'Edit'}</button>
+                        <button type="submit" value={this.state.addMode} name='action' className="btn btn-primary mx-sm-1 mb-2">{this.state.addMode ? 'Add' : 'Edit'}</button>
                         {this.state.addMode ? '' : <button type="submit" value="1" name='cancel' className="btn btn-danger mb-2">Cancel</button>}
 
                     </form>

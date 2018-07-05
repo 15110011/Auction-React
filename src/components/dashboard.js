@@ -10,6 +10,7 @@ import _ from 'lodash'
 import { convertFromRaw, convertFromHTML, ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Form, FormGroup, Label, ButtonGroup } from 'reactstrap';
 
 
 class DashBoard extends Component {
@@ -34,7 +35,11 @@ class DashBoard extends Component {
             isEdited: false,
             isAdding: true,
             contentState: {},
-            editorState: EditorState.createEmpty()
+            editorState: EditorState.createEmpty(),
+            modal: false,
+            checkValidInput: true,
+            images: [],
+            count: 0
         }
         this.handleAddItem = this.handleAddItem.bind(this)
         this.getItem = this.getItem.bind(this)
@@ -44,8 +49,14 @@ class DashBoard extends Component {
         this.handleChange = this.handleChange.bind(this)
         this.editSuccess = this.editSuccess.bind(this)
         this.onEditorStateChange = this.onEditorStateChange.bind(this)
+        this.toggle = this.toggle.bind(this)
+        this.onInputFileChange = this.onInputFileChange.bind(this)
     }
-
+    toggle() {
+        this.setState({
+            modal: !this.state.modal
+        });
+    }
     componentDidMount() {
 
         FB.api('/me', data => {
@@ -58,13 +69,13 @@ class DashBoard extends Component {
         fetch('/api/v1/categories').then(res => res.json()).then(res => {
             let cloneCat = this.state.categories.slice()
             res.cats.map(cat => {
-                cloneCat[cat.id]=cat.name
+                cloneCat[cat.id] = cat.name
                 return true
             })
 
             // let initCat =[]
             // initCat.push(...res.cats)
-            this.setState({categories: cloneCat })  
+            this.setState({ categories: cloneCat })
 
         })
     }
@@ -93,13 +104,29 @@ class DashBoard extends Component {
             editorState,
         });
     };
+    onInputFileChange(e) {
+        console.log(e.target)
 
+        if (e.target.files.length > 3) {
+            this.setState({ checkValidInput: false })
+        } else {
+            const images = this.state.images
+            console.log(e.target.files)
+            this.setState({ checkValidInput: true, images: e.target.files, count: e.target.files.length })
+        }
+    }
     handleAddItem(e) {
 
         e.preventDefault()
-        let formBody = e.target
+        const inputImages = this.state.images
         const form = new FormData(e.target)
+        // const form = new FormData()
+        // console.log(inputImages[0])
         form.append('details', draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())))
+        for (var i = 0; i < 3; i++) {
+            console.log(inputImages[i])
+            form.append('files', inputImages[i])
+        }
         fetch('/api/v1/items', {
             method: 'POST',
             body: form
@@ -107,7 +134,7 @@ class DashBoard extends Component {
             .then(res => res.json())
             .then((res) => {
                 if (res.item) {
-                    this.setState({ isAdded: true, name: '', quantity: '', currentPrice: '', details: '', categoriesId: '' })
+                    this.setState({ isAdded: true, name: '', quantity: '', currentPrice: '', details: '', count: 0, editorState: '' })
                     this.getItem()
                     setTimeout(() => {
                         this.setState({ isAdded: false })
@@ -119,14 +146,12 @@ class DashBoard extends Component {
         var items = this.state.items.slice()
         let curItem = _.findIndex(items, { id: this.state.itemId })
         if (curItem > -1) {
-      
+
             items[curItem].name = target.name.value
             items[curItem].currentPrice = target.currentPrice.value
             items[curItem].quantity = target.quantity.value
 
             items[curItem].details = draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()))
-            //this.state.editorState.getCurrentContent()
-            
             items[curItem].categoriesId = target.categories.value
             this.setState({
                 items,
@@ -137,7 +162,7 @@ class DashBoard extends Component {
                 currentPrice: '',
                 quantity: '',
                 editorState: '',
-                categoriesId: ''
+                count: 0
             })
             setTimeout(() => {
                 this.setState({ isEdited: false })
@@ -156,7 +181,7 @@ class DashBoard extends Component {
         const state = ContentState.createFromBlockArray(
             blocksFromHTML.contentBlocks,
             blocksFromHTML.entityMap
-          );
+        );
         console.log(content)
         this.setState({
             isEditing: true,
@@ -179,9 +204,10 @@ class DashBoard extends Component {
             isEditing: false,
             isEdited: false,
             isAdding: true,
-            name: '', quantity: '', currentPrice: '', details: '', categoriesId: '',editorState:''
+            name: '', quantity: '', currentPrice: '', details: '', editorState: ''
         })
     }
+
     getItem() {
         const items = this.state.items
 
@@ -203,7 +229,7 @@ class DashBoard extends Component {
         if (this.props.loggedIn === GUEST_STATUS) {
             return (
                 <div className="container">
-                    <p className="alert alert-danger" id="expired">Please log in</p>
+                    <p className="alert alert-danger" id="expired"style={{marginTop:'75px'}}>Please log in</p>
                 </div>
             )
         }
@@ -231,10 +257,9 @@ class DashBoard extends Component {
                         onEditorStateChange={this.onEditorStateChange}
                         onContentStateChange={this.onContentStateChange}
                     />
-
                     {
                         this.state.isAdding === true && (
-                            <form className="form-inline" onSubmit={this.handleAddItem}>
+                            <Form onSubmit={this.handleAddItem} encType="multipart/form-data">
                                 <input
                                     type="hidden"
                                     name="userId"
@@ -245,85 +270,119 @@ class DashBoard extends Component {
                                     name="itemId"
                                     value={this.state.itemId}
                                 />
-                                <div className="d-flex justify-content-center" style={{ marginLeft: '140px' }}>
-                                    <div className="form-group mx-sm-1 mb-2">
-                                        <input type="text" className="form-control" id="inputName" placeholder="Name" name="name"
-                                            value={this.state.name}
-                                            onChange={e => this.setState({ name: e.target.value })}
-
-                                        />
+                                <div className="info">
+                                    <div className="row info-intro">
+                                        <h3>Infomation</h3>
                                     </div>
-                                    <div className="form-group mx-sm-1 mb-2">
-                                        <input type="number" className="form-control" id="inputPrice" placeholder="Price"
-                                            name="currentPrice"
-                                            type="number"
-                                            value={this.state.currentPrice}
-                                            onChange={e => this.setState({ currentPrice: e.target.value })}
-                                        />
+                                    <div className="row pt-2" id="detail-border">
+                                        <div className="col" style={{ marginLeft: '150px' }}>
+                                            <FormGroup>
+                                                <Label for="exampleName">Name <span title="Nhập cmnr vào" id="force">(*)</span></Label>
+                                                <Input type="text" name="name" id="exampleName" placeholder="Car..."
+                                                    value={this.state.name}
+                                                    onChange={e => this.setState({ name: e.target.value })}
+                                                />
+                                            </FormGroup>
+                                            <FormGroup>
+                                                <Label for="exampleEmail">Price <span id="force">(*)</span></Label>
+                                                <Input type="number" name="currentPrice" title="Nhập cmnr vào" id="examplePrice" min="0"
+                                                    value={this.state.currentPrice}
+                                                    onChange={e => this.setState({ currentPrice: e.target.value })}
+                                                />
+                                            </FormGroup>
+                                        </div>
+                                        <div className="col">
+                                            <FormGroup>
+                                                <Label for="example">Quantity <span title="Nhập cmnr vào" id="force">(*)</span></Label>
+                                                <Input type="number" name="quantity" id="exampleQuantity" min="0"
+                                                    value={this.state.quantity}
+                                                    onChange={e => this.setState({ quantity: e.target.value })}
+                                                />
+                                            </FormGroup>
+                                            <FormGroup>
+                                                <Label for="example">Category <span title="Nhập cmnr vào" id="force">(*)</span></Label>
+                                                <Input type="select" name="categories" id="exampleSelect" onChange={this.handleChange}>
+                                                    <option selected></option>
+                                                    {this.state.categories.map((cat, index) => {
+                                                        return (<option value={index} key={index}>{cat}</option>)
+                                                    })}
+                                                </Input>
+                                            </FormGroup>
+                                        </div>
                                     </div>
-                                    <div className="form-group mx-sm-1 mb-2">
-                                        <input type="number" className="form-control" id="inputQuantity" placeholder="Quantity"
-                                            name="quantity"
-                                            type="number"
-                                            value={this.state.quantity}
-                                            onChange={e => this.setState({ quantity: e.target.value })}
-                                        />
-                                    </div>
-                                    {/* <div className="form-group mx-sm-1 mb-2">
-                                    <input type="text" className="form-control" id="inputDetails" placeholder="Details"
-                                        name="details"
-                                        value={this.state.details}
-                                        onChange={e => this.setState({ details: e.target.value })}
-                                    />
-                                </div> */}
-                                    <div className="form-group mx-sm-1 mb-2">
-                                        <select onChange={this.handleChange} className="custom-select mr-sm-2" name="categories" >
-                                            <option selected>Categories</option>
-                                            {this.state.categories.map((cat,index)=>{
-                                                return (<option value={index} key={index}>{cat}</option>)
-                                            })}
-                                        </select>
-                                    </div>
-                                    <button type="submit" className="btn btn-primary mb-2">Add</button>
                                 </div>
-                                <hr />
+                                <div className="detail mt-2">
+                                    <div className="detail-form mt-2">
+                                        <div className="row detai-intro mb-1" id="detail-border">
+                                            <h3>Details</h3>
+                                        </div>
+                                        <div className="row detail-field">
+                                            <div className="col bg-success" style={{ borderRadius: '5px' }}>
+                                                <div className="container">
+                                                    <p style={{ marginTop: '20px' }}>Describe about your item sush as type, year...</p>
+                                                </div>
+                                            </div>
+                                            <Editor placeholder="Detail about your item..."
+                                                editorState={this.state.editorState}
+                                                onEditorStateChange={this.onEditorStateChange}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <ButtonGroup className="d-flex justify-content-center pb-3" style={{ marginTop: '80px' }}>
+                                    <Button style={{ width: '150px' }} type="button" color="success" onClick={this.toggle}>{this.props.buttonLabel}Images({this.state.count})</Button>
+                                    <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className} onClosed={() => { this.setState({ checkValidInput: true }) }}>
+                                        <ModalHeader toggle={this.toggle}>Item's Image</ModalHeader>
+                                        <ModalBody>
+                                            <Input type="file" name="files" id="inputFile" accept="image/*" multiple onChange={this.onInputFileChange} />
+                                            {
+                                                !this.state.checkValidInput ? (
+                                                    <p className="errorsInput" id="validFile">Only 3 images allowed!!</p>
+
+                                                ) : ''
+                                            }
+                                        </ModalBody>
+                                        <ModalFooter>
+                                            {
+                                                !this.state.checkValidInput ? (
+                                                    <Button disabled color="primary" onClick={this.toggle}>Add</Button>
+
+                                                ) : (
+                                                        <Button color="primary" onClick={this.toggle}>Add</Button>
+                                                    )
+                                            }
+                                            <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+                                        </ModalFooter>
+                                    </Modal>
+                                    <Button style={{ width: '150px' }} type="submit" color="primary">Add</Button>
+                                </ButtonGroup>
                                 {
-                                        this.state.isAdded === true && (
-                                            <div className="alert alert-warning" role="alert">
-                                                <strong>Item added</strong>
-                                            </div>
+                                    this.state.isAdded === true && (
+                                        <div className="alert alert-warning" role="alert">
+                                            <strong>Item added</strong>
+                                        </div>
 
-                                        )
-                                    }
-                                    {
-                                        this.state.isDeleted === true && (
-                                           <div className="alert alert-warning" role="alert">
-                                                <strong>Item deleted</strong>
-                                            </div>
+                                    )
+                                }
+                                {
+                                    this.state.isDeleted === true && (
+                                        <div className="alert alert-warning" role="alert">
+                                            <strong>Item deleted</strong>
+                                        </div>
 
-                                        )
-                                    }
-                                    {
-                                        this.state.isEdited === true && (
-                                            <div className="alert alert-warning" role="alert">
-                                                <strong>Item edited</strong>
-                                            </div>
-                                        )
-                                    }
-                                <div className="detail-form mt-2">
-                                    <div className="detai-intro mb-1" id="detail-border">
-                                        <h5>Details</h5>
-                                    </div>
-                                    <div className="detail-field">
-                                        <Editor placeholder="Detail about your item..."
-                                            editorState={this.state.editorState}
-                                            onEditorStateChange={this.onEditorStateChange}
-                                        />
-                                    </div>
-                                </div>
-                            </form>
+                                    )
+                                }
+                                {
+                                    this.state.isEdited === true && (
+                                        <div className="alert alert-warning" role="alert">
+                                            <strong>Item edited</strong>
+                                        </div>
+                                    )
+                                }
+                            </Form>
                         )
                     }
+
                     <br />
                     <div className="container" id="adddel-form">
                         {this.state.loadingItem ? <div style={{ textAlign: 'center', zIndex: '900', position: 'relative' }}><img src="./images/loading.gif" style={{ maxHeight: '400px', maxWidth: '400px' }} /></div> :
