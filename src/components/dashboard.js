@@ -38,7 +38,8 @@ class DashBoard extends Component {
             editorState: EditorState.createEmpty(),
             modal: false,
             checkValidInput: true,
-            images: []
+            images: [],
+            count: 0
         }
         this.handleAddItem = this.handleAddItem.bind(this)
         this.getItem = this.getItem.bind(this)
@@ -111,7 +112,7 @@ class DashBoard extends Component {
         } else {
             const images = this.state.images
             console.log(e.target.files)
-            this.setState({ checkValidInput: true, images: e.target.files })
+            this.setState({ checkValidInput: true, images: e.target.files, count: e.target.files.length })
         }
     }
     handleAddItem(e) {
@@ -133,7 +134,7 @@ class DashBoard extends Component {
             .then(res => res.json())
             .then((res) => {
                 if (res.item) {
-                    this.setState({ isAdded: true, name: '', quantity: '', currentPrice: '', details: '', categoriesId: '', categoriesId: '', editorState: '' })
+                    this.setState({ isAdded: true, name: '', quantity: '', currentPrice: '', details: '', count: 0, editorState: '' })
                     this.getItem()
                     setTimeout(() => {
                         this.setState({ isAdded: false })
@@ -160,7 +161,8 @@ class DashBoard extends Component {
                 name: '',
                 currentPrice: '',
                 quantity: '',
-                editorState: ''
+                editorState: '',
+                count: 0
             })
             setTimeout(() => {
                 this.setState({ isEdited: false })
@@ -300,6 +302,7 @@ class DashBoard extends Component {
                                             <FormGroup>
                                                 <Label for="example">Category <span title="Nhập cmnr vào" id="force">(*)</span></Label>
                                                 <Input type="select" name="categories" id="exampleSelect" onChange={this.handleChange}>
+                                                    <option selected></option>
                                                     {this.state.categories.map((cat, index) => {
                                                         return (<option value={index} key={index}>{cat}</option>)
                                                     })}
@@ -327,7 +330,7 @@ class DashBoard extends Component {
                                     </div>
                                 </div>
                                 <ButtonGroup className="d-flex justify-content-center pb-3" style={{ marginTop: '80px' }}>
-                                    <Button style={{ width: '150px' }} type="button" color="success" onClick={this.toggle}>{this.props.buttonLabel}Images</Button>
+                                    <Button style={{ width: '150px' }} type="button" color="success" onClick={this.toggle}>{this.props.buttonLabel}Images({this.state.count})</Button>
                                     <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className} onClosed={() => { this.setState({ checkValidInput: true }) }}>
                                         <ModalHeader toggle={this.toggle}>Item's Image</ModalHeader>
                                         <ModalBody>
