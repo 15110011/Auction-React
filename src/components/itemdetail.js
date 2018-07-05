@@ -108,7 +108,7 @@ class ItemDetail extends Component {
                     <div className="row">
                         <div className="col-md-9">
                             <br />
-                            <Link to='/'><i className="fas fa-backward"> Back to bid</i></Link>
+                            <Link to='/'><i className="fas fa-backward"><span className="light-word"> Back to bid</span></i></Link>
                             <div className="items-info">
                                 <div className="container">
                                     <h3>{itemDetail.name}</h3>
@@ -178,36 +178,38 @@ class ItemDetail extends Component {
                                                         mobile={true} className="form-control pr-5" /> */}
                                                     <button className="btn btn-primary ml-3" type="submit"><i className="fas fa-gavel"> Bid now</i></button>
                                                 </form>
-                                                {this.state.itemDetail.bids.length > 0 ? <p className="alert alert-info">
+                                                {this.state.itemDetail.bids.length > 0 ? <p className="alert alert-info light-word">
                                                     Last bid by : {this.state.itemDetail.bids[0].userId.userName}
                                                 </p> : ''}
-                                                <table className="table table-striped mt-4 mr-2 ml-2">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Name</th>
-                                                            <th>Bid</th>
-                                                            <th>At</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {this.state.itemDetail.bids.map((bid, i) => {
-                                                            return (
-                                                                <tr>
-                                                                    <td>{bid.userId.userName}</td>
-                                                                    <td>
-                                                                        {<NumberFormat displayType={'text'} value={bid.currentPrice} thousandSeparator={true} prefix={'$'} />}
-                                                                    </td>
-                                                                    <td>{dateFns.format(bid.userId.createdAt, 'HH:mm:ss MM/DD/YYYY')}</td>
-
-                                                                </tr>
-                                                            )
-                                                        })}
-
-                                                    </tbody>
-                                                </table>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <hr />
+                                <div className="container">
+                                    <table id="placebid-border" className="table table-striped mt-4">
+                                        <thead>
+                                            <tr>
+                                                <th>Username</th>
+                                                <th>Bid Amount</th>
+                                                <th>Bidding Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="light-word">
+                                            {this.state.itemDetail.bids.map((bid, i) => {
+                                                return (
+                                                    <tr>
+                                                        <td>{bid.userId.userName}</td>
+                                                        <td>
+                                                            {<NumberFormat displayType={'text'} value={bid.currentPrice} thousandSeparator={true} prefix={'$'} />}
+                                                        </td>
+                                                        <td>{dateFns.format(bid.userId.createdAt, 'HH:mm:ss MM/DD/YYYY')}</td>
+                                                    </tr>
+                                                )
+                                            })}
+
+                                        </tbody>
+                                    </table>
                                 </div>
                                 <hr />
                                 <div className="container">

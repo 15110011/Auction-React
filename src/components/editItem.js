@@ -114,15 +114,13 @@ class EditItem extends Component {
                                         <h3>Details</h3>
                                     </div>
                                     <div className="row detail-field">
-                                        <div className="col bg-success" style={{ borderRadius: '5px' }}>
-                                            <div className="container">
-                                                <p style={{ marginTop: '20px' }}>Describe about your item sush as type, year...</p>
-                                            </div>
+                                        <p className="col alert alert-success">Describe about your item sush as type, year...</p>
+                                        <div className="editor" style={{ marginTop: '-12px' }}>
+                                            <Editor placeholder="Detail about your item..."
+                                                editorState={this.props.editorState}
+                                                onEditorStateChange={this.onEditorStateChange}
+                                            />
                                         </div>
-                                        <Editor placeholder="Detail about your item..."
-                                            editorState={this.props.editorState}
-                                            onEditorStateChange={this.onEditorStateChange}
-                                        />
                                     </div>
                                 </div>
                             </div>

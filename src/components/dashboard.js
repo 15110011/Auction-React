@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { render } from 'react-dom'
 import '../styles/styles.css'
 import { LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config';
-import EditItem from './EditItem'
+import EditItem from './editItem'
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw } from 'draft-js';
 import _ from 'lodash'
@@ -229,7 +229,7 @@ class DashBoard extends Component {
         if (this.props.loggedIn === GUEST_STATUS) {
             return (
                 <div className="container">
-                    <p className="alert alert-danger" id="expired"style={{marginTop:'75px'}}>Please log in</p>
+                    <p className="alert alert-danger" id="expired" style={{ marginTop: '75px' }}>Please log in</p>
                 </div>
             )
         }
@@ -317,15 +317,13 @@ class DashBoard extends Component {
                                             <h3>Details</h3>
                                         </div>
                                         <div className="row detail-field">
-                                            <div className="col bg-success" style={{ borderRadius: '5px' }}>
-                                                <div className="container">
-                                                    <p style={{ marginTop: '20px' }}>Describe about your item sush as type, year...</p>
-                                                </div>
+                                            <p className="col alert alert-success light-word">Describe about your item sush as type, year...</p>
+                                            <div className="editor" style={{ marginTop: '-12px' }}>
+                                                <Editor placeholder="Detail about your item..."
+                                                    editorState={this.state.editorState}
+                                                    onEditorStateChange={this.onEditorStateChange}
+                                                />
                                             </div>
-                                            <Editor placeholder="Detail about your item..."
-                                                editorState={this.state.editorState}
-                                                onEditorStateChange={this.onEditorStateChange}
-                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -399,7 +397,7 @@ class DashBoard extends Component {
                                         <th scope="col">Status</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody className="light-word">
                                     {
                                         this.state.items.map((item, i) => {
                                             return (
