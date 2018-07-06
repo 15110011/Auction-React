@@ -42,7 +42,7 @@ class ItemDetail extends Component {
                         console.log(body.msg)
                     })
                     this.props.io.socket.on('room' + item.findItem.id, this.onReceiveRoomMessage)
-
+                    console.log(item.findImg)
                     this.setState({ images: item.findImg, itemDetail: item.findItem, step: nextStep, currentBidding: initBid + nextStep })
                 }
                 else {
@@ -77,21 +77,12 @@ class ItemDetail extends Component {
 
             if (!res.error) {
                 let { itemDetail } = this.state
-<<<<<<< HEAD
                 if (itemDetail) {
                     itemDetail.bids.unshift(res.newBid)
                     itemDetail.currentPrice = itemDetail.bids[0].currentPrice
                     let nextStep = Math.ceil(itemDetail.bids[0].currentPrice * 0.5)
                     this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
                 }
-=======
-                itemDetail.bids.unshift(res.newBid)
-                itemDetail.currentPrice = itemDetail.bids[0].currentPrice
-                console.log(res)
-                let nextStep = Math.ceil(itemDetail.bids[0].currentPrice * 0.5)
-                this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
-
->>>>>>> fb1da072b544cad54ec7d10f3c6e9b65091420f3
             }
             else {
                 alert(res.msg)
