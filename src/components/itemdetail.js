@@ -73,8 +73,8 @@ class ItemDetail extends Component {
     render() {
         const { current, items, itemDetail, images } = this.state
         if (!itemDetail) return (
-            <div className="alert alert-warning text-center" role="alert" >
-                Item not found
+            <div role="alert" style={{ marginTop: '75px' }}>
+                <p className="alert alert-warning text-center light-word">Item not found</p>
             </div>
         )
         return (
@@ -182,7 +182,6 @@ class ItemDetail extends Component {
                                                     </tr>
                                                 )
                                             })}
-
                                         </tbody>
                                     </table>
                                     <div className="d-flex justify-content-center">
