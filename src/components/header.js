@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 
 import { render } from 'react-dom'
 import { Link, withRouter } from 'react-router-dom'
-import SignInPage from './sign-in'
+import SearchResult from './SearchResult'
 import '../styles/styles.css'
 import { LOADING_LOGIN_STATUS, LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config'
 
@@ -93,7 +93,7 @@ class Header extends Component {
     render() {
         const { keywords, results } = this.state
         let filterItem = this.state.results.filter(kw => {
-            return kw.name.indexOf(this.state.keywords) !== -1
+            return kw.name.toLowerCase().indexOf(this.state.keywords.toLowerCase()) !== -1
         }
         )
         console.log(filterItem)
