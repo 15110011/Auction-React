@@ -7,6 +7,7 @@ import EditItem from './editItem'
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw } from 'draft-js';
 import _ from 'lodash'
+import { Link } from 'react-router-dom'
 import { convertFromRaw, convertFromHTML, ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -409,7 +410,7 @@ class DashBoard extends Component {
                                                     <td>{this.state.categories[item.categoriesId]}</td>
                                                     <td>
                                                         <div className="edit-del">
-                                                            <button className="btn btn-info" style={{ color: '#1d93c1' }}><i className="fas fa-eye"></i></button>
+                                                            <Link className="btn btn-info" style={{ color: '#1d93c1' }} to={`/items/${item.id}`}><i className="fas fa-eye"></i></Link>
                                                         </div>
                                                     </td>
                                                     <td>
