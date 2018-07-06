@@ -8,6 +8,9 @@ import '../styles/styles.css'
 import _ from 'lodash';
 import dateFns from 'date-fns'
 import BidInput from './BidInput'
+import NumberFormat from 'react-number-format';
+import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
+
 class ItemDetail extends Component {
 
     constructor(props) {
@@ -17,33 +20,7 @@ class ItemDetail extends Component {
             currentBidding: 0,
             step: 5,
             itemDetail: null,
-            items: [
-                {
-                    id: 'thumbnail',
-                    title: 'gallery',
-                    description: 'gallery',
-                    altText: 'picture',
-                    src: '/images/car.jpg',
-                    thumbSrc: '/images/thumbnails/car.jpg',
-                },
-                {
-                    id: 'thumbnail',
-                    title: 'gallery',
-                    description: 'gallery',
-                    altText: 'picture',
-                    src: '/images/cigar.jpg',
-                    thumbSrc: '/images/thumbnails/cigar.jpg',
-                },
-                {
-                    id: 'thumbnail',
-                    title: 'gallery',
-                    description: 'gallery',
-                    altText: 'picture',
-                    src: '/images/coin.jpg',
-                    thumbSrc: '/images/thumbnails/coin.jpg'
-
-                }
-            ]
+            images: [],
         }
         this.onSubmitBid = this.onSubmitBid.bind(this)
         this.onReceiveRoomMessage = this.onReceiveRoomMessage.bind(this)
@@ -59,7 +36,6 @@ class ItemDetail extends Component {
             .then(item => {
                 console.log(item)
                 if (!item.error) {
-                    console.log(item)
                     let nextStep = Math.ceil(item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice * 0.5 : item.findItem.currentPrice * 0.5)
                     let initBid = item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice : item.findItem.currentPrice
                     this.props.io.socket.get('/socket/items/' + item.findItem.id, (body, JWR) => {
@@ -67,7 +43,7 @@ class ItemDetail extends Component {
                     })
                     this.props.io.socket.on('room' + item.findItem.id, this.onReceiveRoomMessage)
 
-                    this.setState({ itemDetail: item.findItem, step: nextStep, currentBidding: initBid + nextStep })
+                    this.setState({ images: item.findImg, itemDetail: item.findItem, step: nextStep, currentBidding: initBid + nextStep })
                 }
                 else {
                     this.setState({ itemDetail: null })
@@ -101,12 +77,21 @@ class ItemDetail extends Component {
 
             if (!res.error) {
                 let { itemDetail } = this.state
+<<<<<<< HEAD
                 if (itemDetail) {
                     itemDetail.bids.unshift(res.newBid)
                     itemDetail.currentPrice = itemDetail.bids[0].currentPrice
                     let nextStep = Math.ceil(itemDetail.bids[0].currentPrice * 0.5)
                     this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
                 }
+=======
+                itemDetail.bids.unshift(res.newBid)
+                itemDetail.currentPrice = itemDetail.bids[0].currentPrice
+                console.log(res)
+                let nextStep = Math.ceil(itemDetail.bids[0].currentPrice * 0.5)
+                this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
+
+>>>>>>> fb1da072b544cad54ec7d10f3c6e9b65091420f3
             }
             else {
                 alert(res.msg)
@@ -123,10 +108,10 @@ class ItemDetail extends Component {
 
     }
     render() {
-        const { current, items, itemDetail } = this.state
+        const { current, items, itemDetail, images } = this.state
         if (!itemDetail) return (
-            <div>
-                Khong ton tai item nay
+            <div className="alert alert-warning text-center" role="alert" >
+                Item not found
             </div>
         )
         return (
@@ -135,20 +120,20 @@ class ItemDetail extends Component {
                     <div className="row">
                         <div className="col-md-9">
                             <br />
-                            <Link to='/'><i className="fas fa-backward"> Back to bid</i></Link>
+                            <Link to='/'><i className="fas fa-backward"><span className="light-word"> Back to bid</span></i></Link>
                             <div className="items-info">
-                                <div className="container">
+                                <div className="container pt-2">
                                     <h3>{itemDetail.name}</h3>
                                 </div>
                                 <hr />
                                 <div className="container">
                                     <div className="row">
                                         <div className="col-md-5 item-image">
-                                            <ReactImageZoom width={340} height={300} zoomWidth={450} img={items[current].src} />
-                                            <div className="row thumbnail">
-                                                {items.map((item, i) => (
-                                                    <div className="col-md-4 thumbnail-border" key={i}>
-                                                        <img className="img-fluid" src={item.thumbSrc} alt="car" style={{ height: '100px' }} onClick={e => this.setCurrentItem(i)} />
+                                            <ReactImageZoom width={340} height={300} zoomWidth={450} img={"http://localhost:1337/images/items/" + images[current].link} />
+                                            <div className="row thumbnail mt-2" style={{ paddingLeft: '15px', marginRight: '-30px' }}>
+                                                {images.map((img, i) => (
+                                                    <div className="col-sm-4 thumbnail-border" key={i}>
+                                                        <img className="img-fluid" src={`http://localhost:1337/images/items/${img.link}`} alt="car" style={{ height: '100px' }} onClick={e => this.setCurrentItem(i)} />
                                                     </div>
                                                 ))}
                                             </div>
@@ -161,12 +146,16 @@ class ItemDetail extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="col-md-6">
-                                                    <h4>Current price: ${this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice}</h4>
+                                                    <h4> Current price: <NumberFormat displayType={'text'} value={this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice} thousandSeparator={true} prefix={'$'} />
+                                                    </h4>
+                                                    {/* <h4>Current price: ${this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice}</h4> */}
                                                 </div>
                                                 <div className="col-md-6">
                                                 </div>
                                                 <div className="col-md-6">
-                                                    <h4>Current step: ${this.state.step}</h4>
+                                                    <h4> Current step: <NumberFormat displayType={'text'} value={this.state.step} thousandSeparator={true} prefix={'$'} />
+                                                    </h4>
+                                                    {/* <h4>Current step: ${this.state.step}</h4> */}
                                                 </div>
                                             </div>
                                             <br />
@@ -201,33 +190,72 @@ class ItemDetail extends Component {
                                                         mobile={true} className="form-control pr-5" /> */}
                                                     <button className="btn btn-primary ml-3" type="submit"><i className="fas fa-gavel"> Bid now</i></button>
                                                 </form>
-                                                {this.state.itemDetail.bids.length > 0 ? <p className="alert alert-info">
+                                                {this.state.itemDetail.bids.length > 0 ? <p className="alert alert-info light-word mt-2">
                                                     Last bid by : {this.state.itemDetail.bids[0].userId.userName}
                                                 </p> : ''}
-                                                <table className="table table-striped mt-4 mr-2 ml-2">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Name</th>
-                                                            <th>Bid</th>
-                                                            <th>At</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {this.state.itemDetail.bids.map((bid, i) => {
-                                                            return (
-                                                                <tr>
-                                                                    <td>{bid.userId.userName}</td>
-                                                                    <td>{bid.currentPrice}</td>
-                                                                    <td>{dateFns.format(bid.userId.createdAt, 'HH:mm:ss MM/DD/YYYY')}</td>
-
-                                                                </tr>
-                                                            )
-                                                        })}
-
-                                                    </tbody>
-                                                </table>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div className="container">
+                                    <table id="placebid-border" className="table table-striped mt-4">
+                                        <thead>
+                                            <tr>
+                                                <th>Username</th>
+                                                <th>Bid Amount</th>
+                                                <th>Bidding Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="light-word">
+                                            {this.state.itemDetail.bids.map((bid, i) => {
+                                                return (
+                                                    <tr>
+                                                        <td>{bid.userId.userName}</td>
+                                                        <td>
+                                                            {<NumberFormat displayType={'text'} value={bid.currentPrice} thousandSeparator={true} prefix={'$'} />}
+                                                        </td>
+                                                        <td>{dateFns.format(bid.userId.createdAt, 'HH:mm:ss MM/DD/YYYY')}</td>
+                                                    </tr>
+                                                )
+                                            })}
+
+                                        </tbody>
+                                    </table>
+                                    <div className="d-flex justify-content-center">
+                                        <Pagination aria-label="Page navigation example">
+                                            <PaginationItem>
+                                                <PaginationLink previous href="#" />
+                                            </PaginationItem>
+                                            <PaginationItem>
+                                                <PaginationLink href="#">
+                                                    1
+                                                </PaginationLink>
+                                            </PaginationItem>
+                                            <PaginationItem>
+                                                <PaginationLink href="#">
+                                                    2
+                                                </PaginationLink>
+                                            </PaginationItem>
+                                            <PaginationItem>
+                                                <PaginationLink href="#">
+                                                    3
+                                                </PaginationLink>
+                                            </PaginationItem>
+                                            <PaginationItem>
+                                                <PaginationLink href="#">
+                                                    4
+                                                </PaginationLink>
+                                            </PaginationItem>
+                                            <PaginationItem>
+                                                <PaginationLink href="#">
+                                                    5
+                                                </PaginationLink>
+                                            </PaginationItem>
+                                            <PaginationItem>
+                                                <PaginationLink next href="#" />
+                                            </PaginationItem>
+                                        </Pagination>
                                     </div>
                                 </div>
                                 <hr />
@@ -242,7 +270,7 @@ class ItemDetail extends Component {
                         <div className="col-md-3">
                             <div className="itemborder" style={{ marginTop: '50px' }}>
                                 <div className="item-image">
-                                    <Link className="detail" to="/itemdetail"><img src="/images/car.jpg" alt="item" /></Link>
+                                    <Link className="detail" to="/itemdetail"><img src="http://localhost:1337/images/items/79a14aad-ff34-4928-8897-816477e734c0.png" alt="item" /></Link>
                                 </div>
                                 <div className="time-price">
                                     <div className="row d-flex justify-content-between">

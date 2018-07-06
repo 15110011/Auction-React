@@ -19,6 +19,7 @@
     "react-image-magnify": "^2.7.0",
     "react-image-zoom": "^0.7.0",
     "react-lz-editor": "^0.12.1",
+    "react-number-format": "^3.4.2",
     "react-numeric-input": "^2.2.3",
     "react-router-dom": "^4.3.1",
     "react-rte": "^0.16.1",

@@ -3,15 +3,16 @@ import React, { Component } from 'react'
 import { render } from 'react-dom'
 import '../styles/styles.css'
 import { LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config';
-import EditItem from './EditItem'
+import EditItem from './editItem'
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw } from 'draft-js';
 import _ from 'lodash'
+import { Link } from 'react-router-dom'
 import { convertFromRaw, convertFromHTML, ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Form, FormGroup, Label, ButtonGroup } from 'reactstrap';
-
+import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 class DashBoard extends Component {
 
@@ -229,7 +230,7 @@ class DashBoard extends Component {
         if (this.props.loggedIn === GUEST_STATUS) {
             return (
                 <div className="container">
-                    <p className="alert alert-danger" id="expired"style={{marginTop:'75px'}}>Please log in</p>
+                    <p className="alert alert-danger" id="expired" style={{ marginTop: '75px' }}>Please log in</p>
                 </div>
             )
         }
@@ -277,7 +278,7 @@ class DashBoard extends Component {
                                     <div className="row pt-2" id="detail-border">
                                         <div className="col" style={{ marginLeft: '150px' }}>
                                             <FormGroup>
-                                                <Label for="exampleName">Name <span title="Nhập cmnr vào" id="force">(*)</span></Label>
+                                                <Label for="exampleName">Name <span title="Nhập cmn vào" id="force">(*)</span></Label>
                                                 <Input type="text" name="name" id="exampleName" placeholder="Car..."
                                                     value={this.state.name}
                                                     onChange={e => this.setState({ name: e.target.value })}
@@ -285,7 +286,7 @@ class DashBoard extends Component {
                                             </FormGroup>
                                             <FormGroup>
                                                 <Label for="exampleEmail">Price <span id="force">(*)</span></Label>
-                                                <Input type="number" name="currentPrice" title="Nhập cmnr vào" id="examplePrice" min="0"
+                                                <Input type="number" name="currentPrice" title="Nhập cmn vào" id="examplePrice" min="0"
                                                     value={this.state.currentPrice}
                                                     onChange={e => this.setState({ currentPrice: e.target.value })}
                                                 />
@@ -293,14 +294,14 @@ class DashBoard extends Component {
                                         </div>
                                         <div className="col">
                                             <FormGroup>
-                                                <Label for="example">Quantity <span title="Nhập cmnr vào" id="force">(*)</span></Label>
+                                                <Label for="example">Quantity <span title="Nhập cmn vào" id="force">(*)</span></Label>
                                                 <Input type="number" name="quantity" id="exampleQuantity" min="0"
                                                     value={this.state.quantity}
                                                     onChange={e => this.setState({ quantity: e.target.value })}
                                                 />
                                             </FormGroup>
                                             <FormGroup>
-                                                <Label for="example">Category <span title="Nhập cmnr vào" id="force">(*)</span></Label>
+                                                <Label for="example">Category <span title="Nhập cmn vào" id="force">(*)</span></Label>
                                                 <Input type="select" name="categories" id="exampleSelect" onChange={this.handleChange}>
                                                     <option selected></option>
                                                     {this.state.categories.map((cat, index) => {
@@ -317,15 +318,13 @@ class DashBoard extends Component {
                                             <h3>Details</h3>
                                         </div>
                                         <div className="row detail-field">
-                                            <div className="col bg-success" style={{ borderRadius: '5px' }}>
-                                                <div className="container">
-                                                    <p style={{ marginTop: '20px' }}>Describe about your item sush as type, year...</p>
-                                                </div>
+                                            <p className="col alert alert-success light-word">Describe about your item sush as type, year...</p>
+                                            <div className="editor" style={{ marginTop: '-12px' }}>
+                                                <Editor placeholder="Detail about your item..."
+                                                    editorState={this.state.editorState}
+                                                    onEditorStateChange={this.onEditorStateChange}
+                                                />
                                             </div>
-                                            <Editor placeholder="Detail about your item..."
-                                                editorState={this.state.editorState}
-                                                onEditorStateChange={this.onEditorStateChange}
-                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -399,7 +398,7 @@ class DashBoard extends Component {
                                         <th scope="col">Status</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody className="light-word">
                                     {
                                         this.state.items.map((item, i) => {
                                             return (
@@ -411,7 +410,7 @@ class DashBoard extends Component {
                                                     <td>{this.state.categories[item.categoriesId]}</td>
                                                     <td>
                                                         <div className="edit-del">
-                                                            <button className="btn btn-info" style={{ color: '#1d93c1' }}><i className="fas fa-eye"></i></button>
+                                                            <Link className="btn btn-info" style={{ color: '#1d93c1' }} to={`/items/${item.id}`}><i className="fas fa-eye"></i></Link>
                                                         </div>
                                                     </td>
                                                     <td>
@@ -427,6 +426,41 @@ class DashBoard extends Component {
                                     }
                                 </tbody>
                             </table>}
+                        <div className="d-flex justify-content-center">
+                            <Pagination aria-label="Page navigation example">
+                                <PaginationItem>
+                                    <PaginationLink previous href="#" />
+                                </PaginationItem>
+                                <PaginationItem>
+                                    <PaginationLink href="#">
+                                        1
+                                    </PaginationLink>
+                                </PaginationItem>
+                                <PaginationItem>
+                                    <PaginationLink href="#">
+                                        2
+                                    </PaginationLink>
+                                </PaginationItem>
+                                <PaginationItem>
+                                    <PaginationLink href="#">
+                                        3
+                                    </PaginationLink>
+                                </PaginationItem>
+                                <PaginationItem>
+                                    <PaginationLink href="#">
+                                        4
+                                    </PaginationLink>
+                                </PaginationItem>
+                                <PaginationItem>
+                                    <PaginationLink href="#">
+                                        5
+                                    </PaginationLink>
+                                </PaginationItem>
+                                <PaginationItem>
+                                    <PaginationLink next href="#" />
+                                </PaginationItem>
+                            </Pagination>
+                        </div>
                     </div>
                 </div>
             </div>

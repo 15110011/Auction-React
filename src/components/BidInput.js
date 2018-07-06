@@ -1,17 +1,21 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
+import NumberFormat from 'react-number-format';
 
-class BidInput extends Component{
+class BidInput extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props)
 
     }
-    
-    render(){
+
+    render() {
         return (
             <div>
-                <button onClick={this.props.onClickDecrease}>-</button><input type="text" className="text-center" onChange={this.props.onChange} value={this.props.value}/><button onClick={this.props.onClickIncrease}>+</button>
+                <button onClick={this.props.onClickDecrease}>-
+                </button>
+                <NumberFormat className="text-center" value={this.props.value} thousandSeparator={true} prefix={'$'} onValueChange={this.props.onChange} />
+                <button onClick={this.props.onClickIncrease}>+</button>
             </div>
         )
     }
