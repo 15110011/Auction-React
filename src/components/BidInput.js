@@ -15,7 +15,6 @@ class BidInput extends Component {
                 <button onClick={this.props.onClickDecrease}>-
                 </button>
                 <NumberFormat className="text-center" value={this.props.value} thousandSeparator={true} prefix={'$'} onValueChange={this.props.onChange} />
-
                 <button onClick={this.props.onClickIncrease}>+</button>
             </div>
         )

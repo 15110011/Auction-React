@@ -34,7 +34,7 @@ class AdminPanel extends Component {
             let cloneCats = this.state.categories.slice()
             console.log(newCat, "9999999")
             if (mode === CREATED_MODE) {
-                newCat.items=[]
+                newCat.items = []
                 cloneCats.push(newCat)
                 this.setState({ categories: cloneCats })
             }
@@ -91,7 +91,6 @@ class AdminPanel extends Component {
                 </div> : <div className="container adminpanel" style={{ paddingTop: '30px' }}>
                         <p className="alert alert-danger">HELLO FROM OTHER SIDE</p>
                     </div>}
-
             </div>
         )
     }

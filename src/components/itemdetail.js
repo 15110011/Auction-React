@@ -83,7 +83,7 @@ class ItemDetail extends Component {
                             <br />
                             <Link to='/'><i className="fas fa-backward"><span className="light-word"> Back to bid</span></i></Link>
                             <div className="items-info">
-                                <div className="container">
+                                <div className="container pt-2">
                                     <h3>{itemDetail.name}</h3>
                                 </div>
                                 <hr />
@@ -91,9 +91,9 @@ class ItemDetail extends Component {
                                     <div className="row">
                                         <div className="col-md-5 item-image">
                                             <ReactImageZoom width={340} height={300} zoomWidth={450} img={"http://localhost:1337/images/items/" + images[current].link} />
-                                            <div className="row thumbnail">
+                                            <div className="row thumbnail mt-2" style={{ paddingLeft: '15px', marginRight: '-30px' }}>
                                                 {images.map((img, i) => (
-                                                    <div className="col-md-4 thumbnail-border" key={i}>
+                                                    <div className="col thumbnail-border" key={i}>
                                                         <img className="img-fluid" src={`http://localhost:1337/images/items/${img.link}`} alt="car" style={{ height: '100px' }} onClick={e => this.setCurrentItem(i)} />
                                                     </div>
                                                 ))}
@@ -151,7 +151,7 @@ class ItemDetail extends Component {
                                                         mobile={true} className="form-control pr-5" /> */}
                                                     <button className="btn btn-primary ml-3" type="submit"><i className="fas fa-gavel"> Bid now</i></button>
                                                 </form>
-                                                {this.state.itemDetail.bids.length > 0 ? <p className="alert alert-info light-word">
+                                                {this.state.itemDetail.bids.length > 0 ? <p className="alert alert-info light-word mt-2">
                                                     Last bid by : {this.state.itemDetail.bids[0].userId.userName}
                                                 </p> : ''}
                                             </div>
