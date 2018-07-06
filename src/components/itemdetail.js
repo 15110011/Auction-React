@@ -10,6 +10,8 @@ import _ from 'lodash';
 import dateFns from 'date-fns'
 import BidInput from './BidInput'
 import NumberFormat from 'react-number-format';
+import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
+
 class ItemDetail extends Component {
 
     constructor(props) {
@@ -93,7 +95,7 @@ class ItemDetail extends Component {
                                             <ReactImageZoom width={340} height={300} zoomWidth={450} img={"http://localhost:1337/images/items/" + images[current].link} />
                                             <div className="row thumbnail mt-2" style={{ paddingLeft: '15px', marginRight: '-30px' }}>
                                                 {images.map((img, i) => (
-                                                    <div className="col thumbnail-border" key={i}>
+                                                    <div className="col-sm-4 thumbnail-border" key={i}>
                                                         <img className="img-fluid" src={`http://localhost:1337/images/items/${img.link}`} alt="car" style={{ height: '100px' }} onClick={e => this.setCurrentItem(i)} />
                                                     </div>
                                                 ))}
@@ -183,6 +185,41 @@ class ItemDetail extends Component {
 
                                         </tbody>
                                     </table>
+                                    <div className="d-flex justify-content-center">
+                                        <Pagination aria-label="Page navigation example">
+                                            <PaginationItem>
+                                                <PaginationLink previous href="#" />
+                                            </PaginationItem>
+                                            <PaginationItem>
+                                                <PaginationLink href="#">
+                                                    1
+                                                </PaginationLink>
+                                            </PaginationItem>
+                                            <PaginationItem>
+                                                <PaginationLink href="#">
+                                                    2
+                                                </PaginationLink>
+                                            </PaginationItem>
+                                            <PaginationItem>
+                                                <PaginationLink href="#">
+                                                    3
+                                                </PaginationLink>
+                                            </PaginationItem>
+                                            <PaginationItem>
+                                                <PaginationLink href="#">
+                                                    4
+                                                </PaginationLink>
+                                            </PaginationItem>
+                                            <PaginationItem>
+                                                <PaginationLink href="#">
+                                                    5
+                                                </PaginationLink>
+                                            </PaginationItem>
+                                            <PaginationItem>
+                                                <PaginationLink next href="#" />
+                                            </PaginationItem>
+                                        </Pagination>
+                                    </div>
                                 </div>
                                 <hr />
                                 <div className="container">
