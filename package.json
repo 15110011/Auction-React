@@ -26,6 +26,8 @@
     "react-scripts": "1.1.4",
     "react-thumbnail-gallery": "^2.0.2",
     "reactstrap": "^6.1.0",
+    "sails.io.js": "^1.2.1",
+    "socket.io-client": "^2.1.1",
     "yarn": "^1.7.0"
   },
   "scripts": {

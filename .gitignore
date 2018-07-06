@@ -1,8 +1,11 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
-
 # dependencies
 /node_modules
 package-lock.json
+<<<<<<< HEAD
+
+=======
+>>>>>>> fb1da072b544cad54ec7d10f3c6e9b65091420f3
 # testing
 /coverage
 

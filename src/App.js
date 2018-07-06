@@ -12,7 +12,8 @@ import ItemDetail from './components/itemdetail';
 import Items from './components/items';
 import AdminPanel from './components/AdminPanel'
 import Bidcart from './components/bidcart';
-
+import socketIOClient from 'socket.io-client';
+import sailsIOClient from 'sails.io.js';
 
 class App extends Component {
   constructor(props) {
@@ -21,13 +22,22 @@ class App extends Component {
       loggedIn: GUEST_STATUS,
       name: '',
       userId: '',
-      isAdmin: false
+      isAdmin: false,
+      io: null
     }
     this.logIn = this.logIn.bind(this)
     this.logOut = this.logOut.bind(this)
     this.loginCB = this.loginCB.bind(this)
     this.checkStatus = this.checkStatus.bind(this)
     this.checkIsAdmin = this.checkIsAdmin.bind(this)
+    
+
+  }
+  componentWillMount(){
+    let io = sailsIOClient(socketIOClient);
+    io.sails.url = 'http://localhost:1337';
+    io.sails.connect()
+    this.setState({io:io})
   }
   logIn(e) {
     if (e) {
