@@ -4,8 +4,7 @@ import { Link } from 'react-router-dom'
 import ReactImageZoom from 'react-image-zoom';
 import NumericInput from 'react-numeric-input';
 import '../styles/styles.css'
-import Header from './header';
-import Footer from './footer';
+
 import _ from 'lodash';
 import dateFns from 'date-fns'
 import BidInput from './BidInput'
@@ -47,8 +46,14 @@ class ItemDetail extends Component {
             ]
         }
         this.onSubmitBid = this.onSubmitBid.bind(this)
+        this.onReceiveRoomMessage = this.onReceiveRoomMessage.bind(this)
     }
     componentDidMount() {
+        this.props.io.socket.get('/hello', function serverResponded(body, JWR) {
+            console.log('Sails responded with: ', body);
+            console.log('with headers: ', JWR.headers);
+            console.log('and with status code: ', JWR.statusCode);
+        });
         fetch('/api/v1/items/' + this.props.match.params.id)
             .then(res => res.json())
             .then(item => {
@@ -57,6 +62,10 @@ class ItemDetail extends Component {
                     console.log(item)
                     let nextStep = Math.ceil(item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice * 0.5 : item.findItem.currentPrice * 0.5)
                     let initBid = item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice : item.findItem.currentPrice
+                    this.props.io.socket.get('/socket/items/' + item.findItem.id, (body, JWR) => {
+                        console.log(body.msg)
+                    })
+                    this.props.io.socket.on('room' + item.findItem.id, this.onReceiveRoomMessage)
 
                     this.setState({ itemDetail: item.findItem, step: nextStep, currentBidding: initBid + nextStep })
                 }
@@ -66,6 +75,17 @@ class ItemDetail extends Component {
                 }
             })
     }
+    onReceiveRoomMessage(newBid) {
+        console.log(newBid)
+        // console.log(this.state.itemDetail)
+        let { itemDetail } = this.state
+        if (itemDetail) {
+            itemDetail.bids.unshift(newBid)
+            itemDetail.currentPrice = itemDetail.bids[0].currentPrice
+            let nextStep = Math.ceil(itemDetail.bids[0].currentPrice * 0.5)
+            this.setState({ itemDetail, step: nextStep, currentBidding: newBid.currentPrice + nextStep })
+        }
+    }
     setCurrentItem(current) {
         this.setState({ current })
     }
@@ -73,26 +93,34 @@ class ItemDetail extends Component {
         console.log(this.props.userId)
 
         e.preventDefault()
-        fetch('/api/v1/bid/' + this.state.itemDetail.id, {
-            method: 'POST',
-            body: JSON.stringify({
-                currentPrice: this.state.currentBidding,
-                userId: this.props.userId
-            })
-        }).then(res => res.json()).then(res => {
+        this.props.io.socket.post('/api/v1/bid/' + this.state.itemDetail.id, {
+            currentPrice: this.state.currentBidding,
+            userId: this.props.userId
+        }, (function (res) {
+            console.log(res)
+
             if (!res.error) {
                 let { itemDetail } = this.state
-                itemDetail.bids.unshift(res.newBid)
-                itemDetail.currentPrice = itemDetail.bids[0].currentPrice
-                console.log(res)
-                let nextStep =Math.ceil(itemDetail.bids[0].currentPrice * 0.5)
-                this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice+ nextStep })
-
+                if (itemDetail) {
+                    itemDetail.bids.unshift(res.newBid)
+                    itemDetail.currentPrice = itemDetail.bids[0].currentPrice
+                    let nextStep = Math.ceil(itemDetail.bids[0].currentPrice * 0.5)
+                    this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
+                }
             }
             else {
                 alert(res.msg)
             }
-        })
+
+        }).bind(this))
+    }
+    componentWillUnmount() {
+        if (this.state.itemDetail && this.state.itemDetail.id) {
+            this.props.io.socket.get('/leave/items/' + this.state.itemDetail.id, (body, JWR) => {
+                console.log(body.msg)
+            })
+        }
+
     }
     render() {
         const { current, items, itemDetail } = this.state
@@ -147,7 +175,7 @@ class ItemDetail extends Component {
                                                     <BidInput className="form-control pr-5"
                                                         value={this.state.currentBidding}
                                                         onChange={(e) => {
-                                                            if(!/[A-z]/.test(e.target.value))
+                                                            if (!/[A-z]/.test(e.target.value))
                                                                 this.setState({ currentBidding: +e.target.value })
                                                         }}
                                                         onClickDecrease={e => {
