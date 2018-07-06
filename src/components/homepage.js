@@ -6,8 +6,21 @@ import Header from './header'
 import Features from './hotfeatures';
 import Footer from './footer';
 import Items from './items';
+import CategoryShow from './CategoryShow'
+
 
 class HomePage extends Component {
+
+    state={
+        showCategory:true
+    }
+
+    handleShowCate = () =>{
+        this.setState({
+            showCategory:!this.state.showCategory
+        })
+    }
+
     render() {
         return (
             <div>
@@ -36,11 +49,13 @@ class HomePage extends Component {
                             </div>
                         </div>
                     </div>
+                    <button className="btn btn-primary position-fixed" style={{top:'8%'}} onClick={this.handleShowCate}>Category</button>
+                    <CategoryShow show={this.state.showCategory} />
                 </div>
                 <Features />
-                <br/>
-                <hr/>
-                <Items/>
+                <br />
+                <hr />
+                <Items />
             </div>
         )
     }

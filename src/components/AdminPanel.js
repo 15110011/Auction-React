@@ -89,7 +89,7 @@ class AdminPanel extends Component {
                         </TabPane>
                     </TabContent>
                 </div> : <div className="container adminpanel" style={{ paddingTop: '30px' }}>
-                        <p className="alert alert-danger">HELLO FROM OTHER SIDE</p>
+                        <p className="alert alert-danger text-center light-word">HELLO FROM OTHER SIDE</p>
                     </div>}
             </div>
         )
