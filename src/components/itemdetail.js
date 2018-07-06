@@ -19,33 +19,7 @@ class ItemDetail extends Component {
             currentBidding: 0,
             step: 5,
             itemDetail: null,
-            items: [
-                {
-                    id: 'thumbnail',
-                    title: 'gallery',
-                    description: 'gallery',
-                    altText: 'picture',
-                    src: '/images/car.jpg',
-                    thumbSrc: '/images/thumbnails/car.jpg',
-                },
-                {
-                    id: 'thumbnail',
-                    title: 'gallery',
-                    description: 'gallery',
-                    altText: 'picture',
-                    src: '/images/cigar.jpg',
-                    thumbSrc: '/images/thumbnails/cigar.jpg',
-                },
-                {
-                    id: 'thumbnail',
-                    title: 'gallery',
-                    description: 'gallery',
-                    altText: 'picture',
-                    src: '/images/coin.jpg',
-                    thumbSrc: '/images/thumbnails/coin.jpg'
-
-                }
-            ]
+            images: [],
         }
         this.onSubmitBid = this.onSubmitBid.bind(this)
     }
@@ -55,11 +29,10 @@ class ItemDetail extends Component {
             .then(item => {
                 console.log(item)
                 if (!item.error) {
-                    console.log(item)
                     let nextStep = Math.ceil(item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice * 0.5 : item.findItem.currentPrice * 0.5)
                     let initBid = item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice : item.findItem.currentPrice
 
-                    this.setState({ itemDetail: item.findItem, step: nextStep, currentBidding: initBid + nextStep })
+                    this.setState({ images: item.findImg, itemDetail: item.findItem, step: nextStep, currentBidding: initBid + nextStep })
                 }
                 else {
                     this.setState({ itemDetail: null })
@@ -96,10 +69,10 @@ class ItemDetail extends Component {
         })
     }
     render() {
-        const { current, items, itemDetail } = this.state
+        const { current, items, itemDetail, images } = this.state
         if (!itemDetail) return (
-            <div>
-                Khong ton tai item nay
+            <div className="alert alert-warning text-center" role="alert" >
+                Item not found
             </div>
         )
         return (
@@ -117,11 +90,11 @@ class ItemDetail extends Component {
                                 <div className="container">
                                     <div className="row">
                                         <div className="col-md-5 item-image">
-                                            <ReactImageZoom width={340} height={300} zoomWidth={450} img={items[current].src} />
+                                            <ReactImageZoom width={340} height={300} zoomWidth={450} img={"http://localhost:1337/images/items/" + images[current].link} />
                                             <div className="row thumbnail">
-                                                {items.map((item, i) => (
+                                                {images.map((img, i) => (
                                                     <div className="col-md-4 thumbnail-border" key={i}>
-                                                        <img className="img-fluid" src={item.thumbSrc} alt="car" style={{ height: '100px' }} onClick={e => this.setCurrentItem(i)} />
+                                                        <img className="img-fluid" src={`http://localhost:1337/images/items/${img.link}`} alt="car" style={{ height: '100px' }} onClick={e => this.setCurrentItem(i)} />
                                                     </div>
                                                 ))}
                                             </div>
@@ -223,7 +196,7 @@ class ItemDetail extends Component {
                         <div className="col-md-3">
                             <div className="itemborder" style={{ marginTop: '50px' }}>
                                 <div className="item-image">
-                                    <Link className="detail" to="/itemdetail"><img src="/images/car.jpg" alt="item" /></Link>
+                                    <Link className="detail" to="/itemdetail"><img src="http://localhost:1337/images/items/79a14aad-ff34-4928-8897-816477e734c0.png" alt="item" /></Link>
                                 </div>
                                 <div className="time-price">
                                     <div className="row d-flex justify-content-between">
