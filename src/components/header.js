@@ -67,19 +67,21 @@ class Header extends Component {
             .then(res => {
                 var itemsFound = res.resultItem
                 if (itemsFound.length === 0) {
-                    this.setState({ found: false })
-                    setTimeout(() => {
-                        this.setState({ found: true })
-                    }, 800)
+                    // this.setState({ found: false })
+                    // setTimeout(() => {
+                    //     this.setState({ found: true })
+                    // }, 800)
+                    this.props.history.push({
+                        pathname:'/results',
+                        state: { results: itemsFound }
+                    })
                 }
                 else {
                     this.setState({ found: true })
                     this.props.history.push({
-                        // pathname: `/items/${itemsFound[0].id}`,
                         pathname:'/results',
                         state: { results: itemsFound }
                     })
-                    console.log('Found it', this.state.results)
                 }
             })
 

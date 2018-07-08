@@ -9,8 +9,14 @@ class SearchResult extends Component {
         super(props)
     }
     render() {
-        console.log(this.props.history.location.state.results)
         var foundItems = this.props.history.location.state.results
+        if (foundItems.length === 0) {
+            return (
+                <div role="alert" style={{ marginTop: '75px' }}>
+                    <p className="alert alert-warning text-center light-word">Item not found</p>
+                </div>
+            )
+        }
         return (
             <div className="container" id="adddel-form">
                 <table className="table table-striped">
@@ -21,7 +27,7 @@ class SearchResult extends Component {
                             <th scope="col">Price</th>
                             <th scope="col">Quantity</th>
                             <th scope="col">Category</th>
-                            <th scope="col">Details</th>
+                            <th scope="col">Bid now</th>
                         </tr>
                     </thead>
                     <tbody className="light-word">
@@ -45,7 +51,7 @@ class SearchResult extends Component {
                         }
                     </tbody>
                 </table>
-                </div>
+            </div>
         )
     }
 }
