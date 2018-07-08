@@ -75,7 +75,9 @@ class Header extends Component {
                 else {
                     this.setState({ found: true })
                     this.props.history.push({
-                        pathname: `/items/${itemsFound[0].id}`,
+                        // pathname: `/items/${itemsFound[0].id}`,
+                        pathname:'/results',
+                        state: { results: itemsFound }
                     })
                     console.log('Found it', this.state.results)
                 }
@@ -129,7 +131,7 @@ class Header extends Component {
                             {
                                 filterItem.map((kw) => {
                                     return (
-                                        <option  value={kw.name} />
+                                        <option value={kw.name} />
                                     )
 
 

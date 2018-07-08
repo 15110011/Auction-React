@@ -197,7 +197,7 @@ class App extends Component {
         <Route path='/items/:id' component={(props,state) => (<ItemDetail {...this.state} {...props} />)}/>
         <Route exact path='/items' component={Items} />
         <Route path='/bidcart' component={Bidcart}/>
-        <Route path='/items/results' component={SearchResult}/>
+        <Route exact path='/results' component={(props,state) =>(<SearchResult {...this.state} {...props}/>)}/>
         <Footer />
       </div>
     );

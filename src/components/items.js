@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { render } from 'react-dom'
 import { Link } from 'react-router-dom'
 import '../styles/styles.css'
-import Header from './header';
 import Footer from './footer';
 
 class Items extends Component {
@@ -19,7 +18,7 @@ class Items extends Component {
 
     render() {
         return (
-            <div className="col-md-3" style={{marginTop:'25px'}}>
+            <div className="col-md-3" style={{ marginTop: '25px' }}>
                 <div className="itemborder">
                     <div className="item-image">
                         <Link className="detail" to="/itemdetail"><img src="/images/car.jpg" alt="item" /></Link>
@@ -31,7 +30,7 @@ class Items extends Component {
                         </div>
                     </div>
                 </div>
-                <Link class="btn btnbid" to="/itemdetail" role="button" style={{marginTop:'5px'}}><i class="fas fa-gavel"></i> Bid now</Link>
+                <Link class="btn btnbid" to="/itemdetail" role="button" style={{ marginTop: '5px' }}><i class="fas fa-gavel"></i> Bid now</Link>
             </div>
         )
     }
