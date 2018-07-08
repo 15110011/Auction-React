@@ -72,14 +72,14 @@ class Header extends Component {
                     //     this.setState({ found: true })
                     // }, 800)
                     this.props.history.push({
-                        pathname:'/results',
+                        pathname: '/results',
                         state: { results: itemsFound }
                     })
                 }
                 else {
                     this.setState({ found: true })
                     this.props.history.push({
-                        pathname:'/results',
+                        pathname: '/results',
                         state: { results: itemsFound }
                     })
                 }
@@ -140,12 +140,7 @@ class Header extends Component {
                                 })
                             }
                         </datalist>
-                        {this.state.found ? (
-                            <button className="btn btn-info my-2 my-sm-0" onClick={this.handleSearch} type="submit">Search</button>
-                        ) : (
-                                <p className="bold-word btn btn-info my-2 my-sm-0" >Item not found</p>
-                            )
-                        }
+                        <button className="btn btn-info my-2 my-sm-0" onClick={this.handleSearch} type="submit">Search</button>
                         {
                             (this.props.loggedIn === LOADED_LOGIN_STATUS ? (
                                 <div className="ml-auto">
