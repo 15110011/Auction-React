@@ -14,6 +14,7 @@ import AdminPanel from './components/AdminPanel'
 import Bidcart from './components/bidcart';
 import socketIOClient from 'socket.io-client';
 import sailsIOClient from 'sails.io.js';
+import SearchResult from './components/SearchResult';
 
 class App extends Component {
   constructor(props) {
@@ -174,14 +175,11 @@ class App extends Component {
 
       }
       else if (resp.status === "authorization_expired" || resp.status === 'not_authorized') {
-        console.log('??????????')
         FB.login(this.loginCB.bind(this))
         this.setState({ loggedIn: GUEST_STATUS })
         localStorage.setItem("token", '')
       }
       else {
-        console.log('??????????1')
-
         this.setState({ loggedIn: GUEST_STATUS })
         localStorage.setItem("token", '')
       }
@@ -199,6 +197,7 @@ class App extends Component {
         <Route path='/items/:id' component={(props,state) => (<ItemDetail {...this.state} {...props} />)}/>
         <Route exact path='/items' component={Items} />
         <Route path='/bidcart' component={Bidcart}/>
+        <Route path='/items/results' component={SearchResult}/>
         <Footer />
       </div>
     );

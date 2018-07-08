@@ -1,6 +1,6 @@
 /*global FB*/
 import React, { Component } from 'react';
-
+import Items from './items';
 import { render } from 'react-dom'
 import { Link, withRouter } from 'react-router-dom'
 import SearchResult from './SearchResult'
@@ -17,7 +17,7 @@ class Header extends Component {
             categories: [],
             keywords: '',
             results: [],
-            items: []
+            found: true,
         }
         this.handleLogOut = this.handleLogOut.bind(this)
         this.handleLogin = this.handleLogin.bind(this)
@@ -50,21 +50,12 @@ class Header extends Component {
     }
     updateKeyWord(e) {
         e.preventDefault()
-
-        // fetch(`/api/v1/search?search=${this.state.keywords}`)
-        //     .then(res => res.json())
-        //     .then(res => {
-        //         if (res.resultItem) {
-        //             this.setState({ keywords: res.resultItem })
-        //         }
-        //     })
         this.setState({ keywords: e.target.value })
         fetch(`/api/v1/search?search=${e.target.value}`)
             .then(data => data.json())
             .then(data => {
                 if (data.resultItem) {
-                    var itemsFound = data.resultItem
-                    console.log(itemsFound)
+                    console.log(data.resultItem)
                     this.setState({ results: data.resultItem })
                 }
             })
@@ -74,9 +65,18 @@ class Header extends Component {
         fetch(`/api/v1/search?search=${this.state.keywords}`)
             .then(res => res.json())
             .then(res => {
-                if (res.resultItem) {
-                    var itemsFound = res.resultItem
-                    this.props.history.push(`/items/${itemsFound[0].id}`)
+                var itemsFound = res.resultItem
+                if (itemsFound.length === 0) {
+                    this.setState({ found: false })
+                    setTimeout(() => {
+                        this.setState({ found: true })
+                    }, 800)
+                }
+                else {
+                    this.setState({ found: true })
+                    this.props.history.push({
+                        pathname: `/items/${itemsFound[0].id}`,
+                    })
                     console.log('Found it', this.state.results)
                 }
             })
@@ -94,9 +94,7 @@ class Header extends Component {
         const { keywords, results } = this.state
         let filterItem = this.state.results.filter(kw => {
             return kw.name.toLowerCase().indexOf(this.state.keywords.toLowerCase()) !== -1
-        }
-        )
-        console.log(filterItem)
+        })
         return (
             <div>
                 <nav className="navbar navbar-expand-lg navbar-light bg-dark fixed-top">
@@ -128,20 +126,22 @@ class Header extends Component {
                         <input list="suggestions" className="form-control mr-sm-2" name="search" value={keywords} onChange={this.updateKeyWord} id="search-form" type="search" placeholder="Search" aria-label="Search" />
 
                         <datalist id="suggestions">
-
                             {
                                 filterItem.map((kw) => {
                                     return (
-                                        <option value={kw.name} />
+                                        <option  value={kw.name} />
                                     )
 
 
                                 })
                             }
                         </datalist>
-
-                        <button className="btn btn-info my-2 my-sm-0" onClick={this.handleSearch} type="submit">Search</button>
-
+                        {this.state.found ? (
+                            <button className="btn btn-info my-2 my-sm-0" onClick={this.handleSearch} type="submit">Search</button>
+                        ) : (
+                                <p className="bold-word btn btn-info my-2 my-sm-0" >Item not found</p>
+                            )
+                        }
                         {
                             (this.props.loggedIn === LOADED_LOGIN_STATUS ? (
                                 <div className="ml-auto">
@@ -158,6 +158,7 @@ class Header extends Component {
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
                             ) : '')}
                         {(this.props.loggedIn === GUEST_STATUS ?
@@ -179,7 +180,7 @@ class Header extends Component {
                             </div> : '')}
                     </div>
                 </nav>
-            </div>
+            </div >
         )
     }
 }
