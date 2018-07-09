@@ -98,11 +98,11 @@ class DashBoard extends Component {
                         this.setState({ isDeleted: false })
                     }, 1000)
                     var items = this.state.items.slice()
-
                     items = items.filter((item) => {
                         return item.id !== +value
                     })
-                    this.setState({ items })
+                    const renderedItems = items.slice((this.state.page - 1) * 4, (this.state.page - 1) * 4 + 4)
+                    this.setState({ items, renderedItems })
                 }
             })
     }
@@ -225,8 +225,7 @@ class DashBoard extends Component {
             })
             .then(items => {
                 console.log(items)
-                this.setState({ items: items.findItem })
-                    this.setState({ items:items.findItem, renderedItems: items.findItem.slice(0, 4), total: items.findItem.length })
+                this.setState({ items: items.findItem, renderedItems: items.findItem.slice(0, 4), total: items.findItem.length })
             })
 
     }
@@ -451,9 +450,9 @@ class DashBoard extends Component {
                                 </tbody>
                             </table>}
                         <Pagination aria-label="Page navigation example"
-                            margin={1}
+                            margin={2}
                             page={page}
-                            count={Math.ceil(total/2)}
+                            count={Math.ceil(total / 2)}
                             onPageChange={this.handlePageChange}
                         />
 
