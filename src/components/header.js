@@ -127,6 +127,7 @@ class Header extends Component {
 
                             </div>
                         </form>
+                        <form onSubmit={this.handleSearch} className="form-inline">
                         <input list="suggestions" className="form-control mr-sm-2" name="search" value={keywords} onChange={this.updateKeyWord} id="search-form" type="search" placeholder="Search" aria-label="Search" />
 
                         <datalist id="suggestions">
@@ -140,7 +141,8 @@ class Header extends Component {
                                 })
                             }
                         </datalist>
-                        <button className="btn btn-info my-2 my-sm-0" onClick={this.handleSearch} type="submit">Search</button>
+                        <button className="btn btn-info my-2 my-sm-0"  type="submit">Search</button>
+                       </form>
                         {
                             (this.props.loggedIn === LOADED_LOGIN_STATUS ? (
                                 <div className="ml-auto">
