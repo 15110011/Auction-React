@@ -1,12 +1,7 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
 import { Link } from 'react-router-dom'
-<<<<<<< HEAD
-import './../styles/styles.css'
-import Header from './header';
-=======
 import '../styles/styles.css'
->>>>>>> d8911937b0b6948aa1db5e15ea2458b3325af5e5
 import Footer from './footer';
 
 class Items extends Component {

@@ -43,7 +43,6 @@ class ItemDetail extends Component {
                         console.log(body.msg)
                     })
                     this.props.io.socket.on('room' + item.findItem.id, this.onReceiveRoomMessage)
-<<<<<<< HEAD
                     let endTime = dateFns.getTime(dateFns.addHours(item.findItem.startedAt,item.findItem.period))
                     let currTime = dateFns.getTime(new Date())
                     let timeLeft = endTime-currTime
@@ -53,10 +52,6 @@ class ItemDetail extends Component {
                     },1000)
                     this.setState({ images: item.findImg, itemDetail: item.findItem, step: nextStep, currentBidding: initBid + nextStep, timeLeft: timeLeft })
 
-=======
-                    console.log(item.findImg)
-                    this.setState({ images: item.findImg, itemDetail: item.findItem, step: nextStep, currentBidding: initBid + nextStep })
->>>>>>> d8911937b0b6948aa1db5e15ea2458b3325af5e5
                 }
                 else {
                     this.setState({ itemDetail: null })
