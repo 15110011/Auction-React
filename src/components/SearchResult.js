@@ -21,7 +21,9 @@ class SearchResult extends Component {
         }
         return (
             <div className="container" id="adddel-form">
-                <h1>Search results</h1>
+                <div className="page-header">
+                    <h1>Search results</h1>
+                </div>
                 <table className="table table-striped">
                     <thead>
                         <tr>

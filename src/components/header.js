@@ -128,7 +128,7 @@ class Header extends Component {
                             </div>
                         </form>
                         <form onSubmit={this.handleSearch} className="form-inline">
-                        <input list="suggestions" className="form-control mr-sm-2" name="search" value={keywords} onChange={this.updateKeyWord} id="search-form" type="search" placeholder="Search" aria-label="Search" />
+                        <input autoComplete="off" list="suggestions" className="form-control mr-sm-2" name="search" value={keywords} onChange={this.updateKeyWord} id="search-form" type="search" placeholder="Search" aria-label="Search" />
 
                         <datalist id="suggestions">
                             {
