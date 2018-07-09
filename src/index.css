@@ -7,8 +7,11 @@ body {
 .light-word{
   font-family: "Helvatica Light",sans-serif;
 }
-.bold-word {
+.bolditalic-word {
   font-family: "Helvatica BoldItalic",sans-serif;
+}
+.bold-word{
+  font-family: "Helvatica Bold",sans-serif;
 }
 @font-face {
   font-family: "Helvatica Bold";

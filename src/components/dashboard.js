@@ -246,7 +246,7 @@ class DashBoard extends Component {
                     }
                     <div className="intro-dashboard">
                         <center>
-                            <h2>Add your items below</h2>
+                            <h2 className="bold-word">Add your items below</h2>
                             <br />
                         </center>
                     </div>
@@ -274,11 +274,11 @@ class DashBoard extends Component {
                                     value={this.state.itemId}
                                 />
                                 <div className="info">
-                                    <div className="row info-intro">
-                                        <h3>Infomation</h3>
+                                    <div className="row info-intro bold-word">
+                                        <h3 style={{ marginTop: '5px', paddingLeft: '5px' }}>Infomation</h3>
                                     </div>
                                     <div className="row pt-2" id="detail-border">
-                                        <div className="col" style={{ marginLeft: '150px' }}>
+                                        <div className="col-md-4">
                                             <FormGroup>
                                                 <Label for="exampleName">Name <span title="Nhập cmn vào" id="force">(*)</span></Label>
                                                 <Input type="text" name="name" id="exampleName" placeholder="Car..."
@@ -294,7 +294,7 @@ class DashBoard extends Component {
                                                 />
                                             </FormGroup>
                                         </div>
-                                        <div className="col">
+                                        <div className="col-md-4">
                                             <FormGroup>
                                                 <Label for="example">Quantity <span title="Nhập cmn vào" id="force">(*)</span></Label>
                                                 <Input type="number" name="quantity" id="exampleQuantity" min="0"
@@ -312,12 +312,21 @@ class DashBoard extends Component {
                                                 </Input>
                                             </FormGroup>
                                         </div>
+                                        <div className="col-md-4">
+                                            <FormGroup>
+                                                <Label for="example">Time left <span title="Nhập cmn vào" id="force">(*)</span></Label>
+                                                <Input type="number" name="period" id="examplePeriod" min="0"
+                                                    value={this.state.quantity}
+                                                    onChange={e => this.setState({ quantity: e.target.value })}
+                                                />
+                                            </FormGroup>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="detail mt-2">
                                     <div className="detail-form mt-2">
-                                        <div className="row detai-intro mb-1" id="detail-border">
-                                            <h3>Details</h3>
+                                        <div className="row detai-intro mb-1 bold-word" id="detail-border">
+                                            <h3 style={{ marginTop: '5px', paddingLeft: '5px' }}>Details</h3>
                                         </div>
                                         <div className="row detail-field">
                                             <p className="col alert alert-success light-word">Describe about your item sush as type, year...</p>
@@ -421,7 +430,9 @@ class DashBoard extends Component {
                                                             <button className="btn btn-danger mx-2" onClick={this.handleDelete} value={item.id}><i className="far fa-trash-alt"></i></button>
                                                         </div>
                                                     </td>
-                                                    <td>{item.quantity}</td>
+                                                    <td><span className="badge badge-pill badge-success light-word">Accepted</span></td>
+                                                    {/* <td><span className="badge badge-pill badge-danger light-word">Rejected</span></td>
+                                                    <td><span className="badge badge-pill badge-secondary light-word">Pending</span></td> */}
                                                 </tr>
                                             )
                                         })
