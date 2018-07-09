@@ -20,8 +20,8 @@ class SearchResult extends Component {
             )
         }
         return (
-            <div className="container" id="adddel-form">
-                <div className="page-header">
+            <div className="container" id="adddel-form" style={{minHeight:'100vh'}}>
+                <div className="page-header" style={{marginTop:'100px'}}>
                     <h1>Search results</h1>
                 </div>
                 <table className="table table-striped">
