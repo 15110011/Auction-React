@@ -12,7 +12,8 @@ import { convertFromRaw, convertFromHTML, ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Form, FormGroup, Label, ButtonGroup } from 'reactstrap';
-import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
+import { PaginationItem, PaginationLink } from 'reactstrap';
+import Pagination from './Pagination'
 import NumberFormat from 'react-number-format';
 
 
@@ -42,7 +43,9 @@ class DashBoard extends Component {
             modal: false,
             checkValidInput: true,
             images: [],
-            count: 0
+            count: 0,
+            page: 1,
+            renderedItems: []
         }
         this.handleAddItem = this.handleAddItem.bind(this)
         this.getItem = this.getItem.bind(this)
@@ -54,6 +57,7 @@ class DashBoard extends Component {
         this.onEditorStateChange = this.onEditorStateChange.bind(this)
         this.toggle = this.toggle.bind(this)
         this.onInputFileChange = this.onInputFileChange.bind(this)
+        this.handlePageChange = this.handlePageChange.bind(this)
     }
     toggle() {
         this.setState({
@@ -222,13 +226,20 @@ class DashBoard extends Component {
             .then(items => {
                 console.log(items)
                 this.setState({ items: items.findItem })
+                    this.setState({ items:items.findItem, renderedItems: items.findItem.slice(0, 4), total: items.findItem.length })
             })
+
+    }
+    handlePageChange(page) {
+        const renderedItems = this.state.items.slice((page - 1) * 4, (page - 1) * 4 + 4)
+        this.setState({ page, renderedItems })
     }
     handleChange(e) {
         this.setState({ categoriesId: e.target.value })
     }
     render() {
         const { currentNote } = this.props
+        const { page, total, renderedItems } = this.state
         if (this.props.loggedIn === GUEST_STATUS) {
             return (
                 <div className="container">
@@ -411,7 +422,7 @@ class DashBoard extends Component {
                                 </thead>
                                 <tbody className="light-word">
                                     {
-                                        this.state.items.map((item, i) => {
+                                        renderedItems.map((item, i) => {
                                             return (
                                                 <tr className="fixprop" key={item.id}>
                                                     <th scope="row">{i + 1}</th>
@@ -439,41 +450,14 @@ class DashBoard extends Component {
                                     }
                                 </tbody>
                             </table>}
-                        <div className="d-flex justify-content-center">
-                            <Pagination aria-label="Page navigation example">
-                                <PaginationItem>
-                                    <PaginationLink previous href="#" />
-                                </PaginationItem>
-                                <PaginationItem>
-                                    <PaginationLink href="#">
-                                        1
-                                    </PaginationLink>
-                                </PaginationItem>
-                                <PaginationItem>
-                                    <PaginationLink href="#">
-                                        2
-                                    </PaginationLink>
-                                </PaginationItem>
-                                <PaginationItem>
-                                    <PaginationLink href="#">
-                                        3
-                                    </PaginationLink>
-                                </PaginationItem>
-                                <PaginationItem>
-                                    <PaginationLink href="#">
-                                        4
-                                    </PaginationLink>
-                                </PaginationItem>
-                                <PaginationItem>
-                                    <PaginationLink href="#">
-                                        5
-                                    </PaginationLink>
-                                </PaginationItem>
-                                <PaginationItem>
-                                    <PaginationLink next href="#" />
-                                </PaginationItem>
-                            </Pagination>
-                        </div>
+                        <Pagination aria-label="Page navigation example"
+                            margin={1}
+                            page={page}
+                            count={Math.ceil(total/2)}
+                            onPageChange={this.handlePageChange}
+                        />
+
+
                     </div>
                 </div>
             </div>
