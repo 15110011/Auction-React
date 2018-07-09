@@ -7,6 +7,9 @@ body {
 .light-word{
   font-family: "Helvatica Light",sans-serif;
 }
+.bold-word {
+  font-family: "Helvatica BoldItalic",sans-serif;
+}
 @font-face {
   font-family: "Helvatica Bold";
   src: url("styles/fonts/HelveticaNeue-Bold.otf");

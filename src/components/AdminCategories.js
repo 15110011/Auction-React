@@ -105,8 +105,6 @@ class AdminCategories extends Component {
                                     </td>
                                 </tr>)
                             })}
-
-
                         </tbody>
                     </table>
                 </Col>

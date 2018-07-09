@@ -13,6 +13,8 @@ import draftToHtml from 'draftjs-to-html';
 import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Form, FormGroup, Label, ButtonGroup } from 'reactstrap';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
+import NumberFormat from 'react-number-format';
+
 
 class DashBoard extends Component {
 
@@ -405,7 +407,7 @@ class DashBoard extends Component {
                                                 <tr className="fixprop" key={item.id}>
                                                     <th scope="row">{i + 1}</th>
                                                     <td>{item.name}</td>
-                                                    <td>{item.currentPrice}</td>
+                                                    <td><NumberFormat displayType={'text'} value={item.currentPrice} thousandSeparator={true} prefix={'$'} /></td>
                                                     <td>{item.quantity}</td>
                                                     <td>{this.state.categories[item.categoriesId]}</td>
                                                     <td>

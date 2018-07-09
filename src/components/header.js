@@ -1,9 +1,9 @@
 /*global FB*/
 import React, { Component } from 'react';
-
+import Items from './items';
 import { render } from 'react-dom'
 import { Link, withRouter } from 'react-router-dom'
-import SignInPage from './sign-in'
+import SearchResult from './SearchResult'
 import '../styles/styles.css'
 import { LOADING_LOGIN_STATUS, LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config'
 
@@ -14,19 +14,18 @@ class Header extends Component {
             isLoggedIn: false,
             name: '',
             loading: false,
-            categories: []
+            categories: [],
+            keywords: '',
+            results: [],
+            found: true,
         }
         this.handleLogOut = this.handleLogOut.bind(this)
         this.handleLogin = this.handleLogin.bind(this)
-        // this.loggedIn = this.loggedIn.bind(this)
+        this.handleSearch = this.handleSearch.bind(this)
+        this.updateKeyWord = this.updateKeyWord.bind(this)
     }
     handleLogOut(e) {
         e.preventDefault()
-        // localStorage.removeItem('session')
-        // fetch('/api/v1/account/logout')
-        //     .then(() => {
-        //         this.setState({ isLoggedOut: true })
-        //     })
         FB.logout(
             resp => {
                 if (resp.status === 'unknown') {
@@ -42,32 +41,51 @@ class Header extends Component {
                 cloneCat[cat.id] = cat.name
                 return true
             })
-
-            // let initCat =[]
-            // initCat.push(...res.cats)
             this.setState({ categories: cloneCat })
 
         })
     }
     componentWillMount() {
-        // FB.getLoginStatus(resp=>{
-        //     if (resp.status === 'connected') {
-        //         this.loggedIn();
-        //     }
-        //     else if (resp.status === 'authorization_expired') {
-
-        //     }
-        //     else if (resp.status === 'not_authorized') {}
-        //     else {}
-        // })
         this.props.checkStatus()
     }
-    // loggedIn(){
-    //     FB.api('/me',resp=>{
-    //         console.log(resp)
-    //         this.setState({name:resp.name,isLoggedIn:true})
-    //     })
-    // }
+    updateKeyWord(e) {
+        e.preventDefault()
+        this.setState({ keywords: e.target.value })
+        fetch(`/api/v1/search?search=${e.target.value}`)
+            .then(data => data.json())
+            .then(data => {
+                if (data.resultItem) {
+                    console.log(data.resultItem)
+                    this.setState({ results: data.resultItem })
+                }
+            })
+    }
+    handleSearch(e) {
+        e.preventDefault()
+        fetch(`/api/v1/search?search=${this.state.keywords}`)
+            .then(res => res.json())
+            .then(res => {
+                var itemsFound = res.resultItem
+                if (itemsFound.length === 0) {
+                    // this.setState({ found: false })
+                    // setTimeout(() => {
+                    //     this.setState({ found: true })
+                    // }, 800)
+                    this.props.history.push({
+                        pathname: '/results',
+                        state: { results: itemsFound }
+                    })
+                }
+                else {
+                    this.setState({ found: true })
+                    this.props.history.push({
+                        pathname: '/results',
+                        state: { results: itemsFound }
+                    })
+                }
+            })
+
+    }
     handleLogin(e) {
         e.preventDefault()
         this.props.logIn()
@@ -77,6 +95,10 @@ class Header extends Component {
         FB.login(console.log)
     }
     render() {
+        const { keywords, results } = this.state
+        let filterItem = this.state.results.filter(kw => {
+            return kw.name.toLowerCase().indexOf(this.state.keywords.toLowerCase()) !== -1
+        })
         return (
             <div>
                 <nav className="navbar navbar-expand-lg navbar-light bg-dark fixed-top">
@@ -98,15 +120,29 @@ class Header extends Component {
 
                                                     </li>)
                                             })}
-                                            
+
                                         </ul>
                                     </li>
                                 </ul>
 
                             </div>
                         </form>
-                        <input className="form-control mr-sm-2" id="search-form" type="search" placeholder="Search" aria-label="Search" />
-                        <button className="btn btn-info my-2 my-sm-0" type="submit">Search</button>
+                        <form onSubmit={this.handleSearch} className="form-inline">
+                        <input autoComplete="off" list="suggestions" className="form-control mr-sm-2" name="search" value={keywords} onChange={this.updateKeyWord} id="search-form" type="search" placeholder="Search" aria-label="Search" />
+
+                        <datalist id="suggestions">
+                            {
+                                filterItem.map((kw) => {
+                                    return (
+                                        <option value={kw.name} />
+                                    )
+
+
+                                })
+                            }
+                        </datalist>
+                        <button className="btn btn-info my-2 my-sm-0"  type="submit">Search</button>
+                       </form>
                         {
                             (this.props.loggedIn === LOADED_LOGIN_STATUS ? (
                                 <div className="ml-auto">
@@ -123,6 +159,7 @@ class Header extends Component {
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
                             ) : '')}
                         {(this.props.loggedIn === GUEST_STATUS ?
@@ -144,7 +181,7 @@ class Header extends Component {
                             </div> : '')}
                     </div>
                 </nav>
-            </div>
+            </div >
         )
     }
 }
