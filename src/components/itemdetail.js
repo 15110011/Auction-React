@@ -21,6 +21,7 @@ class ItemDetail extends Component {
             step: 5,
             itemDetail: null,
             images: [],
+            timeLeft : 0
         }
         this.onSubmitBid = this.onSubmitBid.bind(this)
         this.onReceiveRoomMessage = this.onReceiveRoomMessage.bind(this)
@@ -42,8 +43,15 @@ class ItemDetail extends Component {
                         console.log(body.msg)
                     })
                     this.props.io.socket.on('room' + item.findItem.id, this.onReceiveRoomMessage)
+                    let endTime = dateFns.getTime(dateFns.addHours(item.findItem.startedAt,item.findItem.period))
+                    let currTime = dateFns.getTime(new Date())
+                    let timeLeft = endTime-currTime
+                    setInterval(()=>{
+                        let remainTime = this.state.timeLeft-1000
+                        this.setState({timeLeft:remainTime})
+                    },1000)
+                    this.setState({ images: item.findImg, itemDetail: item.findItem, step: nextStep, currentBidding: initBid + nextStep, timeLeft: timeLeft })
 
-                    this.setState({ images: item.findImg, itemDetail: item.findItem, step: nextStep, currentBidding: initBid + nextStep })
                 }
                 else {
                     this.setState({ itemDetail: null })
@@ -77,27 +85,24 @@ class ItemDetail extends Component {
 
             if (!res.error) {
                 let { itemDetail } = this.state
-<<<<<<< HEAD
                 if (itemDetail) {
                     itemDetail.bids.unshift(res.newBid)
                     itemDetail.currentPrice = itemDetail.bids[0].currentPrice
                     let nextStep = Math.ceil(itemDetail.bids[0].currentPrice * 0.5)
                     this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
                 }
-=======
-                itemDetail.bids.unshift(res.newBid)
-                itemDetail.currentPrice = itemDetail.bids[0].currentPrice
-                console.log(res)
-                let nextStep = Math.ceil(itemDetail.bids[0].currentPrice * 0.5)
-                this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
-
->>>>>>> fb1da072b544cad54ec7d10f3c6e9b65091420f3
             }
             else {
                 alert(res.msg)
             }
 
         }).bind(this))
+    }
+    fromMillisecondsToFormattedString(ms){
+        let h = Math.floor(ms/(3600*1000))
+        let m = Math.floor((ms-(3600*1000*h))/(60*1000))
+        let s = Math.floor((ms-(3600*1000*h)-(60*1000*m))/(1000))
+        return `${h<10?'0'+h:h}:${m<10?'0'+m:m}:${s<10?'0'+s:s}`
     }
     componentWillUnmount() {
         if (this.state.itemDetail && this.state.itemDetail.id) {
@@ -142,7 +147,9 @@ class ItemDetail extends Component {
                                             <div className="row">
                                                 <div className="col-md-6">
                                                     <div>
-                                                        <h4>Time left: 00:00:00</h4>
+                                                        <h4>Time left: {
+                                                            this.fromMillisecondsToFormattedString(this.state.timeLeft)}
+                                                            </h4>
                                                     </div>
                                                 </div>
                                                 <div className="col-md-6">

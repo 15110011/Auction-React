@@ -42,10 +42,13 @@ class AdminPendingItems extends Component {
             cloneSelected[index].selected = !cloneSelected[index].selected
             this.setState({itemsStatus:cloneSelected})
             if(cloneSelected[index].selected){
-                this.setState({selectedCount:++this.state.selectedCount})
+                let newSelectedCount =this.state.selectedCount+1
+                this.setState({selectedCount:newSelectedCount})
             }
             else{
-                this.setState({selectedCount:--this.state.selectedCount})
+                let newSelectedCount =this.state.selectedCount-1
+
+                this.setState({selectedCount:newSelectedCount})
                 
             }
         }

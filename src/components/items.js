@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
 import { Link } from 'react-router-dom'
-import '../styles/styles.css'
+import './../styles/styles.css'
 import Header from './header';
 import Footer from './footer';
 
@@ -31,7 +31,7 @@ class Items extends Component {
                         </div>
                     </div>
                 </div>
-                <Link class="btn btnbid" to="/itemdetail" role="button" style={{marginTop:'5px'}}><i class="fas fa-gavel"></i> Bid now</Link>
+                <Link className="btn btnbid" to="/itemdetail" role="button" style={{marginTop:'5px'}}><i className="fas fa-gavel"></i> Bid now</Link>
             </div>
         )
     }
