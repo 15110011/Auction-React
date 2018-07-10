@@ -42,7 +42,8 @@ class DashBoard extends Component {
             modal: false,
             checkValidInput: true,
             images: [],
-            count: 0
+            count: 0,
+            period: 1
         }
         this.handleAddItem = this.handleAddItem.bind(this)
         this.getItem = this.getItem.bind(this)
@@ -305,7 +306,7 @@ class DashBoard extends Component {
                                             <FormGroup>
                                                 <Label for="example">Category <span title="Nhập cmn vào" id="force">(*)</span></Label>
                                                 <Input type="select" name="categories" id="exampleSelect" onChange={this.handleChange}>
-                                                    <option selected></option>
+                                                    <option defaultValue></option>
                                                     {this.state.categories.map((cat, index) => {
                                                         return (<option value={index} key={index}>{cat}</option>)
                                                     })}
@@ -314,11 +315,13 @@ class DashBoard extends Component {
                                         </div>
                                         <div className="col-md-4">
                                             <FormGroup>
-                                                <Label for="example">Time left <span title="Nhập cmn vào" id="force">(*)</span></Label>
-                                                <Input type="number" name="period" id="examplePeriod" min="0"
-                                                    value={this.state.quantity}
-                                                    onChange={e => this.setState({ quantity: e.target.value })}
-                                                />
+                                                <Label for="example">Duration (hours) <span title="Nhập cmn vào" id="force">(*)</span></Label>
+                                                <Input type="select" name="period" onChange={e => this.setState({ period: e.target.value })}>
+                                                    <option value="1" defaultValue>1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="5">5</option>
+                                                </Input>
                                             </FormGroup>
                                         </div>
                                     </div>
