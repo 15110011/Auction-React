@@ -21,7 +21,7 @@ class ItemDetail extends Component {
             step: 5,
             itemDetail: null,
             images: [],
-            timeLeft : 0
+            timeLeft: 0
         }
         this.onSubmitBid = this.onSubmitBid.bind(this)
         this.onReceiveRoomMessage = this.onReceiveRoomMessage.bind(this)
@@ -43,13 +43,13 @@ class ItemDetail extends Component {
                         console.log(body.msg)
                     })
                     this.props.io.socket.on('room' + item.findItem.id, this.onReceiveRoomMessage)
-                    let endTime = dateFns.getTime(dateFns.addHours(item.findItem.startedAt,item.findItem.period))
+                    let endTime = dateFns.getTime(dateFns.addHours(item.findItem.startedAt, item.findItem.period))
                     let currTime = dateFns.getTime(new Date())
-                    let timeLeft = endTime-currTime
-                    setInterval(()=>{
-                        let remainTime = this.state.timeLeft-1000
-                        this.setState({timeLeft:remainTime})
-                    },1000)
+                    let timeLeft = endTime - currTime
+                    setInterval(() => {
+                        let remainTime = this.state.timeLeft - 1000
+                        this.setState({ timeLeft: remainTime })
+                    }, 1000)
                     this.setState({ images: item.findImg, itemDetail: item.findItem, step: nextStep, currentBidding: initBid + nextStep, timeLeft: timeLeft })
 
                 }
@@ -98,11 +98,11 @@ class ItemDetail extends Component {
 
         }).bind(this))
     }
-    fromMillisecondsToFormattedString(ms){
-        let h = Math.floor(ms/(3600*1000))
-        let m = Math.floor((ms-(3600*1000*h))/(60*1000))
-        let s = Math.floor((ms-(3600*1000*h)-(60*1000*m))/(1000))
-        return `${h<10?'0'+h:h}:${m<10?'0'+m:m}:${s<10?'0'+s:s}`
+    fromMillisecondsToFormattedString(ms) {
+        let h = Math.floor(ms / (3600 * 1000))
+        let m = Math.floor((ms - (3600 * 1000 * h)) / (60 * 1000))
+        let s = Math.floor((ms - (3600 * 1000 * h) - (60 * 1000 * m)) / (1000))
+        return `${h < 10 ? '0' + h : h}:${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`
     }
     componentWillUnmount() {
         if (this.state.itemDetail && this.state.itemDetail.id) {
@@ -114,7 +114,15 @@ class ItemDetail extends Component {
     }
     render() {
         const { current, items, itemDetail, images } = this.state
-        if (!itemDetail) return (
+        if (itemDetail && this.props.userId != itemDetail.userId) {
+            return (
+                <div role="alert" style={{ marginTop: '75px' }}>
+                    <p className="alert alert-danger text-center light-word">You dont have permission to visit this page, get out</p>
+                </div>
+            )
+        }
+
+        else if (!itemDetail) return (
             <div role="alert" style={{ marginTop: '75px' }}>
                 <p className="alert alert-warning text-center light-word">Item not found</p>
             </div>
@@ -134,22 +142,26 @@ class ItemDetail extends Component {
                                 <div className="container">
                                     <div className="row">
                                         <div className="col-md-5 item-image">
-                                            <ReactImageZoom width={340} height={300} zoomWidth={450} img={"http://localhost:1337/images/items/" + images[current].link} />
-                                            <div className="row thumbnail mt-2" style={{ paddingLeft: '15px', marginRight: '-30px' }}>
-                                                {images.map((img, i) => (
-                                                    <div className="col-sm-4 thumbnail-border" key={i}>
-                                                        <img className="img-fluid" src={`http://localhost:1337/images/items/${img.link}`} alt="car" style={{ height: '100px' }} onClick={e => this.setCurrentItem(i)} />
-                                                    </div>
-                                                ))}
-                                            </div>
+                                            {images.length > 0 ?
+                                                <div>
+                                                    <ReactImageZoom width={340} height={300} zoomWidth={450} img={"http://localhost:1337/images/items/" + images[current].link} />
+                                                    <div className="row thumbnail mt-2" style={{ paddingLeft: '15px', marginRight: '-30px' }}>
+                                                        {images.map((img, i) => (
+                                                            <div className="col-sm-4 thumbnail-border" key={i}>
+                                                                <img className="img-fluid" src={`http://localhost:1337/images/items/${img.link}`} alt="car" style={{ height: '100px' }} onClick={e => this.setCurrentItem(i)} />
+                                                            </div>
+                                                        ))}
+                                                    </div></div> : <img className="img-fluid" src={`http://www.staticwhich.co.uk/static/images/products/no-image/no-image-available.png`} alt="No image" />}
                                         </div>
                                         <div className="col-md-7">
                                             <div className="row">
                                                 <div className="col-md-6">
                                                     <div>
-                                                        <h4>Time left: {
-                                                            this.fromMillisecondsToFormattedString(this.state.timeLeft)}
+                                                        {this.state.itemDetail.startedAt == 0 ? <h4>Duration: {this.state.itemDetail.period} hour(s)</h4> :
+                                                            <h4>Time left: {
+                                                                this.fromMillisecondsToFormattedString(this.state.timeLeft)}
                                                             </h4>
+                                                        }
                                                     </div>
                                                 </div>
                                                 <div className="col-md-6">
