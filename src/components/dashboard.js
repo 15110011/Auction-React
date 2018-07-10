@@ -141,6 +141,7 @@ class DashBoard extends Component {
             .then(res => res.json())
             .then((res) => {
                 if (res.item) {
+
                     this.setState({ isAdded: true, name: '', quantity: '', currentPrice: '', details: '', count: 0, editorState: '' })
                     this.getItem()
                     setTimeout(() => {
@@ -225,7 +226,8 @@ class DashBoard extends Component {
             })
             .then(items => {
                 console.log(items)
-                this.setState({ items: items.findItem, renderedItems: items.findItem.slice(0, 4), total: items.findItem.length })
+
+                this.setState({ items: items.findItem, renderedItems: items.findItem.slice(0, 4), total: items.findItem.length, page: 1 })
             })
 
     }
@@ -236,6 +238,7 @@ class DashBoard extends Component {
     handleChange(e) {
         this.setState({ categoriesId: e.target.value })
     }
+
     render() {
         const { currentNote } = this.props
         const { page, total, renderedItems } = this.state
@@ -246,6 +249,7 @@ class DashBoard extends Component {
                 </div>
             )
         }
+
         return (
             <div className="container">
                 <div className="dashboard">
@@ -440,7 +444,27 @@ class DashBoard extends Component {
                                                             <button className="btn btn-danger mx-2" onClick={this.handleDelete} value={item.id}><i className="far fa-trash-alt"></i></button>
                                                         </div>
                                                     </td>
-                                                    <td><span className="badge badge-pill badge-success light-word">Accepted</span></td>
+                                                    {
+                                                        item.isAccept==1  && (
+                                                            <td><span className="badge badge-pill badge-success light-word">Accepted</span></td>
+
+                                                        )
+                                                        
+                                                    }
+                                                    {
+                                                        item.isAccept === 0 && (
+                                                            <td><span className="badge badge-pill badge-danger light-word">Rejected</span></td>
+
+                                                        )
+                                                        
+                                                    }
+                                                    {
+                                                        item.isAccept === null && (
+                                                            <td><span className="badge badge-pill badge-secondary light-word">Pending</span></td>
+
+                                                        )
+                                                        
+                                                    }
                                                     {/* <td><span className="badge badge-pill badge-danger light-word">Rejected</span></td>
                                                     <td><span className="badge badge-pill badge-secondary light-word">Pending</span></td> */}
                                                 </tr>
