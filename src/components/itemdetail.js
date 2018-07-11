@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom'
 import ReactImageZoom from 'react-image-zoom';
 import NumericInput from 'react-numeric-input';
 import '../styles/styles.css'
-
 import _ from 'lodash';
 import dateFns from 'date-fns'
 import BidInput from './BidInput'
 import NumberFormat from 'react-number-format';
+import RatingStar from './RatingStar';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 class ItemDetail extends Component {
@@ -283,6 +283,7 @@ class ItemDetail extends Component {
                                 <hr />
                                 <div dangerouslySetInnerHTML={{ __html: itemDetail.details }} className="container">
                                 </div>
+                                <RatingStar/> 
                             </div>
                         </div>
                         <div className="col-md-3">
