@@ -507,3 +507,20 @@ body{
   -moz-border-radius: 3px 0 0 3px;
   border-radius: 3px 0 0 3px;
 }
+.notification-item{
+  background-color: #117b94;
+}
+.notification{
+  display: block;
+  padding: 0 12px;
+  background-color: #fff;
+  color: #333333;
+  text-decoration: none;
+}
+.notification :hover{
+  background-color: #f9f9f9;
+  border-color: #eeeeee;
+}
+#a-color a{
+  color: #46549c;
+}

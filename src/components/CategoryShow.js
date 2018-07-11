@@ -10,11 +10,11 @@ import Items from './items';
 const CategoryShow = (props) => {
     return (
         <div>
-            <div class="navigation" style={{left: props.show?"-250px":"0"}}>
+            <div className="navigation" style={{left: props.show?"-250px":"0"}}>
                 <ul>
-                    <li class="has-sub"> <a href="#">Car</a>
+                    <li className="has-sub"> <a href="#">Car</a>
                         <ul>
-                            <li class="has-sub"> <a href="#">Submenu 1.1</a>
+                            <li className="has-sub"> <a href="#">Submenu 1.1</a>
                                 <ul>
                                     <li><a href="#">Submenu 1.1.1</a></li>
                                     <li><a href="#">Submenu 1.1.2</a></li>
@@ -23,9 +23,9 @@ const CategoryShow = (props) => {
                             <li><a href="#">Submenu 1.2</a></li>
                         </ul>
                     </li>
-                    <li class="has-sub"> <a href="#">Car</a>
+                    <li className="has-sub"> <a href="#">Car</a>
                         <ul>
-                            <li class="has-sub"> <a href="#">Submenu 1.1</a>
+                            <li className="has-sub"> <a href="#">Submenu 1.1</a>
                                 <ul>
                                     <li><a href="#">Submenu 1.1.1</a></li>
                                     <li><a href="#">Submenu 1.1.2</a></li>
@@ -34,9 +34,9 @@ const CategoryShow = (props) => {
                             <li><a href="#">Submenu 1.2</a></li>
                         </ul>
                     </li>
-                    <li class="has-sub"> <a href="#">Car</a>
+                    <li className="has-sub"> <a href="#">Car</a>
                         <ul>
-                            <li class="has-sub"> <a href="#">Submenu 1.1</a>
+                            <li className="has-sub"> <a href="#">Submenu 1.1</a>
                                 <ul>
                                     <li><a href="#">Submenu 1.1.1</a></li>
                                     <li><a href="#">Submenu 1.1.2</a></li>
@@ -45,9 +45,9 @@ const CategoryShow = (props) => {
                             <li><a href="#">Submenu 1.2</a></li>
                         </ul>
                     </li>
-                    <li class="has-sub"> <a href="#">Car</a>
+                    <li className="has-sub"> <a href="#">Car</a>
                         <ul>
-                            <li class="has-sub"> <a href="#">Submenu 1.1</a>
+                            <li className="has-sub"> <a href="#">Submenu 1.1</a>
                                 <ul>
                                     <li><a href="#">Submenu 1.1.1</a></li>
                                     <li><a href="#">Submenu 1.1.2</a></li>
@@ -56,9 +56,9 @@ const CategoryShow = (props) => {
                             <li><a href="#">Submenu 1.2</a></li>
                         </ul>
                     </li>
-                    <li class="has-sub"> <a href="#">Car</a>
+                    <li className="has-sub"> <a href="#">Car</a>
                         <ul>
-                            <li class="has-sub"> <a href="#">Submenu 1.1</a>
+                            <li className="has-sub"> <a href="#">Submenu 1.1</a>
                                 <ul>
                                     <li><a href="#">Submenu 1.1.1</a></li>
                                     <li><a href="#">Submenu 1.1.2</a></li>
@@ -67,9 +67,9 @@ const CategoryShow = (props) => {
                             <li><a href="#">Submenu 1.2</a></li>
                         </ul>
                     </li>
-                    <li class="has-sub"> <a href="#">Car</a>
+                    <li className="has-sub"> <a href="#">Car</a>
                         <ul>
-                            <li class="has-sub"> <a href="#">Submenu 1.1</a>
+                            <li className="has-sub"> <a href="#">Submenu 1.1</a>
                                 <ul>
                                     <li><a href="#">Submenu 1.1.1</a></li>
                                     <li><a href="#">Submenu 1.1.2</a></li>
@@ -78,9 +78,9 @@ const CategoryShow = (props) => {
                             <li><a href="#">Submenu 1.2</a></li>
                         </ul>
                     </li>
-                    <li class="has-sub"> <a href="#">Car</a>
+                    <li className="has-sub"> <a href="#">Car</a>
                         <ul>
-                            <li class="has-sub"> <a href="#">Submenu 1.1</a>
+                            <li className="has-sub"> <a href="#">Submenu 1.1</a>
                                 <ul>
                                     <li><a href="#">Submenu 1.1.1</a></li>
                                     <li><a href="#">Submenu 1.1.2</a></li>

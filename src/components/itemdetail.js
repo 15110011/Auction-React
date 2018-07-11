@@ -10,6 +10,7 @@ import _ from 'lodash';
 import dateFns from 'date-fns'
 import BidInput from './BidInput'
 import NumberFormat from 'react-number-format';
+import RatingStar from './RatingStar';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 class ItemDetail extends Component {
@@ -284,6 +285,7 @@ class ItemDetail extends Component {
                                 <hr />
                                 <div dangerouslySetInnerHTML={{ __html: itemDetail.details }} className="container">
                                 </div>
+                                <RatingStar/> 
                             </div>
                             <hr/>
                             <h1>Review</h1>

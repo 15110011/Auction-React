@@ -128,33 +128,114 @@ class Header extends Component {
                             </div>
                         </form>
                         <form onSubmit={this.handleSearch} className="form-inline">
-                        <input autoComplete="off" list="suggestions" className="form-control mr-sm-2" name="search" value={keywords} onChange={this.updateKeyWord} id="search-form" type="search" placeholder="Search" aria-label="Search" />
+                            <input autoComplete="off" list="suggestions" className="form-control mr-sm-2" name="search" value={keywords} onChange={this.updateKeyWord} id="search-form" type="search" placeholder="Search" aria-label="Search" />
 
-                        <datalist id="suggestions">
-                            {
-                                filterItem.map((kw) => {
-                                    return (
-                                        <option value={kw.name} />
-                                    )
+                            <datalist id="suggestions">
+                                {
+                                    filterItem.map((kw) => {
+                                        return (
+                                            <option value={kw.name} />
+                                        )
 
 
-                                })
-                            }
-                        </datalist>
-                        <button className="btn btn-info my-2 my-sm-0"  type="submit">Search</button>
-                       </form>
+                                    })
+                                }
+                            </datalist>
+                            <button className="btn btn-info my-2 my-sm-0" type="submit">Search</button>
+                        </form>
                         {
                             (this.props.loggedIn === LOADED_LOGIN_STATUS ? (
                                 <div className="ml-auto">
                                     <div className="form-inline">
                                         <Link className="nav-item nav-link ml-auto" to="/bidcart" style={{ color: 'white' }}><i className="fas fa-cart-plus"></i></Link>
-                                        <Link className="nav-item nav-link" to="/contact" style={{ color: 'white' }}><i className="far fa-bell"></i></Link>
-                                        <div className="nav-item dropdown" style={{ color: 'white' }}>
-                                            <a className="nav-link dropdown-toggle" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="far fa-user"></i></a>
+                                        <div className="nav-item dropdown">
+                                            <Link style={{ color: 'white' }} className="nav-link" to="/notification" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i className="far fa-bell"></i>
+                                                <span style={{ position: 'absolute', top: '5px', borderRadius: '10px' }} class="badge badge-danger">4</span>
+                                            </Link>
+
+                                            <div id="a-color" style={{ width: '400px', marginLeft: '-300px' }} className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
+                                                <div className="container row">
+                                                    <div className="col-md-6">
+                                                        <p>Notifications</p>
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <a href="#" style={{ float: 'right' }}>Mark all as read</a>
+                                                    </div>
+                                                </div>
+                                                <hr style={{ marginTop: '-10px' }} />
+                                                <ul className="notification">
+                                                    <Link to='/itemdetail' style={{ textDecoration: 'none' }} className="notification-item">
+                                                        <li className="notification pt-2" style={{ marginTop: '-16px' }} >
+                                                            <div className="media" style={{ borderBottom: '1px solid #F1F1F1' }}>
+                                                                <div className="avatar-noti pt-2">
+                                                                    <img style={{ height: '50px', width: '50px', borderRadius: '50%' }} src="./images/car.jpg" alt="img" />
+                                                                </div>
+                                                                <div className="container content-noti">
+                                                                    <strong className="notification-title"><a href="#">Admin Name</a> accepted your item <a href="#">Cigar Cuvu</a></strong>
+                                                                    <div className="notification-meta">
+                                                                        <small className="timestamp"><strong>at: 27. 11. 2015, 15:00</strong></small>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </Link>
+                                                    <Link to='/itemdetail' style={{ textDecoration: 'none' }} className="notification-item">
+                                                        <li className="notification pt-2">
+                                                            <div className="media" style={{ borderBottom: '1px solid #F1F1F1' }}>
+                                                                <div className="avatar-noti pt-2">
+                                                                    <img style={{ height: '50px', width: '50px', borderRadius: '50%' }} src="./images/car.jpg" alt="img" />
+                                                                </div>
+                                                                <div className="container content-noti">
+                                                                    <strong className="notification-title"><a href="#">Admin Name</a> accepted your item <a href="#">Cigar Cuvu</a></strong>
+                                                                    <div className="notification-meta">
+                                                                        <small className="timestamp"><strong>at: 27. 11. 2015, 15:00</strong></small>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </Link>
+                                                    <Link to='/itemdetail' style={{ textDecoration: 'none' }} className="notification-item">
+                                                        <li className="notification pt-2">
+                                                            <div className="media" style={{ borderBottom: '1px solid #F1F1F1' }}>
+                                                                <div className="avatar-noti pt-2">
+                                                                    <img style={{ height: '50px', width: '50px', borderRadius: '50%' }} src="./images/car.jpg" alt="img" />
+                                                                </div>
+                                                                <div className="container content-noti">
+                                                                    <strong className="notification-title"><a href="#">Admin Name</a> accepted your item <a href="#">Cigar Cuvu</a></strong>
+                                                                    <div className="notification-meta">
+                                                                        <small className="timestamp"><strong>at: 27. 11. 2015, 15:00</strong></small>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </Link>
+                                                    <Link to='/itemdetail' style={{ textDecoration: 'none' }} className="notification-item">
+                                                        <li className="notification pt-2 pt-2">
+                                                            <div className="media" style={{ borderBottom: '1px solid #F1F1F1' }}>
+                                                                <div className="avatar-noti">
+                                                                    <img style={{ height: '50px', width: '50px', borderRadius: '50%' }} src="./images/car.jpg" alt="img" />
+                                                                </div>
+                                                                <div className="container content-noti">
+                                                                    <strong className="notification-title"><a href="#">Admin Name</a> accepted your item <a href="#">Cigar Cuvu</a></strong>
+                                                                    <div className="notification-meta">
+                                                                        <small className="timestamp"><strong>at: 27. 11. 2015, 15:00</strong></small>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </Link>
+                                                </ul>
+                                                <hr />
+                                                <center style={{ marginTop: '-10px' }}><a href="#">See All</a></center>
+                                            </div>
+                                        </div>
+                                        <div className="nav-item dropdown">
+                                            <Link style={{ color: 'white' }} className="nav-link dropdown-toggle" to="/manager" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="far fa-user"></i></Link>
                                             <div className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
                                                 <Link className="dropdown-item" to="">{this.props.name}</Link>
                                                 <Link className="dropdown-item" to="/dashboard">Dashboard</Link>
-                                                {this.props.isAdmin ? <Link className="dropdown-item" to="/admin">Admin Panel</Link> : ''}
+                                                {this.props.isAdmin ? <Link className="dropdown-item" to="/admin">Admin Panel <span class="badge badge-danger" style={{ position: 'absolute', left: '120px', top: '77px', borderRadius: '10px' }} >4</span></Link> : ''}
                                                 <Link className="dropdown-item" to="/logout" onClick={this.handleLogOut}>Sign out</Link>
                                             </div>
                                         </div>
