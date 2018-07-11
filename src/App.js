@@ -196,7 +196,7 @@ class App extends Component {
         <Route path='/dashboard' component={(props) => (<DashBoard checkStatus={this.checkStatus} isLoggedIn={this.logIn} isLoggedOut={this.isLoggedOut} {...props} {...this.state} />)} />
         <Route path='/items/:id' component={(props,state) => (<ItemDetail {...this.state} {...props} />)}/>
         <Route exact path='/items' component={Items} />
-        <Route path='/bidcart' component={Bidcart}/>
+        <Route path='/bidcart' component={(props,state) => (<Bidcart {...this.state} {...props} />)}/>
         <Route exact path='/results' component={(props,state) =>(<SearchResult {...this.state} {...props}/>)}/>
         <Footer />
       </div>
