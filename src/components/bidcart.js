@@ -18,7 +18,8 @@ class Bidcart extends Component {
         this.state = {
             items: [],
             activeTab: '1',
-            timeLeft: 0
+            timeLeft: 0,
+            bidding: false
         }
         this.toggle = this.toggle.bind(this);
     }
@@ -37,7 +38,7 @@ class Bidcart extends Component {
                 .then(item => {
                     var biddingItems = item.biddingItems
                     console.log(biddingItems[0].startedAt)
-                    biddingItems.map(item => {  
+                    biddingItems.map(item => {
 
                         let endTime = dateFns.getTime(dateFns.addHours(item.startedAt, item.period))
                         let curTime = dateFns.getTime(new Date())
@@ -54,7 +55,7 @@ class Bidcart extends Component {
                         })
                         this.setState({ item: itemTime })
                     }, 1000)
-                    this.setState({ items: biddingItems, })
+                    this.setState({ items: biddingItems, bidding: true })
 
                 })
         }
@@ -119,34 +120,40 @@ class Bidcart extends Component {
                                                 <th scope="col">Detail</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            {
-                                                this.state.items.map(item => {
+                                        {
+                                            this.state.bidding ? (
+                                                <tbody>
+                                                    {
+                                                        this.state.items.map(item => {
+                                                            return (
+                                                                <tr className="fixprop">
+                                                                    <td>
+                                                                        {item.itemId}
+                                                                    </td>
+                                                                    <td>{item.itemName}</td>
 
-                                                    return (
-                                                        <tr className="fixprop">
-                                                            <td>
-                                                                {item.itemId}
-                                                            </td>
-                                                            <td>{item.itemName}</td>
-
-                                                            <td>
-                                                                <NumberFormat displayType={'text'} value={item.curPrice} thousandSeparator={true} prefix={'$'} />
-
-                                                            </td>
-                                                            <td>{item.quantity}</td>
-                                                            <td>{item.categoryName}</td>
-                                                            <td>{this.fromMillisecondsToFormattedString(item.timeLeft)}</td>
-                                                            <td>
-                                                                <div className="edit-del">
-                                                                    <Link className="btn btn-info" style={{ color: '#1d93c1' }} to={`/items/${item.itemId}`}><i className="fas fa-eye"></i></Link>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    )
-                                                })
-                                            }
-                                        </tbody>
+                                                                    <td>
+                                                                        <NumberFormat displayType={'text'} value={item.curPrice} thousandSeparator={true} prefix={'$'} />
+                                                                    </td>
+                                                                    <td>{item.quantity}</td>
+                                                                    <td>{item.categoryName}</td>
+                                                                    <td>{this.fromMillisecondsToFormattedString(item.timeLeft)}</td>
+                                                                    <td>
+                                                                        <div className="edit-del">
+                                                                            <Link className="btn btn-info" style={{ color: '#1d93c1' }} to={`/items/${item.itemId}`}><i className="fas fa-eye"></i></Link>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            )
+                                                        })
+                                                    }
+                                                </tbody>
+                                            ) : (
+                                                    <div role="alert" style={{ marginTop: '5px', position: 'absolute', left: '40%', width: '20%' }}>
+                                                        <p className="alert alert-warning text-center light-word">No bidding item</p>
+                                                    </div>
+                                                )
+                                        }
                                     </table>
                                 </Col>
                             </Row>
