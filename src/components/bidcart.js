@@ -19,7 +19,9 @@ class Bidcart extends Component {
             items: [],
             activeTab: '1',
             timeLeft: 0,
-            bidding: false
+            bidding: false,
+            won: false,
+            lost: false
         }
         this.toggle = this.toggle.bind(this);
     }
@@ -149,7 +151,7 @@ class Bidcart extends Component {
                                                     }
                                                 </tbody>
                                             ) : (
-                                                    <div role="alert" style={{ marginTop: '5px', position: 'absolute', left: '40%', width: '20%' }}>
+                                                    <div role="alert" style={{ marginTop: '5px', position: 'absolute', left: '40%', width: 'auto' }}>
                                                         <p className="alert alert-warning text-center light-word">No bidding item</p>
                                                     </div>
                                                 )
@@ -173,29 +175,38 @@ class Bidcart extends Component {
                                                 <th scope="col">Detail</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            {
-                                                this.state.items.map(item => {
-                                                    return (
-                                                        <tr className="fixprop">
-                                                            <td>
-                                                                {item.id}
-                                                            </td>
-                                                            <td>{item.name}</td>
-                                                            <td>{item.currentPrice}</td>
-                                                            <td>{item.quantity}</td>
-                                                            <td>{item.categoriesId}</td>
-                                                            <td>{item.userId}</td>
-                                                            <td>
-                                                                <div className="edit-del">
-                                                                    <button className="btn btn-info" style={{ color: '#1d93c1' }}><i className="fas fa-eye"></i></button>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    )
-                                                })
-                                            }
-                                        </tbody>
+                                        {
+                                            !this.state.won ? (
+                                                <div role="alert" style={{ marginTop: '5px', position: 'absolute', left: '40%', width: 'auto' }}>
+                                                    <p className="alert alert-warning text-center light-word">Start bidding to win items now</p>
+                                                </div>
+                                            ) : (
+                                                    <tbody>
+                                                        {
+                                                            this.state.items.map(item => {
+                                                                return (
+                                                                    <tr className="fixprop">
+                                                                        <td>
+                                                                            {item.id}
+                                                                        </td>
+                                                                        <td>{item.name}</td>
+                                                                        <td>{item.currentPrice}</td>
+                                                                        <td>{item.quantity}</td>
+                                                                        <td>{item.categoriesId}</td>
+                                                                        <td>{item.userId}</td>
+                                                                        <td>
+                                                                            <div className="edit-del">
+                                                                                <button className="btn btn-info" style={{ color: '#1d93c1' }}><i className="fas fa-eye"></i></button>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                )
+                                                            })
+                                                        }
+                                                    </tbody>
+                                                )
+                                        }
+
                                     </table>
                                 </Col>
                             </Row>
@@ -215,29 +226,38 @@ class Bidcart extends Component {
                                                 <th scope="col">Detail</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            {
-                                                this.state.items.map(item => {
-                                                    return (
-                                                        <tr className="fixprop">
-                                                            <td>
-                                                                {item.id}
-                                                            </td>
-                                                            <td>{item.name}</td>
-                                                            <td>{item.currentPrice}</td>
-                                                            <td>{item.quantity}</td>
-                                                            <td>{item.categoriesId}</td>
-                                                            <td>{item.userId}</td>
-                                                            <td>
-                                                                <div className="edit-del">
-                                                                    <button className="btn btn-info" style={{ color: '#1d93c1' }}><i className="fas fa-eye"></i></button>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    )
-                                                })
-                                            }
-                                        </tbody>
+                                        {
+                                            !this.state.lost ? (
+                                                <div role="alert" style={{ marginTop: '5px', position: 'absolute', left: '40%', width: 'auto' }}>
+                                                    <p className="alert alert-warning text-center light-word">You haven't lost any battle yet</p>
+                                                </div>
+                                            ) : (
+                                                    <tbody>
+                                                        {
+                                                            this.state.items.map(item => {
+                                                                return (
+                                                                    <tr className="fixprop">
+                                                                        <td>
+                                                                            {item.id}
+                                                                        </td>
+                                                                        <td>{item.name}</td>
+                                                                        <td>{item.currentPrice}</td>
+                                                                        <td>{item.quantity}</td>
+                                                                        <td>{item.categoriesId}</td>
+                                                                        <td>{item.userId}</td>
+                                                                        <td>
+                                                                            <div className="edit-del">
+                                                                                <button className="btn btn-info" style={{ color: '#1d93c1' }}><i className="fas fa-eye"></i></button>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                )
+                                                            })
+                                                        }
+                                                    </tbody>
+                                                )
+                                        }
+
                                     </table>
                                 </Col>
                             </Row>

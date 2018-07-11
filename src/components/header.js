@@ -149,7 +149,11 @@ class Header extends Component {
                                     <div className="form-inline">
                                         <Link className="nav-item nav-link ml-auto" to="/bidcart" style={{ color: 'white' }}><i className="fas fa-cart-plus"></i></Link>
                                         <div className="nav-item dropdown">
-                                            <Link style={{ color: 'white' }} className="nav-link" to="/notification" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="far fa-bell"></i><span style={{ position: 'absolute', top: '5px', borderRadius: '10px' }} class="badge badge-danger">4</span></Link>
+                                            <Link style={{ color: 'white' }} className="nav-link" to="/notification" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i className="far fa-bell"></i>
+                                                <span style={{ position: 'absolute', top: '5px', borderRadius: '10px' }} class="badge badge-danger">4</span>
+                                            </Link>
+
                                             <div id="a-color" style={{ width: '400px', marginLeft: '-300px' }} className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
                                                 <div className="container row">
                                                     <div className="col-md-6">
@@ -222,8 +226,8 @@ class Header extends Component {
                                                         </li>
                                                     </Link>
                                                 </ul>
-                                                <hr/>
-                                                <center style={{marginTop:'-10px'}}><a href="#">See All</a></center>
+                                                <hr />
+                                                <center style={{ marginTop: '-10px' }}><a href="#">See All</a></center>
                                             </div>
                                         </div>
                                         <div className="nav-item dropdown">
