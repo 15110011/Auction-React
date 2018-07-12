@@ -7,6 +7,8 @@ import classnames from 'classnames';
 import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import _ from 'lodash'
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+
 
 import DashBoard from './dashboard'
 
@@ -29,7 +31,7 @@ class AdminPendingItems extends Component {
                 if (!items.error) {
                     this.setState({
                         items: items.pendingItems, itemsStatus: items.pendingItems.map(i => {
-                            return { id: i.id, selected: false }
+                            return { id: i.id, itemName: i.name, selected: false, ownerId: i.userId }
                         })
                     })
                 }
@@ -63,31 +65,28 @@ class AdminPendingItems extends Component {
 
         if (button.value) {
             let selectedItems = _.filter(this.state.itemsStatus, { selected: true })
-            fetch('/api/v1/pendingitems/', {
-                method: 'PATCH',
-                body: JSON.stringify({
-                    type: button.value,
-                    selectedItems,
-                    adminId: this.props.userId
-                })
-            }).then(res => res.json())
-                .then(res => {
-                    if (!res.error) {
-                        console.log(res.isAccept)
-                        let remainPending = _.filter(this.state.items, i => {
+            this.props.io.socket.patch('/api/v1/pendingitems/', {
+                type: button.value,
+                selectedItems,
+                adminId: this.props.userId
 
-                            return _.findIndex(selectedItems, selected => { return i.id === selected.id }) === -1
-                        })
+            }, (res) => {
+                if (!res.error) {
+                    console.log(res.isAccept)
+                    let remainPending = _.filter(this.state.items, i => {
 
-                        this.setState({
-                            isAccept: res.isAccept,
-                            items: remainPending, itemsStatus: remainPending.map(i => {
-                                return { id: i.id, selected: false }
-                            }), selectedCount: 0
-                        })
-                        console.log(this.state.itemsStatus)
-                    }
-                })
+                        return _.findIndex(selectedItems, selected => { return i.id === selected.id }) === -1
+                    })
+
+                    this.setState({
+                        isAccept: res.isAccept,
+                        items: remainPending, itemsStatus: remainPending.map(i => {
+                            return { id: i.id, selected: false ,ownerId: i.userId, itemName:i.name}
+                        }), selectedCount: 0
+                    })
+                    console.log(this.state.itemsStatus)
+                }
+            })
         }
     }
     render() {
@@ -134,7 +133,7 @@ class AdminPendingItems extends Component {
                                             <td>{item.userId}</td>
                                             <td>
                                                 <div className="edit-del">
-                                                    <button className="btn btn-info" style={{ color: '#1d93c1' }}><i className="fas fa-eye"></i></button>
+                                                    <Link style={{ color: '#1d93c1' }} className="btn btn-info"  to={`/items/${item.id}`}><i className="fas fa-eye"></i></Link>
                                                 </div>
                                             </td>
                                             <td>
