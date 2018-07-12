@@ -235,7 +235,7 @@ class Header extends Component {
                                                                                         )
                                                                                     }
                                                                                     <div className="notification-meta">
-                                                                                        <small className="timestamp"><strong>at {dateFns.format(info.createdAt, 'HH:mm:ss MM/DD/YYYY')}</strong></small>
+                                                                                        <small className="timestamp"><strong>at {dateFns.format(info.createdAt, 'HH:mm MM/DD/YYYY')}</strong></small>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
