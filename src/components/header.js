@@ -215,39 +215,39 @@ class Header extends Component {
                                                 <hr style={{ marginTop: '-10px' }} />
                                                 <ul className="notification" style={{ marginTop: '-12px' }}>
                                                     {
-                                                        getNoti && (
-                                                            getNoti.length ? (
-                                                                getNoti.map(info => {
-                                                                    return (
-                                                                        <Link to={`/items/${info.itemId}`} style={{ textDecoration: 'none' }} className="notification-item">
-                                                                            <li className="notification">
-                                                                                <div className="media" style={{ borderBottom: '1px solid #F1F1F1', minHeight: '73px' }}>
-                                                                                    <div className="avatar-noti pt-2">
-                                                                                        <img style={{ height: '50px', width: '50px', borderRadius: '50%' }} src="./images/car.jpg" alt="img" />
-                                                                                    </div>
-                                                                                    <div className="container content-noti">
-                                                                                        {info.isAccept ? (
-                                                                                            <strong className="notification-title">Admin accepted your item <Link to={`/items/${info.itemId}`}>{info.itemName}</Link></strong>
+                                                        getNoti ? (
 
-                                                                                        ) : (
-                                                                                                <strong className="notification-title">Admin rejected your item <Link to={`/items/${info.itemId}`}>{info.itemName}</Link></strong>
-                                                                                            )
-                                                                                        }
-                                                                                        <div className="notification-meta">
-                                                                                            <small className="timestamp"><strong>at {dateFns.format(info.createdAt, 'HH:mm MM/DD/YYYY')}</strong></small>
-                                                                                        </div>
+                                                            getNoti.map(info => {
+                                                                return (
+                                                                    <Link to={`/items/${info.itemId}`} style={{ textDecoration: 'none' }} className="notification-item">
+                                                                        <li className="notification">
+                                                                            <div className="media" style={{ borderBottom: '1px solid #F1F1F1', minHeight: '73px' }}>
+                                                                                <div className="avatar-noti pt-2">
+                                                                                    <img style={{ height: '50px', width: '50px', borderRadius: '50%' }} src="./images/car.jpg" alt="img" />
+                                                                                </div>
+                                                                                <div className="container content-noti">
+                                                                                    {info.isAccept ? (
+                                                                                        <strong className="notification-title">Admin accepted your item <Link to={`/items/${info.itemId}`}>{info.itemName}</Link></strong>
+
+                                                                                    ) : (
+                                                                                            <strong className="notification-title">Admin rejected your item <Link to={`/items/${info.itemId}`}>{info.itemName}</Link></strong>
+                                                                                        )
+                                                                                    }
+                                                                                    <div className="notification-meta">
+                                                                                        <small className="timestamp"><strong>at {dateFns.format(info.createdAt, 'HH:mm MM/DD/YYYY')}</strong></small>
                                                                                     </div>
                                                                                 </div>
-                                                                            </li>
-                                                                        </Link>
-                                                                    )
-                                                                })
-                                                            ) : (
-                                                                    <div role="alert">
-                                                                        <p className="light-word text-center"><strong>No notifications</strong></p>
-                                                                    </div>
+                                                                            </div>
+                                                                        </li>
+                                                                    </Link>
                                                                 )
-                                                        )
+                                                            })
+                                                        ) : (
+                                                                <div role="alert">
+                                                                    <p className="light-word text-center"><strong>No notifications</strong></p>
+                                                                </div>
+                                                            )
+
                                                     }
                                                 </ul>
                                                 <hr style={{ marginTop: '-12px' }} />
