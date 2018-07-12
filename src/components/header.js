@@ -219,7 +219,7 @@ class Header extends Component {
                                                         getNoti && (
                                                             getNoti.map(info => {
                                                                 return (
-                                                                    <Link to='/itemdetail' style={{ textDecoration: 'none' }} className="notification-item">
+                                                                    <Link to={`/items/${info.itemId}`} style={{ textDecoration: 'none' }} className="notification-item">
                                                                         <li className="notification">
                                                                             <div className="media" style={{ borderBottom: '1px solid #F1F1F1' }}>
                                                                                 <div className="avatar-noti pt-2">
