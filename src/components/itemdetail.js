@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 import ReactImageZoom from 'react-image-zoom';
 import NumericInput from 'react-numeric-input';
 import '../styles/styles.css'
+import Comments from './Comments'
+import Rating from './Rating'
 import _ from 'lodash';
 import dateFns from 'date-fns'
 import BidInput from './BidInput'
@@ -285,6 +287,13 @@ class ItemDetail extends Component {
                                 </div>
                                 <RatingStar/> 
                             </div>
+                            <hr/>
+                            <h1>Review</h1>
+                            <Rating userId={this.state.itemDetail.userId}></Rating>
+                            <hr/>
+                            <h1>Comments</h1>
+                            <Comments itemId= {this.props.match.params.id} userId={this.props.userId} io={this.props.io}></Comments>
+
                         </div>
                         <div className="col-md-3">
                             <div className="itemborder" style={{ marginTop: '50px' }}>
