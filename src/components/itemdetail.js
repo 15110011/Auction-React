@@ -285,15 +285,17 @@ class ItemDetail extends Component {
                                 <hr />
                                 <div dangerouslySetInnerHTML={{ __html: itemDetail.details }} className="container">
                                 </div>
-                                <RatingStar/> 
+                                <div className="container">
+                                    <h3></h3>
+                                </div>
+                                <RatingStar />
                             </div>
-                            <hr/>
+                            <hr />
                             <h1>Review</h1>
                             <Rating userId={this.state.itemDetail.userId} itemId={this.props.match.params.id}></Rating>
                             <hr/>
                             <h1>Comments</h1>
-                            <Comments itemId= {this.props.match.params.id} userId={this.props.userId} io={this.props.io}></Comments>
-
+                            <Comments itemId={this.props.match.params.id} userId={this.props.userId} io={this.props.io}></Comments>
                         </div>
                         <div className="col-md-3">
                             <div className="itemborder" style={{ marginTop: '50px' }}>

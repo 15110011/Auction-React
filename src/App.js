@@ -24,21 +24,22 @@ class App extends Component {
       name: '',
       userId: '',
       isAdmin: false,
-      io: null
+      io: null,
+      name: ''
     }
     this.logIn = this.logIn.bind(this)
     this.logOut = this.logOut.bind(this)
     this.loginCB = this.loginCB.bind(this)
     this.checkStatus = this.checkStatus.bind(this)
     this.checkIsAdmin = this.checkIsAdmin.bind(this)
-    
+
 
   }
-  componentWillMount(){
+  componentWillMount() {
     let io = sailsIOClient(socketIOClient);
     io.sails.url = 'http://localhost:1337';
     io.sails.connect()
-    this.setState({io:io})
+    this.setState({ io: io })
   }
   logIn(e) {
     if (e) {
@@ -111,10 +112,10 @@ class App extends Component {
     FB.getLoginStatus((response) => {
 
       if (response.status === 'connected') {
-        console.log(0)
-
         FB.api('/me', data => {
-          console.log(data)
+          console.log(data.name)
+          this.setState({ name: data.name })
+
           if (!data.error) {
             var form = new FormData();
             form.append('action', 'CHECK');
@@ -170,9 +171,9 @@ class App extends Component {
     FB.Event.subscribe("auth.authResponseChange", resp => {
 
       if (resp.status === "connected") {
-
-
-
+        this.state.io.socket.get(`/socket/user/${resp.authResponse.userID}`, (body) => {
+          console.log(body.msg) 
+        })
       }
       else if (resp.status === "authorization_expired" || resp.status === 'not_authorized') {
         FB.login(this.loginCB.bind(this))
@@ -185,19 +186,20 @@ class App extends Component {
       }
     })
 
+
   }
   render() {
     return (
-      <div className="App" style={{marginTop:'56px'}}>
+      <div className="App" style={{ marginTop: '56px' }}>
         <Header logIn={this.logIn} logOut={this.logOut} {...this.state} checkStatus={this.checkStatus} />
         <Route exact path='/' component={HomePage} />
         <Route path='/faq' component={FAQ} />
-        <Route path='/admin' component={(props) => (<AdminPanel {...this.state} />)}  />
+        <Route path='/admin' component={(props) => (<AdminPanel {...this.state} />)} />
         <Route path='/dashboard' component={(props) => (<DashBoard checkStatus={this.checkStatus} isLoggedIn={this.logIn} isLoggedOut={this.isLoggedOut} {...props} {...this.state} />)} />
-        <Route path='/items/:id' component={(props,state) => (<ItemDetail {...this.state} {...props} />)}/>
+        <Route path='/items/:id' component={(props, state) => (<ItemDetail {...this.state} {...props} />)} />
         <Route exact path='/items' component={Items} />
-        <Route path='/bidcart' component={(props,state) => (<Bidcart {...this.state} {...props} />)}/>
-        <Route exact path='/results' component={(props,state) =>(<SearchResult {...this.state} {...props}/>)}/>
+        <Route path='/bidcart' component={(props, state) => (<Bidcart {...this.state} {...props} />)} />
+        <Route exact path='/results' component={(props, state) => (<SearchResult {...this.state} {...props} />)} />
         <Footer />
       </div>
     );

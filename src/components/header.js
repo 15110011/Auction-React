@@ -6,6 +6,8 @@ import { Link, withRouter } from 'react-router-dom'
 import SearchResult from './SearchResult'
 import '../styles/styles.css'
 import { LOADING_LOGIN_STATUS, LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config'
+import dateFns from 'date-fns'
+
 
 class Header extends Component {
     constructor(props) {
@@ -18,6 +20,7 @@ class Header extends Component {
             keywords: '',
             results: [],
             found: true,
+            notifications: []
         }
         this.handleLogOut = this.handleLogOut.bind(this)
         this.handleLogin = this.handleLogin.bind(this)
@@ -44,9 +47,50 @@ class Header extends Component {
             this.setState({ categories: cloneCat })
 
         })
+
+
+    }
+    shouldComponentUpdate(nextProps) {
+        if (this.props.userId == '' && nextProps.userId !== '') {
+            let notifications = this.state.notifications.slice()
+            console.log(nextProps.userId)
+            this.props.io.socket.on('user' + nextProps.userId, (owner) => {
+                this.props.io.socket.post('/api/v1/notifications', {
+                    id: owner.id,
+                    isAccept: owner.isAccept,
+                    itemName: owner.itemName,
+                    ownerId: owner.ownerId,
+                }, (res) => {
+                    console.log(res)
+                    if (!res.error) {
+                        var newNoti = res.newNoti
+                        notifications.push({
+                            newNoti
+                        })
+                        this.setState({ notifications })
+                        console.log(this.state.notifications)
+                        this.props.io.socket.get('/api/v1/notifications', (body) => {
+                            let getNoti = body.noti
+                            console.log(getNoti.length)
+
+                            this.setState({ getNoti })
+                        })
+                    }
+                })
+                console.log('hihihi', owner)
+
+
+            })
+        }
+        return true
     }
     componentWillMount() {
         this.props.checkStatus()
+        fetch('/api/v1/notifications')
+            .then(res => res.json())
+            .then(res => {
+                this.setState({ getNoti: res.noti })
+            })
     }
     updateKeyWord(e) {
         e.preventDefault()
@@ -95,7 +139,7 @@ class Header extends Component {
         FB.login(console.log)
     }
     render() {
-        const { keywords, results } = this.state
+        const { keywords, results, getNoti } = this.state
         let filterItem = this.state.results.filter(kw => {
             return kw.name.toLowerCase().indexOf(this.state.keywords.toLowerCase()) !== -1
         })
@@ -149,11 +193,16 @@ class Header extends Component {
                                     <div className="form-inline">
                                         <Link className="nav-item nav-link ml-auto" to="/bidcart" style={{ color: 'white' }}><i className="fas fa-cart-plus"></i></Link>
                                         <div className="nav-item dropdown">
+
                                             <Link style={{ color: 'white' }} className="nav-link" to="/notification" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i className="far fa-bell"></i>
-                                                <span style={{ position: 'absolute', top: '5px', borderRadius: '10px' }} class="badge badge-danger">4</span>
-                                            </Link>
+                                                {
+                                                    getNoti && (
+                                                        <span style={{ position: 'absolute', top: '5px', borderRadius: '10px' }} class="badge badge-danger">{getNoti.length}</span>
 
+                                                    )
+                                                }
+                                            </Link>
                                             <div id="a-color" style={{ width: '400px', marginLeft: '-300px' }} className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
                                                 <div className="container row">
                                                     <div className="col-md-6">
@@ -164,69 +213,44 @@ class Header extends Component {
                                                     </div>
                                                 </div>
                                                 <hr style={{ marginTop: '-10px' }} />
-                                                <ul className="notification">
-                                                    <Link to='/itemdetail' style={{ textDecoration: 'none' }} className="notification-item">
-                                                        <li className="notification pt-2" style={{ marginTop: '-16px' }} >
-                                                            <div className="media" style={{ borderBottom: '1px solid #F1F1F1' }}>
-                                                                <div className="avatar-noti pt-2">
-                                                                    <img style={{ height: '50px', width: '50px', borderRadius: '50%' }} src="./images/car.jpg" alt="img" />
+                                                <ul className="notification" style={{ marginTop: '-12px' }}>
+                                                    {
+                                                        getNoti ? (
+
+                                                            getNoti.map(info => {
+                                                                return (
+                                                                    <Link to={`/items/${info.itemId}`} style={{ textDecoration: 'none' }} className="notification-item">
+                                                                        <li className="notification">
+                                                                            <div className="media" style={{ borderBottom: '1px solid #F1F1F1', minHeight: '73px' }}>
+                                                                                <div className="avatar-noti pt-2">
+                                                                                    <img style={{ height: '50px', width: '50px', borderRadius: '50%' }} src="./images/car.jpg" alt="img" />
+                                                                                </div>
+                                                                                <div className="container content-noti">
+                                                                                    {info.isAccept ? (
+                                                                                        <strong className="notification-title">Admin accepted your item <Link to={`/items/${info.itemId}`}>{info.itemName}</Link></strong>
+
+                                                                                    ) : (
+                                                                                            <strong className="notification-title">Admin rejected your item <Link to={`/items/${info.itemId}`}>{info.itemName}</Link></strong>
+                                                                                        )
+                                                                                    }
+                                                                                    <div className="notification-meta">
+                                                                                        <small className="timestamp"><strong>at {dateFns.format(info.createdAt, 'HH:mm MM/DD/YYYY')}</strong></small>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </li>
+                                                                    </Link>
+                                                                )
+                                                            })
+                                                        ) : (
+                                                                <div role="alert">
+                                                                    <p className="light-word text-center"><strong>No notifications</strong></p>
                                                                 </div>
-                                                                <div className="container content-noti">
-                                                                    <strong className="notification-title"><a href="#">Admin Name</a> accepted your item <a href="#">Cigar Cuvu</a></strong>
-                                                                    <div className="notification-meta">
-                                                                        <small className="timestamp"><strong>at: 27. 11. 2015, 15:00</strong></small>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </Link>
-                                                    <Link to='/itemdetail' style={{ textDecoration: 'none' }} className="notification-item">
-                                                        <li className="notification pt-2">
-                                                            <div className="media" style={{ borderBottom: '1px solid #F1F1F1' }}>
-                                                                <div className="avatar-noti pt-2">
-                                                                    <img style={{ height: '50px', width: '50px', borderRadius: '50%' }} src="./images/car.jpg" alt="img" />
-                                                                </div>
-                                                                <div className="container content-noti">
-                                                                    <strong className="notification-title"><a href="#">Admin Name</a> accepted your item <a href="#">Cigar Cuvu</a></strong>
-                                                                    <div className="notification-meta">
-                                                                        <small className="timestamp"><strong>at: 27. 11. 2015, 15:00</strong></small>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </Link>
-                                                    <Link to='/itemdetail' style={{ textDecoration: 'none' }} className="notification-item">
-                                                        <li className="notification pt-2">
-                                                            <div className="media" style={{ borderBottom: '1px solid #F1F1F1' }}>
-                                                                <div className="avatar-noti pt-2">
-                                                                    <img style={{ height: '50px', width: '50px', borderRadius: '50%' }} src="./images/car.jpg" alt="img" />
-                                                                </div>
-                                                                <div className="container content-noti">
-                                                                    <strong className="notification-title"><a href="#">Admin Name</a> accepted your item <a href="#">Cigar Cuvu</a></strong>
-                                                                    <div className="notification-meta">
-                                                                        <small className="timestamp"><strong>at: 27. 11. 2015, 15:00</strong></small>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </Link>
-                                                    <Link to='/itemdetail' style={{ textDecoration: 'none' }} className="notification-item">
-                                                        <li className="notification pt-2 pt-2">
-                                                            <div className="media" style={{ borderBottom: '1px solid #F1F1F1' }}>
-                                                                <div className="avatar-noti">
-                                                                    <img style={{ height: '50px', width: '50px', borderRadius: '50%' }} src="./images/car.jpg" alt="img" />
-                                                                </div>
-                                                                <div className="container content-noti">
-                                                                    <strong className="notification-title"><a href="#">Admin Name</a> accepted your item <a href="#">Cigar Cuvu</a></strong>
-                                                                    <div className="notification-meta">
-                                                                        <small className="timestamp"><strong>at: 27. 11. 2015, 15:00</strong></small>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </Link>
+                                                            )
+
+                                                    }
                                                 </ul>
-                                                <hr />
+                                                <hr style={{ marginTop: '-12px' }} />
                                                 <center style={{ marginTop: '-10px' }}><a href="#">See All</a></center>
                                             </div>
                                         </div>
