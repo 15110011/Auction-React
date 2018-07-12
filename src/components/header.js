@@ -203,7 +203,6 @@ class Header extends Component {
                                                     )
                                                 }
                                             </Link>
-
                                             <div id="a-color" style={{ width: '400px', marginLeft: '-300px' }} className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
                                                 <div className="container row">
                                                     <div className="col-md-6">
@@ -217,10 +216,10 @@ class Header extends Component {
                                                 <ul className="notification" style={{ marginTop: '-12px' }}>
                                                     {
                                                         getNoti && (
-                                                            !getNoti.length ? (
+                                                            getNoti.length ? (
                                                                 getNoti.map(info => {
                                                                     return (
-                                                                        <Link to='/itemdetail' style={{ textDecoration: 'none' }} className="notification-item">
+                                                                        <Link to={`/items/${info.itemId}`} style={{ textDecoration: 'none' }} className="notification-item">
                                                                             <li className="notification">
                                                                                 <div className="media" style={{ borderBottom: '1px solid #F1F1F1', minHeight: '73px' }}>
                                                                                     <div className="avatar-noti pt-2">
@@ -232,11 +231,10 @@ class Header extends Component {
 
                                                                                         ) : (
                                                                                                 <strong className="notification-title">Admin rejected your item <Link to={`/items/${info.itemId}`}>{info.itemName}</Link></strong>
-
                                                                                             )
                                                                                         }
                                                                                         <div className="notification-meta">
-                                                                                            <small className="timestamp"><strong>at {dateFns.format(info.createdAt, 'HH:mm:ss MM/DD/YYYY')}</strong></small>
+                                                                                            <small className="timestamp"><strong>at {dateFns.format(info.createdAt, 'HH:mm MM/DD/YYYY')}</strong></small>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -252,7 +250,7 @@ class Header extends Component {
                                                         )
                                                     }
                                                 </ul>
-                                                <hr style={{marginTop:'-12px'}} />
+                                                <hr style={{ marginTop: '-12px' }} />
                                                 <center style={{ marginTop: '-10px' }}><a href="#">See All</a></center>
                                             </div>
                                         </div>
