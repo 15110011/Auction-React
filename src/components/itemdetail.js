@@ -289,7 +289,7 @@ class ItemDetail extends Component {
                             </div>
                             <hr/>
                             <h1>Review</h1>
-                            <Rating userId={this.state.itemDetail.userId}></Rating>
+                            <Rating userId={this.state.itemDetail.userId} itemId={this.props.match.params.id}></Rating>
                             <hr/>
                             <h1>Comments</h1>
                             <Comments itemId= {this.props.match.params.id} userId={this.props.userId} io={this.props.io}></Comments>
