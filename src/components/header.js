@@ -7,6 +7,8 @@ import SearchResult from './SearchResult'
 import '../styles/styles.css'
 import { LOADING_LOGIN_STATUS, LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config'
 import dateFns from 'date-fns'
+import _ from 'lodash'
+
 
 
 class Header extends Component {
@@ -20,12 +22,14 @@ class Header extends Component {
             keywords: '',
             results: [],
             found: true,
-            notifications: []
+            readNoti: '',
+            seen: 1
         }
         this.handleLogOut = this.handleLogOut.bind(this)
         this.handleLogin = this.handleLogin.bind(this)
         this.handleSearch = this.handleSearch.bind(this)
         this.updateKeyWord = this.updateKeyWord.bind(this)
+        this.handleNoti = this.handleNoti.bind(this)
     }
     handleLogOut(e) {
         e.preventDefault()
@@ -52,7 +56,6 @@ class Header extends Component {
     }
     shouldComponentUpdate(nextProps) {
         if (this.props.userId == '' && nextProps.userId !== '') {
-            let notifications = this.state.notifications.slice()
             console.log(nextProps.userId)
             this.props.io.socket.on('user' + nextProps.userId, (owner) => {
                 this.props.io.socket.post('/api/v1/notifications', {
@@ -63,23 +66,19 @@ class Header extends Component {
                 }, (res) => {
                     console.log(res)
                     if (!res.error) {
-                        var newNoti = res.newNoti
-                        notifications.push({
-                            newNoti
-                        })
-                        this.setState({ notifications })
-                        console.log(this.state.notifications)
                         this.props.io.socket.get('/api/v1/notifications', (body) => {
                             let getNoti = body.noti
-                            console.log(getNoti.length)
-
-                            this.setState({ getNoti })
+                            let seenNoti = body.noti.reduce((cur, i) => {
+                                if (i.seen !== true) {
+                                    cur.push(i.seen)
+                                }
+                                return cur
+                            }
+                                , [])
+                            this.setState({ getNoti, seenNoti })
                         })
                     }
                 })
-                console.log('hihihi', owner)
-
-
             })
         }
         return true
@@ -89,7 +88,16 @@ class Header extends Component {
         fetch('/api/v1/notifications')
             .then(res => res.json())
             .then(res => {
-                this.setState({ getNoti: res.noti })
+                let seenNoti = res.noti.reduce((cur, i) => {
+                    if (i.seen !== true) {
+                        cur.push(i.seen)
+                    }
+                    return cur
+                }
+                    , [])
+                console.log(seenNoti.length)
+
+                this.setState({ getNoti: res.noti, seenNoti })
             })
     }
     updateKeyWord(e) {
@@ -134,12 +142,30 @@ class Header extends Component {
         e.preventDefault()
         this.props.logIn()
     }
+    handleNoti(e) {
+        e.preventDefault()
+        this.props.io.socket.patch('/api/v1/notifications', {
+            seen: this.state.seen,
+            userId: this.props.userId
+        }, (res) => {
+            console.log(res.seenNoti)
+            let seenNoti = res.seenNoti.reduce((cur, i) => {
+                if (i.seen !== true) {
+                    cur.push(i.seen)
+                }
+                return cur
+            }
+                , [])
+            this.setState({ seenNoti })
+            // var rsNoti = _.find(seenNoti, { seen: this.state.seen})
+        })
+    }
     onClick(e) {
         e.preventDefault()
         FB.login(console.log)
     }
     render() {
-        const { keywords, results, getNoti } = this.state
+        const { keywords, results, getNoti, readNoti, seenNoti } = this.state
         let filterItem = this.state.results.filter(kw => {
             return kw.name.toLowerCase().indexOf(this.state.keywords.toLowerCase()) !== -1
         })
@@ -192,13 +218,18 @@ class Header extends Component {
                                 <div className="ml-auto">
                                     <div className="form-inline">
                                         <Link className="nav-item nav-link ml-auto" to="/bidcart" style={{ color: 'white' }}><i className="fas fa-cart-plus"></i></Link>
-                                        <div className="nav-item dropdown">
+                                        <div onClick={this.handleNoti} className="nav-item dropdown">
 
                                             <Link style={{ color: 'white' }} className="nav-link" to="/notification" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i className="far fa-bell"></i>
                                                 {
                                                     getNoti && (
-                                                        <span style={{ position: 'absolute', top: '5px', borderRadius: '10px' }} class="badge badge-danger">{getNoti.length}</span>
+                                                        seenNoti.length !== 0 ? (
+                                                            <span style={{ position: 'absolute', top: '5px', borderRadius: '10px' }} class="badge badge-danger">{seenNoti.length} </span>
+
+                                                        ) : (
+                                                            <span style={{ position: 'absolute', top: '5px', borderRadius: '10px' }} class="badge badge-danger"></span>
+                                                        )
                                                     )
                                                 }
                                             </Link>
@@ -257,7 +288,7 @@ class Header extends Component {
                                             <div className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
                                                 <Link className="dropdown-item" to="">{this.props.name}</Link>
                                                 <Link className="dropdown-item" to="/dashboard">Dashboard</Link>
-                                                {this.props.isAdmin ? <Link className="dropdown-item" to="/admin">Admin Panel <span class="badge badge-danger" style={{ position: 'absolute', left: '120px', top: '77px', borderRadius: '10px' }} >4</span></Link> : ''}
+                                                {this.props.isAdmin ? <Link className="dropdown-item" to="/admin">Admin Panel <span class="badge badge-danger" style={{ position: 'absolute', left: '120px', top: '77px', borderRadius: '10px' }} ></span></Link> : ''}
                                                 <Link className="dropdown-item" to="/logout" onClick={this.handleLogOut}>Sign out</Link>
                                             </div>
                                         </div>
