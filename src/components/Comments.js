@@ -41,21 +41,34 @@ class Comments extends Component {
     render() {
         return (
             <div>
+                <h4 className="bolditalic-word">Leave a comment here:</h4>
+                <form onSubmit={this.onSubmitComment}>
+                    <textarea name="content" id="" cols="96" rows="5" style={{ resize: 'none' }} onChange={e => {
+                        this.setState({ newCommentContent: e.target.value })
+                    }}>{this.state.newCommentContent}</textarea>
+                    <button type="submit" className="btn btn-success mb-2" style={{ marginLeft: '-78px', marginTop: '70px' }} >Submit</button>
+                </form>
                 <ul>
                     {this.state.comments.map(cmt => {
                         return (
-                            <li key={cmt.id}>
-                                {cmt.content}
-                            </li>
+                            <div className="cmt pt-2" style={{ marginLeft: '-40px' }}>
+                                <div className="question italic-word">
+                                    <li style={{ backgroundColor: '#F1F1F1', borderRadius: '10px', listStyleType: 'none', padding: '10px 10px' }} key={cmt.id}>
+                                        {cmt.content}
+                                        <div className="user-question">
+                                            <small style={{ color: '#7b7171' }}>by <a href="#">Con Heo Sữa</a> - 10/07/2018</small>
+                                        </div>
+                                        <hr />
+                                        <div className="answer italic-word">
+                                            <small>Hỏi cmm - <strong>Aution Blocha team</strong></small>
+                                        </div>
+                                    </li>
+                                </div>
+
+                            </div>
                         )
                     })}
                 </ul>
-                <form onSubmit={this.onSubmitComment}>
-                    <textarea name="content" id="" cols="30" rows="10" onChange={e => {
-                        this.setState({ newCommentContent: e.target.value })
-                    }}>{this.state.newCommentContent}</textarea>
-                    <button type="submit" className="btn btn-success">Submit</button>
-                </form>
             </div>
         )
     }

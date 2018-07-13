@@ -199,7 +199,6 @@ class Header extends Component {
                                                 {
                                                     getNoti && (
                                                         <span style={{ position: 'absolute', top: '5px', borderRadius: '10px' }} class="badge badge-danger">{getNoti.length}</span>
-
                                                     )
                                                 }
                                             </Link>
@@ -216,7 +215,6 @@ class Header extends Component {
                                                 <ul className="notification" style={{ marginTop: '-12px' }}>
                                                     {
                                                         getNoti ? (
-
                                                             getNoti.map(info => {
                                                                 return (
                                                                     <Link to={`/items/${info.itemId}`} style={{ textDecoration: 'none' }} className="notification-item">
