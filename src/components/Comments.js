@@ -22,11 +22,12 @@ class Comments extends Component {
         }
     }
     onSubmitComment(e) {
+        this.setState({ newCommentContent: '' })
         e.preventDefault()
         console.log("submit")
         this.props.io.socket.post(`/api/v1/items/${this.props.itemId}/comments`, {
             content: e.target.content.value,
-            user: this.props.userId
+            userId: this.props.userId
         }, (res) => {
             if (res.error) {
                 console.log(res.msg)

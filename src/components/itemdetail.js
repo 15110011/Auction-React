@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+    import React, { Component } from 'react'
 import { render } from 'react-dom'
 import { Link } from 'react-router-dom'
 import ReactImageZoom from 'react-image-zoom';
@@ -319,7 +319,7 @@ class ItemDetail extends Component {
                                 <div className="review-content">
                                     <div className="review-block" style={{ backgroundColor: '#F1F1F1', borderRadius: '10px' }}>
                                         <div className="container">
-                                            <Rating userId={this.state.itemDetail.userId}></Rating>
+                                            <Rating userId={this.state.itemDetail.userId} itemId={this.props.match.params.id}></Rating>
                                         </div>
                                     </div>
                                     <hr style={{ width: '825px', marginLeft: '-16px' }} />
