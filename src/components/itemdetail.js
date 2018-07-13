@@ -289,7 +289,7 @@ class ItemDetail extends Component {
                                                         <td>
                                                             {<NumberFormat displayType={'text'} value={bid.currentPrice} thousandSeparator={true} prefix={'$'} />}
                                                         </td>
-                                                        <td>{dateFns.format(bid.userId.createdAt, 'HH:mm:ss MM/DD/YYYY')}</td>
+                                                        <td>{dateFns.format(bid.createdAt, 'HH:mm:ss MM/DD/YYYY')}</td>
                                                     </tr>
                                                 )
                                             })}
