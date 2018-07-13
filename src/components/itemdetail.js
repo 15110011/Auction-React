@@ -1,4 +1,4 @@
-    import React, { Component } from 'react'
+import React, { Component } from 'react'
 import { render } from 'react-dom'
 import { Link } from 'react-router-dom'
 import ReactImageZoom from 'react-image-zoom';
@@ -10,6 +10,7 @@ import _ from 'lodash';
 import dateFns from 'date-fns'
 import BidInput from './BidInput'
 import NumberFormat from 'react-number-format';
+import StarRatingComponent from 'react-star-rating-component';
 import RatingStar from './RatingStar';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
@@ -25,11 +26,47 @@ class ItemDetail extends Component {
             itemDetail: null,
             images: [],
             timeLeft: 0,
-            modal: false
+            modal: false,
+            reviews: [],
+            newReview: {
+                rating: 1,
+                content: ''
+            }
         }
         this.onSubmitBid = this.onSubmitBid.bind(this)
         this.onReceiveRoomMessage = this.onReceiveRoomMessage.bind(this)
-        this.toggle = this.toggle.bind(this);
+        this.toggle = this.toggle.bind(this)
+        this.onClickReview = this.onClickReview.bind(this)
+    }
+    onClickReview(e) {
+        e.preventDefault()
+        let form = new FormData(e.target)
+        this.setState({
+            newReview: {
+                rating: 1,
+                content: ''
+            }
+        })
+        fetch(`/api/v1/users/${this.props.userId}/rates`, {
+            method: 'POST',
+            body: form
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (!res.error) {
+                    let reviews = this.state.reviews.slice()
+                    reviews.unshift(res.newReview)
+                    this.setState({ reviews })
+                }
+                else {
+                    alert(res.msg)
+                }
+            })
+    }
+    onStarClick(nextValue, prevValue, name) {
+        let { newReview } = this.state
+        newReview.rating = nextValue
+        this.setState({ newReview });
     }
     toggle() {
         this.setState({
@@ -68,6 +105,14 @@ class ItemDetail extends Component {
                     console.log(item.msg)
                 }
             })
+        if (this.props.userId) {
+            fetch(`/api/v1/users/${this.props.userId}/rates`)
+                .then(res => res.json())
+                .then(reviews => {
+                    if (!reviews.error)
+                        this.setState({ reviews: reviews.rates })
+                })
+        }
     }
     onReceiveRoomMessage(newBid) {
         console.log(newBid)
@@ -123,7 +168,7 @@ class ItemDetail extends Component {
 
     }
     render() {
-        const { current, items, itemDetail, images } = this.state
+        const { current, items, itemDetail, images, newReview } = this.state
         if (itemDetail && this.props.userId != itemDetail.userId) {
             return (
                 <div role="alert" style={{ marginTop: '75px' }}>
@@ -305,7 +350,22 @@ class ItemDetail extends Component {
                                             <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
                                                 <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
                                                 <ModalBody>
-                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                                    <form onSubmit={this.onClickReview}>
+                                                        <input type="hidden" name="itemId" value={this.props.match.params.id} />
+                                                        <StarRatingComponent
+                                                            name="rating"
+                                                            starCount={5}
+                                                            value={newReview.rating}
+                                                            onStarClick={this.onStarClick.bind(this)}
+                                                        />
+                                                        <textarea name="content" id="" cols="30" rows="10" onChange={e => {
+                                                            newReview.content = e.target.value
+                                                            this.setState({
+                                                                newReview
+                                                            })
+                                                        }} value={this.state.newReview.content} defaultValue={this.state.newReview.content}></textarea>
+                                                        <button type="submit" className="btn btn-success" >Review</button>
+                                                    </form>
                                                 </ModalBody>
                                                 <ModalFooter>
                                                     <Button color="primary" onClick={this.toggle}>Do Something</Button>{' '}
@@ -317,12 +377,11 @@ class ItemDetail extends Component {
                                 </div>
                                 <hr style={{ width: '825px', marginLeft: '-16px' }} />
                                 <div className="review-content">
-                                    <div className="review-block" style={{ backgroundColor: '#F1F1F1', borderRadius: '10px' }}>
+                                    <div className="review-block">
                                         <div className="container">
-                                            <Rating userId={this.state.itemDetail.userId} itemId={this.props.match.params.id}></Rating>
+                                            <Rating reviews={this.state.reviews} userId={this.state.itemDetail.userId} itemId={this.props.match.params.id}></Rating>
                                         </div>
                                     </div>
-                                    <hr style={{ width: '825px', marginLeft: '-16px' }} />
                                 </div>
                             </div>
                             <div className="col-md-12 items-info mt-2">
