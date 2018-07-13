@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+    import React, { Component } from 'react'
 import { render } from 'react-dom'
 import { Link } from 'react-router-dom'
 import ReactImageZoom from 'react-image-zoom';
@@ -12,6 +12,7 @@ import BidInput from './BidInput'
 import NumberFormat from 'react-number-format';
 import RatingStar from './RatingStar';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 class ItemDetail extends Component {
 
@@ -23,10 +24,17 @@ class ItemDetail extends Component {
             step: 5,
             itemDetail: null,
             images: [],
-            timeLeft: 0
+            timeLeft: 0,
+            modal: false
         }
         this.onSubmitBid = this.onSubmitBid.bind(this)
         this.onReceiveRoomMessage = this.onReceiveRoomMessage.bind(this)
+        this.toggle = this.toggle.bind(this);
+    }
+    toggle() {
+        this.setState({
+            modal: !this.state.modal
+        });
     }
     componentDidMount() {
         this.props.io.socket.get('/hello', function serverResponded(body, JWR) {
@@ -137,7 +145,7 @@ class ItemDetail extends Component {
                             <br />
                             <Link to='/'><i className="fas fa-backward"><span className="light-word"> Back to bid</span></i></Link>
                             <div className="items-info">
-                                <div className="container pt-2">
+                                <div className="container pt-3">
                                     <h3>{itemDetail.name}</h3>
                                 </div>
                                 <hr />
@@ -285,49 +293,128 @@ class ItemDetail extends Component {
                                 <hr />
                                 <div dangerouslySetInnerHTML={{ __html: itemDetail.details }} className="container">
                                 </div>
-                                <div className="container">
-                                    <h3></h3>
-                                </div>
-                                <RatingStar />
                             </div>
-                            <hr />
-                            <h1>Review</h1>
-                            <Rating userId={this.state.itemDetail.userId}></Rating>
-                            <hr />
-                            <h1>Comments</h1>
-                            <Comments itemId={this.props.match.params.id} userId={this.props.userId} io={this.props.io}></Comments>
+                            <div className="col-md-12 items-info mt-2">
+                                <div className="review-titles pt-3">
+                                    <div className="row">
+                                        <div className="col-md-6 review-left">
+                                            <h3>Review</h3>
+                                        </div>
+                                        <div className="col-md-6 review-right">
+                                            <Button style={{ float: 'right' }} color="danger" onClick={this.toggle}>{this.props.buttonLabel}Đánh cmn giá đi</Button>
+                                            <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
+                                                <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
+                                                <ModalBody>
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                                </ModalBody>
+                                                <ModalFooter>
+                                                    <Button color="primary" onClick={this.toggle}>Do Something</Button>{' '}
+                                                    <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+                                                </ModalFooter>
+                                            </Modal>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr style={{ width: '825px', marginLeft: '-16px' }} />
+                                <div className="review-content">
+                                    <div className="review-block" style={{ backgroundColor: '#F1F1F1', borderRadius: '10px' }}>
+                                        <div className="container">
+                                            <Rating userId={this.state.itemDetail.userId} itemId={this.props.match.params.id}></Rating>
+                                        </div>
+                                    </div>
+                                    <hr style={{ width: '825px', marginLeft: '-16px' }} />
+                                </div>
+                            </div>
+                            <div className="col-md-12 items-info mt-2">
+                                <div className="comment-titles pt-3">
+                                    <h3>Comments</h3>
+                                </div>
+                                <hr style={{ width: '825px', marginLeft: '-16px' }} />
+                                <div className="comment-content">
+                                    <div className="comment-block">
+                                        <Comments itemId={this.props.match.params.id} userId={this.props.userId} io={this.props.io}></Comments>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div className="col-md-3">
-                            <div className="itemborder" style={{ marginTop: '50px' }}>
-                                <div className="item-image">
-                                    <Link className="detail" to="/itemdetail"><img src="http://localhost:1337/images/items/79a14aad-ff34-4928-8897-816477e734c0.png" alt="item" /></Link>
-                                </div>
-                                <div className="time-price">
-                                    <div className="row d-flex justify-content-between">
-                                        <div className="col-md-6">00:00:00</div>
-                                        <div className="col-md-6" id="price">$200</div>
+                            <div className="more-item" style={{ marginTop: '25px' }}>
+                                <div className="right-item pt-4">
+                                    <div className="itemborder">
+                                        <div className="item-image">
+                                            <Link className="detail" to="/itemdetail"><img src="http://localhost:1337/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg" alt="item" /></Link>
+                                        </div>
+                                        <div className="time-price">
+                                            <div className="row d-flex justify-content-between">
+                                                <div className="col-md-6">00:00:00</div>
+                                                <div className="col-md-6" id="price">$200</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="itemborder" style={{ marginTop: '25px' }}>
-                                <div className="item-image">
-                                    <Link className="detail" to="/itemdetail"><img src="/images/car.jpg" alt="item" /></Link>
-                                </div>
-                                <div className="time-price">
-                                    <div className="row d-flex justify-content-between">
-                                        <div className="col-md-6">00:00:00</div>
-                                        <div className="col-md-6" id="price">$200</div>
+                                <div className="right-item pt-4">
+                                    <div className="itemborder">
+                                        <div className="item-image">
+                                            <Link className="detail" to="/itemdetail"><img src="http://localhost:1337/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg" alt="item" /></Link>
+                                        </div>
+                                        <div className="time-price">
+                                            <div className="row d-flex justify-content-between">
+                                                <div className="col-md-6">00:00:00</div>
+                                                <div className="col-md-6" id="price">$200</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="itemborder" style={{ marginTop: '25px' }}>
-                                <div className="item-image">
-                                    <Link className="detail" to="/itemdetail"><img src="/images/car.jpg" alt="item" /></Link>
+                                <div className="right-item pt-4">
+                                    <div className="itemborder">
+                                        <div className="item-image">
+                                            <Link className="detail" to="/itemdetail"><img src="http://localhost:1337/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg" alt="item" /></Link>
+                                        </div>
+                                        <div className="time-price">
+                                            <div className="row d-flex justify-content-between">
+                                                <div className="col-md-6">00:00:00</div>
+                                                <div className="col-md-6" id="price">$200</div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="time-price">
-                                    <div className="row d-flex justify-content-between">
-                                        <div className="col-md-6">00:00:00</div>
-                                        <div className="col-md-6" id="price">$200</div>
+                                <div className="right-item pt-4">
+                                    <div className="itemborder">
+                                        <div className="item-image">
+                                            <Link className="detail" to="/itemdetail"><img src="http://localhost:1337/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg" alt="item" /></Link>
+                                        </div>
+                                        <div className="time-price">
+                                            <div className="row d-flex justify-content-between">
+                                                <div className="col-md-6">00:00:00</div>
+                                                <div className="col-md-6" id="price">$200</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="right-item pt-4">
+                                    <div className="itemborder">
+                                        <div className="item-image">
+                                            <Link className="detail" to="/itemdetail"><img src="http://localhost:1337/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg" alt="item" /></Link>
+                                        </div>
+                                        <div className="time-price">
+                                            <div className="row d-flex justify-content-between">
+                                                <div className="col-md-6">00:00:00</div>
+                                                <div className="col-md-6" id="price">$200</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="right-item pt-4">
+                                    <div className="itemborder">
+                                        <div className="item-image">
+                                            <Link className="detail" to="/itemdetail"><img src="http://localhost:1337/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg" alt="item" /></Link>
+                                        </div>
+                                        <div className="time-price">
+                                            <div className="row d-flex justify-content-between">
+                                                <div className="col-md-6">00:00:00</div>
+                                                <div className="col-md-6" id="price">$200</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
