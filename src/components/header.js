@@ -88,16 +88,19 @@ class Header extends Component {
         fetch('/api/v1/notifications')
             .then(res => res.json())
             .then(res => {
-                let seenNoti = res.noti.reduce((cur, i) => {
-                    if (i.seen !== true) {
-                        cur.push(i.seen)
+                if (res.noti) {
+                    let seenNoti = res.noti.reduce((cur, i) => {
+                        if (i.seen !== true) {
+                            cur.push(i.seen)
+                        }
+                        return cur
                     }
-                    return cur
-                }
-                    , [])
-                console.log(seenNoti.length)
+                        , [])
+                    console.log(seenNoti.length)
 
-                this.setState({ getNoti: res.noti, seenNoti })
+                    this.setState({ getNoti: res.noti, seenNoti })
+                }
+
             })
     }
     updateKeyWord(e) {
@@ -228,8 +231,8 @@ class Header extends Component {
                                                             <span style={{ position: 'absolute', top: '5px', borderRadius: '10px' }} class="badge badge-danger">{seenNoti.length} </span>
 
                                                         ) : (
-                                                            <span style={{ position: 'absolute', top: '5px', borderRadius: '10px' }} class="badge badge-danger"></span>
-                                                        )
+                                                                <span style={{ position: 'absolute', top: '5px', borderRadius: '10px' }} class="badge badge-danger"></span>
+                                                            )
                                                     )
                                                 }
                                             </Link>
