@@ -14,6 +14,8 @@ import StarRatingComponent from 'react-star-rating-component';
 import RatingStar from './RatingStar';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Progress } from 'reactstrap';
+import { Form, FormGroup, Label, Input } from 'reactstrap';
 
 class ItemDetail extends Component {
 
@@ -342,37 +344,87 @@ class ItemDetail extends Component {
                             <div className="col-md-12 items-info mt-2">
                                 <div className="review-titles pt-3">
                                     <div className="row">
-                                        <div className="col-md-6 review-left">
+                                        <div className="col-md-12 review-left">
                                             <h3>Review</h3>
                                         </div>
-                                        <div className="col-md-6 review-right">
-                                            <Button style={{ float: 'right' }} color="danger" onClick={this.toggle}>{this.props.buttonLabel}Đánh cmn giá đi</Button>
-                                            <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
-                                                <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
+                                    </div>
+                                </div>
+                                <hr style={{ width: '825px', marginLeft: '-16px' }} />
+                                <div className="row">
+                                    <div className="col-md-4">
+                                        <div className="total-rate">
+                                            <h3>4.0/5</h3>
+                                            <p>Số sao</p>
+                                            <small>69 votes</small>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-4">
+                                        <Form inline>
+                                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                                                <Label for="example" className="mr-sm-2"><small>5★ </small></Label>
+                                                <Progress style={{ width: '230px' }} striped color="warning" value={75} />
+                                                <Label for="example" className="mr-sm-2 ml-1"><small> 35</small></Label>
+                                            </FormGroup>
+                                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                                                <Label for="example" className="mr-sm-2"><small>4★ </small></Label>
+                                                <Progress style={{ width: '230px' }} striped color="warning" value={55} />
+                                                <Label for="example" className="mr-sm-2 ml-1"><small> 25</small></Label>
+                                            </FormGroup>
+                                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                                                <Label for="example" className="mr-sm-2"><small>3★ </small></Label>
+                                                <Progress style={{ width: '230px' }} striped color="warning" value={35} />
+                                                <Label for="example" className="mr-sm-2 ml-1"><small> 15</small></Label>
+                                            </FormGroup>
+                                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                                                <Label for="example" className="mr-sm-2"><small>2★ </small></Label>
+                                                <Progress style={{ width: '230px' }} striped color="warning" value={15} />
+                                                <Label for="example" className="mr-sm-2 ml-1"><small> 10</small></Label>
+                                            </FormGroup>
+                                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                                                <Label for="example" className="mr-sm-2"><small>1★ </small></Label>
+                                                <Progress style={{ width: '230px' }} striped color="warning" value={5} />
+                                                <Label for="example" className="mr-sm-2 ml-1"><small> 5</small></Label>
+                                            </FormGroup>
+                                        </Form>
+                                    </div>
+                                    <div className="col-md-4 light-word">
+                                        <Button style={{ float: 'right', width: '50%' }} color="danger" onClick={this.toggle}>{this.props.buttonLabel}Rate it</Button>
+                                        <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
+                                            <ModalHeader toggle={this.toggle}>Rate your purchased item</ModalHeader>
+                                            <form onSubmit={this.onClickReview}>
                                                 <ModalBody>
-                                                    <form onSubmit={this.onClickReview}>
-                                                        <input type="hidden" name="itemId" value={this.props.match.params.id} />
-                                                        <StarRatingComponent
-                                                            name="rating"
-                                                            starCount={5}
-                                                            value={newReview.rating}
-                                                            onStarClick={this.onStarClick.bind(this)}
-                                                        />
-                                                        <textarea name="content" id="" cols="30" rows="10" onChange={e => {
+                                                    <input type="hidden" name="itemId" value={this.props.match.params.id} />
+                                                    <div className="starRating">
+                                                        <div className="item-rate">
+                                                            <img src="../images/car.jpg" alt="itemimage" style={{ height: '50px', width: '50px' }} />
+                                                            <h3 style={{ display: 'inline' }}> {itemDetail.name}</h3>
+                                                        </div>
+                                                        <div className="dv-star-rating mt-1" style={{ fontSize: '40px' }}>
+                                                            <StarRatingComponent
+                                                                name="rating"
+                                                                starCount={5}
+                                                                value={newReview.rating}
+                                                                onStarClick={this.onStarClick.bind(this)}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <Label for="example" className="mr-sm-2 italic-word"><small style={{ color: '#7b7171' }}>Content</small></Label>
+                                                    <div className="textarea-content" style={{ marginTop: '-10px' }}>
+                                                        <textarea style={{ resize: 'none' }} name="content" id="" cols="55" rows="8" onChange={e => {
                                                             newReview.content = e.target.value
                                                             this.setState({
                                                                 newReview
                                                             })
-                                                        }} value={this.state.newReview.content} defaultValue={this.state.newReview.content}></textarea>
-                                                        <button type="submit" className="btn btn-success" >Review</button>
-                                                    </form>
+                                                        }} value={this.state.newReview.content} defaultValue={this.state.newReview.content}>
+                                                        </textarea>
+                                                    </div>
                                                 </ModalBody>
                                                 <ModalFooter>
-                                                    <Button color="primary" onClick={this.toggle}>Do Something</Button>{' '}
+                                                    <Button type="submit" color="success" onClick={this.toggle} >Review</Button>
                                                     <Button color="secondary" onClick={this.toggle}>Cancel</Button>
                                                 </ModalFooter>
-                                            </Modal>
-                                        </div>
+                                            </form>
+                                        </Modal>
                                     </div>
                                 </div>
                                 <hr style={{ width: '825px', marginLeft: '-16px' }} />
@@ -382,6 +434,41 @@ class ItemDetail extends Component {
                                             <Rating reviews={this.state.reviews} userId={this.state.itemDetail.userId} itemId={this.props.match.params.id}></Rating>
                                         </div>
                                     </div>
+                                </div>
+                                <div className="d-flex justify-content-end">
+                                    <Pagination aria-label="Page navigation example">
+                                        <PaginationItem>
+                                            <PaginationLink previous href="#" />
+                                        </PaginationItem>
+                                        <PaginationItem>
+                                            <PaginationLink href="#">
+                                                1
+                                                </PaginationLink>
+                                        </PaginationItem>
+                                        <PaginationItem>
+                                            <PaginationLink href="#">
+                                                2
+                                                </PaginationLink>
+                                        </PaginationItem>
+                                        <PaginationItem>
+                                            <PaginationLink href="#">
+                                                3
+                                                </PaginationLink>
+                                        </PaginationItem>
+                                        <PaginationItem>
+                                            <PaginationLink href="#">
+                                                4
+                                                </PaginationLink>
+                                        </PaginationItem>
+                                        <PaginationItem>
+                                            <PaginationLink href="#">
+                                                5
+                                                </PaginationLink>
+                                        </PaginationItem>
+                                        <PaginationItem>
+                                            <PaginationLink next href="#" />
+                                        </PaginationItem>
+                                    </Pagination>
                                 </div>
                             </div>
                             <div className="col-md-12 items-info mt-2">
@@ -393,6 +480,41 @@ class ItemDetail extends Component {
                                     <div className="comment-block">
                                         <Comments itemId={this.props.match.params.id} userId={this.props.userId} io={this.props.io}></Comments>
                                     </div>
+                                </div>
+                                <div className="d-flex justify-content-end">
+                                    <Pagination aria-label="Page navigation example">
+                                        <PaginationItem>
+                                            <PaginationLink previous href="#" />
+                                        </PaginationItem>
+                                        <PaginationItem>
+                                            <PaginationLink href="#">
+                                                1
+                                                </PaginationLink>
+                                        </PaginationItem>
+                                        <PaginationItem>
+                                            <PaginationLink href="#">
+                                                2
+                                                </PaginationLink>
+                                        </PaginationItem>
+                                        <PaginationItem>
+                                            <PaginationLink href="#">
+                                                3
+                                                </PaginationLink>
+                                        </PaginationItem>
+                                        <PaginationItem>
+                                            <PaginationLink href="#">
+                                                4
+                                                </PaginationLink>
+                                        </PaginationItem>
+                                        <PaginationItem>
+                                            <PaginationLink href="#">
+                                                5
+                                                </PaginationLink>
+                                        </PaginationItem>
+                                        <PaginationItem>
+                                            <PaginationLink next href="#" />
+                                        </PaginationItem>
+                                    </Pagination>
                                 </div>
                             </div>
                         </div>
@@ -480,7 +602,7 @@ class ItemDetail extends Component {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
         )
     }
 }
