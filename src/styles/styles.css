@@ -11,7 +11,7 @@ body{
   height: 320px;
 }
 .logo{
-  background-color: #c4d0e0;
+  background-color: #b3bdca;
   height: 560px;
   padding-top: 120px;
 }
@@ -523,4 +523,12 @@ body{
 }
 #a-color a{
   color: #46549c;
+}
+#particles-js{
+  height: 100%;
+  width: 100%;
+  background-color: transparent;
+  position: absolute;
+  top: -12%;
+
 }
