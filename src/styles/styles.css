@@ -11,7 +11,7 @@ body{
   height: 320px;
 }
 .logo{
-  background-color: #b3bdca;
+  background-color: #030721;
   height: 560px;
   padding-top: 120px;
 }
@@ -23,13 +23,13 @@ body{
 }
 #word p, #word li{
   font-size: 20px;
-  color: #091f61;
+  color: #c3c7d2;
 }
 #word h1{
-  color: #091f61;
+  color: #8194ce;
 }
 #quote{
-  color: #091f61;
+  color: #c3c7d2;
 }
 #quote:hover{
   text-decoration: none;
@@ -91,7 +91,7 @@ body{
   border-radius: .25rem;
 }
 .text-muted{
-  color: #7a25ad!important;
+  color: #16e415!important;
 }
 .bgrfeat{
   background-color: #e9e9f1;

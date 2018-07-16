@@ -78,7 +78,7 @@ class Bidcart extends Component {
         }
 
         return (
-            <div>
+            <div style={{ position: 'relative', zIndex: '1000' }}>
                 <div className="container adminpanel" style={{ paddingTop: '30px' }}>
                     <Nav tabs>
                         <NavItem>

@@ -31,7 +31,7 @@ class HomePage extends Component {
                                 <img src="./images/logo.png" alt="Logo" />
                             </div>
                             <div className="col-md-7" id="word">
-                                <h1>Auctions Beyond Actions</h1>
+                                <h1 id="light-word">Auctions Beyond Actions</h1>
                                 <p>
                                     We are here to offer you great deals of the most exclusive and beautiful items in the world.
                                     When participate in our auction system
