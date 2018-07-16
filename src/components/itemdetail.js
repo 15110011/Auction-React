@@ -39,6 +39,8 @@ class ItemDetail extends Component {
         this.onReceiveRoomMessage = this.onReceiveRoomMessage.bind(this)
         this.toggle = this.toggle.bind(this)
         this.onClickReview = this.onClickReview.bind(this)
+        this.onBeginAuction = this.onBeginAuction.bind(this)
+        this.setCountDown = this.setCountDown.bind(this)
     }
     onClickReview(e) {
         e.preventDefault()
@@ -92,14 +94,10 @@ class ItemDetail extends Component {
                         console.log(body.msg)
                     })
                     this.props.io.socket.on('room' + item.findItem.id, this.onReceiveRoomMessage)
-                    let endTime = dateFns.getTime(dateFns.addHours(item.findItem.startedAt, item.findItem.period))
-                    let currTime = dateFns.getTime(new Date())
-                    let timeLeft = endTime - currTime
-                    setInterval(() => {
-                        let remainTime = this.state.timeLeft - 1000
-                        this.setState({ timeLeft: remainTime })
-                    }, 1000)
-                    this.setState({ images: item.findImg, itemDetail: item.findItem, step: nextStep, currentBidding: initBid + nextStep, timeLeft: timeLeft })
+                    this.setState({ images: item.findImg, itemDetail: item.findItem, step: nextStep, currentBidding: initBid + nextStep }, function () {
+                        this.setCountDown()
+
+                    })
 
                 }
                 else {
@@ -130,13 +128,31 @@ class ItemDetail extends Component {
     setCurrentItem(current) {
         this.setState({ current })
     }
+    setCountDown() {
+        if (this.state.itemDetail && this.state.itemDetail.startedAt !== 0) {
+            let endTime = dateFns.getTime(dateFns.addHours(this.state.itemDetail.startedAt, this.state.itemDetail.period))
+            let currTime = dateFns.getTime(new Date())
+            let timeLeft = endTime + this.state.itemDetail.additionalTime - currTime
+            clearInterval(this.countDownInterval)
+            this.countDownInterval = setInterval(() => {
+                let remainTime = this.state.timeLeft - 1000
+                this.setState({ timeLeft: remainTime })
+                if(remainTime<=0){
+                    clearInterval(this.countDownInterval)
+                }
+            }, 1000)
+            this.setState({ timeLeft: timeLeft })
+        }
+    }
     onSubmitBid(e) {
         console.log(this.props.userId)
 
         e.preventDefault()
+
         this.props.io.socket.post('/api/v1/bid/' + this.state.itemDetail.id, {
             currentPrice: this.state.currentBidding,
-            userId: this.props.userId
+            userId: this.props.userId,
+            isLastFiveSec: this.state.timeLeft <= 5000
         }, (function (res) {
             console.log(res)
 
@@ -146,6 +162,16 @@ class ItemDetail extends Component {
                     itemDetail.bids.unshift(res.newBid)
                     itemDetail.currentPrice = itemDetail.bids[0].currentPrice
                     let nextStep = Math.ceil(itemDetail.bids[0].currentPrice * 0.5)
+                    if (res.newAdditionalTime) {
+                        console.log('addition', res.newAdditionalTime)
+                        let modifyDetail = this.state.itemDetail
+                        modifyDetail.additionalTime = res.newAdditionalTime
+                        this.setState({
+                            itemDetail: modifyDetail
+                        }, () => {
+                            this.setCountDown()
+                        })
+                    }
                     this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
                 }
             }
@@ -168,6 +194,30 @@ class ItemDetail extends Component {
             })
         }
 
+    }
+    onBeginAuction() {
+        let startTime = new Date().getTime()
+        console.log(startTime)
+        fetch('/api/v1/items/' + this.props.match.params.id, {
+            method: "PATCH",
+            body: JSON.stringify({
+                startedAt: startTime
+            })
+        })
+            .then((res) => res.json())
+            .then((res) => {
+                if (!res.error) {
+                    let modifyDetail = this.state.itemDetail
+                    modifyDetail.startedAt = startTime
+                    this.setState({ itemDetail: modifyDetail }, function () {
+                        this.setCountDown()
+                    })
+
+                }
+                else {
+                    console.log(res.msg)
+                }
+            })
     }
     render() {
         const { current, items, itemDetail, images, newReview } = this.state
@@ -192,8 +242,8 @@ class ItemDetail extends Component {
                             <br />
                             <Link to='/'><i className="fas fa-backward"><span className="light-word"> Back to bid</span></i></Link>
                             <div className="items-info">
-                                <div className="container pt-3">
-                                    <h3>{itemDetail.name}</h3>
+                                <div className="container pt-3 ">
+                                    <h3 class="d-flex">{itemDetail.name} {itemDetail.startedAt == 0 && <button className="btn btn-primary ml-auto" onClick={this.onBeginAuction}>Begin auction</button>}</h3>
                                 </div>
                                 <hr />
                                 <div className="container">
@@ -264,7 +314,7 @@ class ItemDetail extends Component {
                                                             }
                                                         }}
                                                         mobile={true} className="form-control pr-5" /> */}
-                                                    <button className="btn btn-primary ml-3" type="submit"><i className="fas fa-gavel"> Bid now</i></button>
+                                                    {this.state.itemDetail.startedAt !== 0 && <button className="btn btn-primary ml-3" type="submit"><i className="fas fa-gavel"> Bid now</i></button>}
                                                 </form>
                                                 {this.state.itemDetail.bids.length > 0 ? <p className="alert alert-info light-word mt-2">
                                                     Last bid by : {this.state.itemDetail.bids[0].userId.userName}

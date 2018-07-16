@@ -63,11 +63,6 @@ class EditItem extends Component {
                                 name="userId"
                                 value={this.props.userId}
                             />
-                            <input
-                                type="hidden"
-                                name="itemId"
-                                value={this.props.itemId}
-                            />
                             <div className="info">
                                 <div className="row info-intro">
                                     <h3>Infomation</h3>
