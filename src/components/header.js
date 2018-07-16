@@ -255,7 +255,7 @@ class Header extends Component {
                                                                         <li className="notification">
                                                                             <div className="media" style={{ borderBottom: '1px solid #F1F1F1', minHeight: '73px' }}>
                                                                                 <div className="avatar-noti pt-2">
-                                                                                    <img style={{ height: '50px', width: '50px', borderRadius: '50%' }} src="./images/cs.jpg" alt="img" />
+                                                                                    <img style={{ height: '50px', width: '50px', borderRadius: '50%' }} src="./images/car.jpg" alt="img" />
                                                                                 </div>
                                                                                 <div className="container content-noti">
                                                                                     {info.isAccept ? (

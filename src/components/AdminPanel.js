@@ -60,7 +60,7 @@ class AdminPanel extends Component {
     }
     render() {
         return (
-            <div>
+            <div style={{ position: 'relative', zIndex: '1000' }}>
                 {this.props.isAdmin ? <div className="container adminpanel" style={{ paddingTop: '30px' }}>
                     <Nav tabs>
                         <NavItem>

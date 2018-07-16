@@ -235,7 +235,7 @@ class ItemDetail extends Component {
             </div>
         )
         return (
-            <div className="itemDetail-content">
+            <div className="itemDetail-content" style={{ position: 'relative', zIndex: '1000' }}>
                 <div className="container">
                     <div className="row">
                         <div className="col-md-9">

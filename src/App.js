@@ -16,6 +16,8 @@ import socketIOClient from 'socket.io-client';
 import sailsIOClient from 'sails.io.js';
 import SearchResult from './components/SearchResult';
 
+
+
 class App extends Component {
   constructor(props) {
     super(props)

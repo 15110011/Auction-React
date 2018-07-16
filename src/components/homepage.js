@@ -11,13 +11,13 @@ import CategoryShow from './CategoryShow'
 
 class HomePage extends Component {
 
-    state={
-        showCategory:true
+    state = {
+        showCategory: true
     }
 
-    handleShowCate = () =>{
+    handleShowCate = () => {
         this.setState({
-            showCategory:!this.state.showCategory
+            showCategory: !this.state.showCategory
         })
     }
 
@@ -49,7 +49,7 @@ class HomePage extends Component {
                             </div>
                         </div>
                     </div>
-                    <button className="btn btn-primary position-fixed" style={{top:'8%'}} onClick={this.handleShowCate}>Category</button>
+                    <button className="btn btn-primary position-fixed" style={{ top: '8%' }} onClick={this.handleShowCate}>Category</button>
                     <CategoryShow show={this.state.showCategory} />
                 </div>
                 <Features />

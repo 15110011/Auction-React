@@ -252,7 +252,7 @@ class DashBoard extends Component {
         }
 
         return (
-            <div className="container">
+            <div className="container" style={{ position: 'relative', zIndex: '1000' }}>
                 <div className="dashboard">
                     {
                         this.state.expire === true && (
@@ -448,25 +448,25 @@ class DashBoard extends Component {
                                                         </div>
                                                     </td>
                                                     {
-                                                        item.isAccept==1  && (
+                                                        item.isAccept == 1 && (
                                                             <td><span className="badge badge-pill badge-success light-word">Accepted</span></td>
 
                                                         )
-                                                        
+
                                                     }
                                                     {
                                                         item.isAccept === 0 && (
                                                             <td><span className="badge badge-pill badge-danger light-word">Rejected</span></td>
 
                                                         )
-                                                        
+
                                                     }
                                                     {
                                                         item.isAccept === null && (
                                                             <td><span className="badge badge-pill badge-secondary light-word">Pending</span></td>
 
                                                         )
-                                                        
+
                                                     }
                                                     {/* <td><span className="badge badge-pill badge-danger light-word">Rejected</span></td>
                                                     <td><span className="badge badge-pill badge-secondary light-word">Pending</span></td> */}
