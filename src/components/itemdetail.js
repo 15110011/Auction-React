@@ -197,7 +197,6 @@ class ItemDetail extends Component {
     }
     onBeginAuction() {
         let startTime = new Date().getTime()
-        console.log(startTime)
         fetch('/api/v1/items/' + this.props.match.params.id, {
             method: "PATCH",
             body: JSON.stringify({
@@ -207,6 +206,7 @@ class ItemDetail extends Component {
             .then((res) => res.json())
             .then((res) => {
                 if (!res.error) {
+                    console.log('begin auction',res)
                     let modifyDetail = this.state.itemDetail
                     modifyDetail.startedAt = startTime
                     this.setState({ itemDetail: modifyDetail }, function () {
