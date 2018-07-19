@@ -24,6 +24,7 @@ class Bidcart extends Component {
             lost: false
         }
         this.toggle = this.toggle.bind(this);
+        this.setCountDown = this.setCountDown.bind(this)
     }
 
     toggle(tab) {
@@ -31,6 +32,26 @@ class Bidcart extends Component {
             this.setState({
                 activeTab: tab
             });
+        }
+    }
+    setCountDown() {
+        if (this.state.items && this.state.items.startedAt !== 0) {
+            console.log(this.state.items)
+            let endTime = dateFns.getTime(dateFns.addHours(this.state.items.startedAt, this.state.items.period))
+            let currTime = dateFns.getTime(new Date())
+            let timeLeft = endTime + this.state.items.additionalTime - currTime
+
+            clearInterval(this.countDownInterval)
+            this.countDownInterval = setInterval(() => {
+                let remainTime = this.state.timeLeft - 1000
+                if (remainTime <= 0) {
+                    clearInterval(this.countDownInterval)
+                }
+                else {
+                    this.setState({ timeLeft: remainTime })
+                }
+            }, 1000)
+            this.setState({ timeLeft: timeLeft })
         }
     }
     componentDidMount() {
@@ -44,20 +65,35 @@ class Bidcart extends Component {
 
                         let endTime = dateFns.getTime(dateFns.addHours(item.startedAt, item.period))
                         let curTime = dateFns.getTime(new Date())
-                        let timeLeft = endTime - curTime
+                        let timeLeft = endTime + item.additionalTime - curTime
 
                         item.timeLeft = timeLeft
+                        if (item && item.startedAt !== 0) {
+                            clearInterval(this.countDownInterval)
+                            this.countDownInterval = setInterval(() => {
+                                let remainTime = item.timeLeft - 1000
+                                if (remainTime <= 0) {
+                                    clearInterval(this.countDownInterval)
+                                }
+                                else {
+                                    item.timeLeft = remainTime
+                                    this.setState({ remainTime })
+                                }
+                            }, 1000)
+                            // this.setState({ timeLeft: timeLeft })
+                        }
                         return item
                     })
-                    setInterval(() => {
-                        var itemTime = biddingItems.slice()
-                        itemTime.map(item => {
-                            item.timeLeft = item.timeLeft - 1000
-                            return item
-                        })
-                        this.setState({ item: itemTime })
-                    }, 1000)
+                    // setInterval(() => {
+                    //     var itemTime = biddingItems.slice()
+                    //     itemTime.map(item => {
+                    //         item.timeLeft = item.timeLeft - 1000
+                    //         return item
+                    //     })
+                    //     this.setState({ item: itemTime })
+                    // }, 1000)
                     this.setState({ items: biddingItems, bidding: true })
+
 
                 })
         }

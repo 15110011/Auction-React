@@ -136,9 +136,11 @@ class ItemDetail extends Component {
             clearInterval(this.countDownInterval)
             this.countDownInterval = setInterval(() => {
                 let remainTime = this.state.timeLeft - 1000
-                this.setState({ timeLeft: remainTime })
-                if(remainTime<=0){
+                if (remainTime <= 0) {
                     clearInterval(this.countDownInterval)
+                }
+                else {
+                    this.setState({ timeLeft: remainTime })
                 }
             }, 1000)
             this.setState({ timeLeft: timeLeft })
@@ -206,7 +208,7 @@ class ItemDetail extends Component {
             .then((res) => res.json())
             .then((res) => {
                 if (!res.error) {
-                    console.log('begin auction',res)
+                    console.log('begin auction', res)
                     let modifyDetail = this.state.itemDetail
                     modifyDetail.startedAt = startTime
                     this.setState({ itemDetail: modifyDetail }, function () {
