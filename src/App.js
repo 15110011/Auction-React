@@ -17,6 +17,11 @@ import sailsIOClient from 'sails.io.js';
 import SearchResult from './components/SearchResult';
 
 
+let root = `${window.location.protocol}//${window.location.host}`
+if (window.location.port) {
+  root += `:${window.location.port}`
+}
+
 
 class App extends Component {
   constructor(props) {
@@ -39,7 +44,7 @@ class App extends Component {
   }
   componentWillMount() {
     let io = sailsIOClient(socketIOClient);
-    io.sails.url = 'http://localhost:1337';
+    io.sails.url = root;
     io.sails.connect()
     this.setState({ io: io })
   }
@@ -75,7 +80,7 @@ class App extends Component {
         form.append('action', 'LOGIN');
 
         form.append('userName', res.name)
-        fetch(`http://localhost:1337/api/v2/login`, {
+        fetch(`${root}/api/v2/login`, {
           method: 'POST',
           body: form,
           credentials: 'include'
@@ -101,7 +106,7 @@ class App extends Component {
 
   }
   checkIsAdmin() {
-    fetch(`http://localhost:1337/api/v1/me?id=${this.state.userId}`)
+    fetch(`${root}/api/v1/me?id=${this.state.userId}`)
       .then(res => res.json())
       .then(userData => {
         console.log(userData)
@@ -124,7 +129,7 @@ class App extends Component {
             form.append('token', localStorage.getItem('token'))
             form.append('userId', data.id)
             console.log("CHECK")
-            fetch(`http://localhost:1337/api/v2/login`, {
+            fetch(`${root}/api/v2/login`, {
               method: 'POST',
               body: form,
               credentials: 'include'
