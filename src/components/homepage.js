@@ -49,8 +49,8 @@ class HomePage extends Component {
                             </div>
                         </div>
                     </div>
-                    <button className="btn btn-primary position-fixed" style={{ top: '8%' }} onClick={this.handleShowCate}>Category</button>
-                    <CategoryShow show={this.state.showCategory} />
+                    {/* <button className="btn btn-primary position-fixed" style={{ top: '8%' }} onClick={this.handleShowCate}>Category</button>
+                    <CategoryShow show={this.state.showCategory} /> */}
                 </div>
                 <Features />
                 <br />
