@@ -51,7 +51,7 @@ class ItemDetail extends Component {
                 content: ''
             }
         })
-        fetch(`/api/v1/users/${this.props.userId}/rates`, {
+        fetch(`${root}/api/v1/users/${this.props.userId}/rates`, {
             method: 'POST',
             body: form
         })
@@ -83,14 +83,14 @@ class ItemDetail extends Component {
             console.log('with headers: ', JWR.headers);
             console.log('and with status code: ', JWR.statusCode);
         });
-        fetch('/api/v1/items/' + this.props.match.params.id)
+        fetch(`${root}/api/v1/items/` + this.props.match.params.id)
             .then(res => res.json())
             .then(item => {
                 console.log(item)
                 if (!item.error) {
                     let nextStep = Math.ceil(item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice * 0.5 : item.findItem.currentPrice * 0.5)
                     let initBid = item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice : item.findItem.currentPrice
-                    this.props.io.socket.get('/socket/items/' + item.findItem.id, (body, JWR) => {
+                    this.props.io.socket.get(`${root}/socket/items/` + item.findItem.id, (body, JWR) => {
                         console.log(body.msg)
                     })
                     this.props.io.socket.on('room' + item.findItem.id, this.onReceiveRoomMessage)
@@ -106,7 +106,7 @@ class ItemDetail extends Component {
                 }
             })
         if (this.props.userId) {
-            fetch(`/api/v1/users/${this.props.userId}/rates`)
+            fetch(`${root}/api/v1/users/${this.props.userId}/rates`)
                 .then(res => res.json())
                 .then(reviews => {
                     if (!reviews.error)
@@ -151,7 +151,7 @@ class ItemDetail extends Component {
 
         e.preventDefault()
 
-        this.props.io.socket.post('/api/v1/bid/' + this.state.itemDetail.id, {
+        this.props.io.socket.post(`${root}/api/v1/bid/` + this.state.itemDetail.id, {
             currentPrice: this.state.currentBidding,
             userId: this.props.userId,
             isLastFiveSec: this.state.timeLeft <= 5000
@@ -253,11 +253,11 @@ class ItemDetail extends Component {
                                         <div className="col-md-5 item-image">
                                             {images.length > 0 ?
                                                 <div>
-                                                    <ReactImageZoom width={340} height={300} zoomWidth={450} img={"http://localhost:1337/images/items/" + images[current].link} />
+                                                    <ReactImageZoom width={340} height={300} zoomWidth={450} img={`${root}/images/items/` + images[current].link} />
                                                     <div className="row thumbnail mt-2" style={{ paddingLeft: '15px', marginRight: '-30px' }}>
                                                         {images.map((img, i) => (
                                                             <div className="col-sm-4 thumbnail-border" key={i}>
-                                                                <img className="img-fluid" src={`http://localhost:1337/images/items/${img.link}`} alt="car" style={{ height: '100px' }} onClick={e => this.setCurrentItem(i)} />
+                                                                <img className="img-fluid" src={`${root}/images/items/${img.link}`} alt="car" style={{ height: '100px' }} onClick={e => this.setCurrentItem(i)} />
                                                             </div>
                                                         ))}
                                                     </div></div> : <img className="img-fluid" src={`http://www.staticwhich.co.uk/static/images/products/no-image/no-image-available.png`} alt="No image" />}

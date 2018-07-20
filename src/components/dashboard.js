@@ -74,7 +74,7 @@ class DashBoard extends Component {
                 })
             }
         })
-        fetch('/api/v1/categories').then(res => res.json()).then(res => {
+        fetch(`${root}/api/v1/categories`).then(res => res.json()).then(res => {
             let cloneCat = this.state.categories.slice()
             res.cats.map(cat => {
                 cloneCat[cat.id] = cat.name
@@ -89,7 +89,7 @@ class DashBoard extends Component {
     }
     handleDelete(e) {
         let value = e.currentTarget.value
-        fetch(`/api/v1/items/${value}`, {
+        fetch(`${root}/api/v1/items/${value}`, {
             method: 'DELETE'
         }).then(res => res.json())
             .then((rs) => {
@@ -135,7 +135,7 @@ class DashBoard extends Component {
             console.log(inputImages[i])
             form.append('files', inputImages[i])
         }
-        fetch('/api/v1/items', {
+        fetch(`${root}/api/v1/items`, {
             method: 'POST',
             body: form
         })
@@ -220,7 +220,7 @@ class DashBoard extends Component {
     getItem() {
         const items = this.state.items
 
-        fetch(`/api/v1/users/${this.state.userID}/items`)
+        fetch(`${root}/api/v1/users/${this.state.userID}/items`)
             .then(items => {
                 console.log(items)
                 return items.json()

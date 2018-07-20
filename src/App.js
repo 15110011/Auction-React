@@ -17,7 +17,7 @@ import sailsIOClient from 'sails.io.js';
 import SearchResult from './components/SearchResult';
 
 
-let root = `${window.location.protocol}//${window.location.host}`
+// let root = `${window.location.protocol}//${window.location.host}`
 // if (window.location.port) {
 //   root += `:${window.location.port}`
 // }
@@ -43,6 +43,7 @@ class App extends Component {
 
   }
   componentWillMount() {
+    window.root = `${window.location.protocol}//${window.location.host}`
     let io = sailsIOClient(socketIOClient);
     io.sails.url = root;
     io.sails.connect()
@@ -178,7 +179,7 @@ class App extends Component {
     FB.Event.subscribe("auth.authResponseChange", resp => {
 
       if (resp.status === "connected") {
-        this.state.io.socket.get(`/socket/user/${resp.authResponse.userID}`, (body) => {
+        this.state.io.socket.get(`${root}/socket/user/${resp.authResponse.userID}`, (body) => {
           console.log(body.msg) 
         })
       }

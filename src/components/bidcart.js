@@ -57,7 +57,7 @@ class Bidcart extends Component {
     componentDidMount() {
         this.countDownInterval = []
         if (this.props.userId) {
-            fetch(`/api/v1/bidding/${this.props.userId}`)
+            fetch(`${root}/api/v1/bidding/${this.props.userId}`)
                 .then(item => item.json())
                 .then(item => {
                     var biddingItems = item.biddingItems

@@ -16,7 +16,7 @@ class AdminPanel extends Component {
     }
     componentDidMount() {
 
-        fetch('/api/v1/categories').then(res => res.json()).then(cat => {
+        fetch(`${root}/api/v1/categories`).then(res => res.json()).then(cat => {
             if (!cat.error)
                 this.setState({ categories: cat.cats })
         })

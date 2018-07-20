@@ -26,7 +26,7 @@ class EditItem extends Component {
         form.append('details', draftToHtml(convertToRaw(this.props.editorState.getCurrentContent())))
 
         let value = e.target
-        fetch(`/api/v1/items/${this.props.itemId}`, {
+        fetch(`${root}/api/v1/items/${this.props.itemId}`, {
             method: 'PATCH',
             body: form
         }).then(res => res.json())
