@@ -18,9 +18,9 @@ import SearchResult from './components/SearchResult';
 
 
 let root = `${window.location.protocol}//${window.location.host}`
-if (window.location.port) {
-  root += `:${window.location.port}`
-}
+// if (window.location.port) {
+//   root += `:${window.location.port}`
+// }
 
 
 class App extends Component {

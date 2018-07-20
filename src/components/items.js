@@ -33,17 +33,17 @@ class Items extends Component {
                         items.map(item => {
                             return (
                                 <div className="col-md-3" style={{ marginTop: '25px' }}>
-                                    <div className="itemborder">
+                                    <div className="itemborder" style={{ borderTopLeftRadius: '10px', borderTopRightRadius: '10px' }}>
                                         <div className="item-image">
                                             {
                                                 item.imgItem ? (
                                                     <Link className="detail" to="/itemdetail">
-                                                        <img className="img-fluid" src={`http://localhost:1337/images/items/${item.imgItem[0].link}`} alt="car" style={{ height: '100px' }}
+                                                        <img className="img-fluid" src={`http://localhost:1337/images/items/${item.imgItem[0].link}`} alt="car" style={{ borderTopLeftRadius: '10px', borderTopRightRadius: '10px', minHeight: '200px' }}
                                                         />
 
                                                     </Link>
                                                 ) : (
-                                                        <img className="img-fluid" src={`http://www.staticwhich.co.uk/static/images/products/no-image/no-image-available.png`} alt="No image" />
+                                                        <img className="img-fluid" src={`http://www.staticwhich.co.uk/static/images/products/no-image/no-image-available.png`} alt="No image" style={{ borderTopLeftRadius: '10px', borderTopRightRadius: '10px', minHeight: '200px' }} />
 
                                                     )
                                             }
@@ -57,8 +57,8 @@ class Items extends Component {
                                                 </div>
                                             </div>
                                         </div>
-                                        <Link className="btn btnbid" to={`/items/${item.id}`} role="button" style={{ marginTop: '5px' }}><i className="fas fa-gavel"></i> Bid now</Link>
                                     </div>
+                                    <Link className="btn btnbid" to={`/items/${item.id}`} role="button" style={{ marginTop: '5px' }}><i className="fas fa-gavel"></i> Bid now</Link>
                                 </div>
                             )
                         })
