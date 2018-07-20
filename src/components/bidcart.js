@@ -55,28 +55,32 @@ class Bidcart extends Component {
         }
     }
     componentDidMount() {
+        this.countDownInterval = []
         if (this.props.userId) {
             fetch(`/api/v1/bidding/${this.props.userId}`)
                 .then(item => item.json())
                 .then(item => {
                     var biddingItems = item.biddingItems
-                    console.log(biddingItems[0].startedAt)
-                    biddingItems.map(item => {
-
+                    biddingItems.map((item, i) => {
+                        let index = i
                         let endTime = dateFns.getTime(dateFns.addHours(item.startedAt, item.period))
                         let curTime = dateFns.getTime(new Date())
                         let timeLeft = endTime + item.additionalTime - curTime
-
                         item.timeLeft = timeLeft
+                        if (this.countDownInterval) {
+                            clearInterval(this.countDownInterval[index])
+                        }
                         if (item && item.startedAt !== 0) {
-                            clearInterval(this.countDownInterval)
-                            this.countDownInterval = setInterval(() => {
+                            this.countDownInterval[index] = setInterval(() => {
                                 let remainTime = item.timeLeft - 1000
+                                console.log(remainTime)
+
                                 if (remainTime <= 0) {
-                                    clearInterval(this.countDownInterval)
+                                    clearInterval(this.countDownInterval[index])
                                 }
                                 else {
                                     item.timeLeft = remainTime
+                                    console.log(remainTime)
                                     this.setState({ remainTime })
                                 }
                             }, 1000)
