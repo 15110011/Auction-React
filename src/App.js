@@ -6,7 +6,7 @@ import Footer from './components/footer'
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom'
 import HomePage from './components/homepage';
 import FAQ from './components/faq'
-import { LOADING_LOGIN_STATUS, LOADED_LOGIN_STATUS, GUEST_STATUS } from './config'
+import { LOADING_LOGIN_STATUS, LOADED_LOGIN_STATUS, GUEST_STATUS, API_URL, WS_URL } from './config'
 import DashBoard from './components/dashboard';
 import ItemDetail from './components/itemdetail';
 import Items from './components/items';
@@ -16,11 +16,7 @@ import socketIOClient from 'socket.io-client';
 import sailsIOClient from 'sails.io.js';
 import SearchResult from './components/SearchResult';
 
-
-// let root = `${window.location.protocol}//${window.location.host}`
-// if (window.location.port) {
-//   root += `:${window.location.port}`
-// }
+window.root = API_URL
 
 
 class App extends Component {
@@ -39,25 +35,22 @@ class App extends Component {
     this.loginCB = this.loginCB.bind(this)
     this.checkStatus = this.checkStatus.bind(this)
     this.checkIsAdmin = this.checkIsAdmin.bind(this)
-
-
   }
   componentWillMount() {
-    window.root = `${window.location.protocol}//${window.location.host}`
     let io = sailsIOClient(socketIOClient);
-    io.sails.url = root;
+    io.sails.url = WS_URL;
     io.sails.connect()
-    this.setState({ io: io })
+    this.setState({ io })
   }
+
   logIn(e) {
     if (e) {
       e.preventDefault()
-
     }
     this.setState({ loggedIn: LOADING_LOGIN_STATUS })
     FB.login(this.loginCB)
-
   }
+
   logOut(e) {
     FB.logout(
       resp => {
@@ -67,6 +60,7 @@ class App extends Component {
       }
     )
   }
+
   loginCB(resp) {
     var form = new FormData();
     localStorage.setItem("token", resp.authResponse.accessToken)
