@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
-import { render } from 'react-dom'
 import { Link } from 'react-router-dom'
 import '../styles/styles.css'
-import Header from './header'
 import Features from './hotfeatures';
-import Footer from './footer';
 import Items from './items';
-import CategoryShow from './CategoryShow'
 
 
 class HomePage extends Component {
@@ -26,12 +22,12 @@ class HomePage extends Component {
             <div>
                 <div className="logo">
                     <div className="container">
-                        <div className="row">
+                        <div className="row" id="logo">
                             <div className="col-md-5 image">
                                 <img src="./images/logo.png" alt="Logo" />
                             </div>
                             <div className="col-md-7" id="word">
-                                <h1 id="light-word">Auctions Beyond Actions</h1>
+                                <h1 className="team-tittle" id="light-word">Auctions Beyond Actions</h1>
                                 <p>
                                     We are here to offer you great deals of the most exclusive and beautiful items in the world.
                                     When participate in our auction system

@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
-import { render } from 'react-dom'
-import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
-import classnames from 'classnames';
+import { Row, Col } from 'reactstrap';
 import { CREATED_MODE, DELETED_MODE, UPDATED_MODE } from '../config';
 
 class AdminCategories extends Component {

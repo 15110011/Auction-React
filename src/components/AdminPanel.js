@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { render } from 'react-dom'
 import '../styles/styles.css'
-import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
+import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import classnames from 'classnames';
 import _ from 'lodash';
 import { CREATED_MODE, DELETED_MODE, UPDATED_MODE } from '../config';
@@ -60,8 +59,8 @@ class AdminPanel extends Component {
     }
     render() {
         return (
-            <div style={{ position: 'relative', zIndex: '1000' }}>
-                {this.props.isAdmin ? <div className="container adminpanel" style={{ paddingTop: '30px' }}>
+            <div style={{ position: 'relative', zIndex: '1000', marginTop: '130px' }}>
+                {this.props.isAdmin ? <div className="container adminpanel" style={{ paddingTop: '70px' }}>
                     <Nav tabs>
                         <NavItem>
                             <NavLink

@@ -1,14 +1,10 @@
 import React, { Component } from 'react'
-import { render } from 'react-dom'
 import '../styles/styles.css'
-import { LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config';
-import { EditorState, convertToRaw } from 'draft-js';
-import _ from 'lodash'
-import { convertFromRaw, convertFromHTML, ContentState } from 'draft-js';
+import { convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import { Editor } from 'react-draft-wysiwyg';
 import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Form, FormGroup, Label, ButtonGroup } from 'reactstrap';
+import { Button, Input, Form, FormGroup, Label, ButtonGroup } from 'reactstrap';
 
 
 class EditItem extends Component {

@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
-import { render } from 'react-dom'
 import { Link } from 'react-router-dom'
 import '../styles/styles.css'
-import Footer from './footer';
 import NumberFormat from 'react-number-format';
 
 
@@ -14,7 +12,7 @@ class Items extends Component {
             items: []
         }
     }
-    componentWillMount() {
+    componentDidMount() {
         fetch('/api/v1/items')
             .then(res => res.json())
             .then(res => {
@@ -36,18 +34,16 @@ class Items extends Component {
                                     <div className="itemborder" style={{ borderTopLeftRadius: '10px', borderTopRightRadius: '10px' }}>
                                         <div className="item-image">
                                             {
-                                                item.imgItem ? (
+                                                item.imgItem.length !== 0 ? (
                                                     <Link className="detail" to="/itemdetail">
                                                         <img className="img-fluid" src={`http://localhost:1337/images/items/${item.imgItem[0].link}`} alt="car" style={{ borderTopLeftRadius: '10px', borderTopRightRadius: '10px', minHeight: '200px' }}
                                                         />
 
                                                     </Link>
                                                 ) : (
-                                                        <img className="img-fluid" src={`http://www.staticwhich.co.uk/static/images/products/no-image/no-image-available.png`} alt="No image" style={{ borderTopLeftRadius: '10px', borderTopRightRadius: '10px', minHeight: '200px' }} />
-
+                                                        <img className="img-fluid" src={`http://www.staticwhich.co.uk/static/images/products/no-image/no-image-available.png`} alt="" style={{ borderTopLeftRadius: '10px', borderTopRightRadius: '10px', minHeight: '200px' }} />
                                                     )
                                             }
-
                                         </div>
                                         <div className="time-price">
                                             <div className="row d-flex justify-content-between">

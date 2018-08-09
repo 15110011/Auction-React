@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
-import { render } from 'react-dom'
-import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
-import { FormGroup, Label, Input } from 'reactstrap';
+import { TabContent, TabPane, Nav, NavItem, NavLink, Row, Col } from 'reactstrap';
 import '../styles/styles.css'
 import classnames from 'classnames';
 import { Link } from 'react-router-dom'
 import dateFns from 'date-fns'
 import NumberFormat from 'react-number-format';
-import { LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config';
+import { GUEST_STATUS } from '../config';
 
 
 
@@ -118,8 +116,8 @@ class Bidcart extends Component {
         }
 
         return (
-            <div style={{ position: 'relative', zIndex: '1000' }}>
-                <div className="container adminpanel" style={{ paddingTop: '30px' }}>
+            <div style={{ position: 'relative', zIndex: '1000', minHeight: '100vh', marginTop: '130px' }}>
+                <div className="container bidcartpanel" style={{ paddingTop: '70px' }}>
                     <Nav tabs>
                         <NavItem>
                             <NavLink
@@ -146,7 +144,7 @@ class Bidcart extends Component {
                             </NavLink>
                         </NavItem>
                     </Nav>
-                    <TabContent activeTab={this.state.activeTab} id="admin-panel">
+                    <TabContent activeTab={this.state.activeTab} id="admin-panel" style={{ minHeight: '300px' }}>
                         <TabPane tabId="1">
                             <Row>
                                 <Col sm="12">
@@ -191,9 +189,13 @@ class Bidcart extends Component {
                                                     }
                                                 </tbody>
                                             ) : (
-                                                    <div role="alert" style={{ marginTop: '5px', position: 'absolute', left: '40%', width: 'auto' }}>
-                                                        <p className="alert alert-warning text-center light-word">No bidding item</p>
-                                                    </div>
+                                                    <tbody>
+                                                        <tr className="info-bidcart" role="alert">
+                                                            <td>
+                                                                <p className="alert alert-warning light-word">No bidding item</p>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
                                                 )
                                         }
                                     </table>
@@ -217,9 +219,13 @@ class Bidcart extends Component {
                                         </thead>
                                         {
                                             !this.state.won ? (
-                                                <div role="alert" style={{ marginTop: '5px', position: 'absolute', left: '40%', width: 'auto' }}>
-                                                    <p className="alert alert-warning text-center light-word">Start bidding to win items now</p>
-                                                </div>
+                                                <tbody>
+                                                    <tr className="info-bidcart" role="alert">
+                                                        <td>
+                                                            <p className="alert alert-warning light-word">Start bidding to win items now</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
                                             ) : (
                                                     <tbody>
                                                         {
@@ -268,9 +274,13 @@ class Bidcart extends Component {
                                         </thead>
                                         {
                                             !this.state.lost ? (
-                                                <div role="alert" style={{ marginTop: '5px', position: 'absolute', left: '40%', width: 'auto' }}>
-                                                    <p className="alert alert-warning text-center light-word">You haven't lost any battle yet</p>
-                                                </div>
+                                                <tbody>
+                                                    <tr className="info-bidcart" role="alert">
+                                                        <td>
+                                                            <p className="alert alert-warning light-word">You haven't lost any battle yet</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
                                             ) : (
                                                     <tbody>
                                                         {

@@ -1,21 +1,17 @@
 import React, { Component } from 'react'
-import { render } from 'react-dom'
 import { Link } from 'react-router-dom'
 import ReactImageZoom from 'react-image-zoom';
-import NumericInput from 'react-numeric-input';
 import '../styles/styles.css'
 import Comments from './Comments'
 import Rating from './Rating'
-import _ from 'lodash';
 import dateFns from 'date-fns'
 import BidInput from './BidInput'
 import NumberFormat from 'react-number-format';
 import StarRatingComponent from 'react-star-rating-component';
-import RatingStar from './RatingStar';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Progress } from 'reactstrap';
-import { Form, FormGroup, Label, Input } from 'reactstrap';
+import { Form, FormGroup, Label } from 'reactstrap';
 
 class ItemDetail extends Component {
 
@@ -222,8 +218,8 @@ class ItemDetail extends Component {
             })
     }
     render() {
-        const { current, items, itemDetail, images, newReview } = this.state
-        if (itemDetail && this.props.userId != itemDetail.userId) {
+        const { current, itemDetail, images, newReview } = this.state
+        if (itemDetail && this.props.userId !== itemDetail.userId) {
             return (
                 <div role="alert" style={{ marginTop: '75px' }}>
                     <p className="alert alert-danger text-center light-word">You dont have permission to visit this page, get out</p>
@@ -245,7 +241,7 @@ class ItemDetail extends Component {
                             <Link to='/'><i className="fas fa-backward"><span className="light-word"> Back to bid</span></i></Link>
                             <div className="items-info">
                                 <div className="container pt-3 ">
-                                    <h3 class="d-flex">{itemDetail.name} {itemDetail.startedAt == 0 && <button className="btn btn-primary ml-auto" onClick={this.onBeginAuction}>Begin auction</button>}</h3>
+                                    <h3 className="d-flex">{itemDetail.name} {itemDetail.startedAt === 0 && <button className="btn btn-primary ml-auto" onClick={this.onBeginAuction}>Begin auction</button>}</h3>
                                 </div>
                                 <hr />
                                 <div className="container">
@@ -260,13 +256,13 @@ class ItemDetail extends Component {
                                                                 <img className="img-fluid" src={`http://localhost:1337/images/items/${img.link}`} alt="car" style={{ height: '100px' }} onClick={e => this.setCurrentItem(i)} />
                                                             </div>
                                                         ))}
-                                                    </div></div> : <img className="img-fluid" src={`http://www.staticwhich.co.uk/static/images/products/no-image/no-image-available.png`} alt="No image" />}
+                                                    </div></div> : <img className="img-fluid" src={`http://www.staticwhich.co.uk/static/images/products/no-image/no-image-available.png`} alt="" />}
                                         </div>
                                         <div className="col-md-7">
                                             <div className="row">
                                                 <div className="col-md-6">
                                                     <div>
-                                                        {this.state.itemDetail.startedAt == 0 ? <h4>Duration: {this.state.itemDetail.period} hour(s)</h4> :
+                                                        {this.state.itemDetail.startedAt === 0 ? <h4>Duration: {this.state.itemDetail.period} hour(s)</h4> :
                                                             <h4>Time left: {
                                                                 this.fromMillisecondsToFormattedString(this.state.timeLeft)}
                                                             </h4>

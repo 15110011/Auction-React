@@ -6,27 +6,21 @@ body{
 .bg-dark {
   background-color: #265c94 !important;
 }
-.logo img{
-  width: 350px;
-  height: 320px;
-}
 .logo{
   background-color: #030721;
   height: 560px;
-  padding-top: 120px;
 }
 #search-form{
   width: 280px;
 }
-.image img{
-  float: right;
-}
 #word p, #word li{
-  font-size: 20px;
+  font-size: 15px;
   color: #c3c7d2;
 }
 #word h1{
   color: #8194ce;
+  font-size: 1.5em;
+  margin-top: 40px;
 }
 #quote{
   color: #c3c7d2;
@@ -35,8 +29,8 @@ body{
   text-decoration: none;
 }
 .feature img{
-  height: 240px;
-  width: 270px;
+  height: 200px;
+  width: 200px;
   border-radius: 50%;
   margin-left: auto;
   margin-right: auto;
@@ -125,6 +119,7 @@ body{
 }
 #price{
   text-align: right;
+  margin-top: -30px;
 }
 .btnbid{
   width: 100%;
@@ -232,28 +227,95 @@ body{
   border-radius: 2px;
   padding: 5px 5px;
 }
-@media screen and (max-width: 400px){
-    .logo img{
-      width: 160px;
-      height: 160px;
-      margin-right: 95px;
-      margin-top: -100px;
-    }
-    #word p{
-      font-size: 15px;
-    }
-    #word li{
-      font-size: 15px;
-    }
-    #price{
-      margin-top: -30px;
-    }
-    #adddel-form{
-      overflow-x: auto;
-    }
-    #admin-panel{
-      overflow-x: auto;
-    }
+.notification-panel{
+  width: 400px;
+  margin-left: -300px;
+}
+.logo img{
+  height: 160px;
+  width: 160px;
+  margin: 0 auto;
+  display: block;
+  margin-top: 25px;
+}
+#adddel-form{
+  overflow: auto;
+}
+#admin-panel{
+  overflow: auto;
+}
+.info-bidcart p{
+  margin: 0 auto;
+  display: block;
+  position: absolute;
+}
+.form-group .form-control{
+  width: 290px;
+}
+#pagination .pagination-button{
+  width: 30px;
+  height: 30px;
+}
+.avatar-noti img{
+  height: 30px; 
+  width: 30px; 
+  border-radius: 50%;
+}
+@media only screen and (min-width: 375px){
+  .logo img{
+    height: 200px;
+    width: 200px;
+  }
+  #word h1{
+    font-size: 1.5em;
+    text-align: center;
+  }
+  .feature img{
+    height: 220px;
+    width: 220px;
+  }
+  #adddel-form{
+    overflow-x: auto;
+  }
+  #admin-panel{
+    overflow-x: auto;
+  }
+  .form-group .form-control {
+    width: 345px;
+  }
+  #pagination-container{
+    font-size: 0.8em;
+  }
+}
+@media only screen and (min-width: 425px){
+  .feature img{
+    height: 220px;
+    width: 220px;
+    border-radius: 50%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #a-color {
+    width: 300px;
+    margin-left: -210px;
+    font-size: 1em;
+}
+}
+@media only screen and (min-width: 768px){
+  .logo img{
+    margin-top:0; 
+  }
+  #a-color{
+    width: 300px;
+    margin-left: -215px;
+    font-size: 0.9em;
+  }
+}
+@media only screen and (min-width: 1024px){
+  .logo img{
+    height: 350px;
+    width: 350px;
+}
 }
 .adminpanel{
   min-height: 100vh;  
@@ -512,10 +574,11 @@ body{
 }
 .notification{
   display: block;
-  padding: 0 12px;
+  padding: 10px 5px;
   background-color: #fff;
   color: #333333;
   text-decoration: none;
+  margin-top: -10px;
 }
 .notification :hover{
   background-color: #f9f9f9;
@@ -523,6 +586,190 @@ body{
 }
 #a-color a{
   color: #46549c;
+  margin-top: -32px;
+}
+#a-color{
+  width: 200px;
+  margin-left: -105px;
+  font-size: 0.7em;
+}
+@media only screen and (min-width: 375px)
+{
+  #a-color{
+    width: 250px;
+    margin-left: -160px;
+    font-size: 0.7em;
+  }
+  #a-color a{
+    margin-top: -32px;
+  }
+  .notification{
+    display: block;
+    padding: 10px 5px;
+    background-color: #fff;
+    color: #333333;
+    text-decoration: none;
+    margin-top: -10px;
+  }
+}
+@media only screen and (min-width: 425px){
+  #a-color {
+    width: 300px;
+    margin-left: -210px;
+    font-size: 1em;
+  }
+  #a-color a {
+    margin-top: -40px;
+  }
+  .notification {
+    display: block;
+    padding: 10px 5px;
+    background-color: #fff;
+    color: #333333;
+    text-decoration: none;
+    margin-top: -10px;
+    min-height: 72px;
+  }
+  .form-group .form-control {
+    width: 392px;
+  }
+  .feature img{
+    height: 250px;
+    width: 250px;
+    border-radius: 50%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+@media only screen and (min-width: 768px){
+  .logo img{
+    height: 260px;
+    width: 260px;
+    margin-top: 25px;
+  }
+  #a-color{
+    width: 350px;
+    margin-left: -260px;
+    font-size: 1.2em;
+  }
+  #a-color a{
+    margin-top: 0;
+  }
+  .notification{
+    padding: 10px 5px;
+  }
+  .feature img {
+    height: 220px;
+    width: 220px;
+    border-radius: 50%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .avatar-noti img{
+    height: 50px;
+    width: 50px;
+  }
+  .form-group .form-control {
+    width: 210px;
+  }
+  #see-all{
+    font-size: 0.9em;
+  }
+  #word h1 {
+    font-size: 3em;
+    text-align: center;
+  }
+  #word p, #word li {
+    font-size: 18px;
+    color: #c3c7d2;
+  }
+  #quote{
+    font-size: 20px;
+  }
+  #logo{
+    padding: 40px;
+  }
+}
+@media only screen and (min-width: 1024px){
+  .logo img{
+    height: 320px;
+    width: 350px;
+  }
+  #word h1 {
+    font-size: 3.5em;
+    text-align: center;
+}
+#a-color {
+  width: 400px;
+  margin-left: -300px;
+  font-size: 16px;
+}
+.avatar-noti img{
+  height: 60px;
+  width:  60px;
+}
+.logo{
+  padding-top: 65px;
+}
+#word p, #word li{
+  font-size: 20px;
+}
+#quote{
+  font-size: 18px;
+}
+.feature img {
+  height: 280px;
+  width: 280px;
+  border-radius: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  }
+  .notification {
+    padding: 10px 10px;
+    font-size: 16px;
+  }
+  #admin-panel{
+    overflow: hidden;
+  }
+  #adddel-form{
+    overflow: hidden;
+  }
+  .info-bidcart p {
+    margin: 25px auto;
+    display: block;
+    position: absolute;
+    text-align: center;
+    left: 40%;
+  }
+  .form-group .form-control {
+    width: 350px;
+  }
+  #pagination .pagination-button{
+    width: 50px;
+    height: 50px;
+  }
+  .dashboard{
+    margin-top: -60px;
+    font-size: 16px;
+  }
+  .container{
+    padding-top: 0;
+  }
+  .adminpanel{
+    margin-top: -60px;
+    font-size: 16px;
+  }
+  #price{
+    text-align: right;
+    margin-top: 0px;
+  }
+  .bidcartpanel{
+    margin-top: -60px;
+    font-size: 16px;
+  }
+  #logo{
+    padding: 0;
+  }
 }
 #particles-js{
   height: 100%;
@@ -530,5 +777,4 @@ body{
   background-color: transparent;
   position: absolute;
   top: -12%;
-
 }

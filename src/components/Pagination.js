@@ -1,6 +1,4 @@
-import { PaginationItem, PaginationLink } from 'reactstrap';
 import React, { Component } from 'react'
-import { render } from 'react-dom'
 import classnames from 'classnames';
 import '../styles/setting.css'
 

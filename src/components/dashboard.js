@@ -1,18 +1,16 @@
 /*global FB */
 import React, { Component } from 'react'
-import { render } from 'react-dom'
 import '../styles/styles.css'
-import { LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config';
+import { GUEST_STATUS } from '../config';
 import EditItem from './editItem'
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw } from 'draft-js';
 import _ from 'lodash'
 import { Link } from 'react-router-dom'
-import { convertFromRaw, convertFromHTML, ContentState } from 'draft-js';
+import { convertFromHTML, ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Form, FormGroup, Label, ButtonGroup } from 'reactstrap';
-import { PaginationItem, PaginationLink } from 'reactstrap';
 import Pagination from './Pagination'
 import NumberFormat from 'react-number-format';
 
@@ -118,7 +116,6 @@ class DashBoard extends Component {
         if (e.target.files.length > 3) {
             this.setState({ checkValidInput: false })
         } else {
-            const images = this.state.images
             console.log(e.target.files)
             this.setState({ checkValidInput: true, images: e.target.files, count: e.target.files.length })
         }
@@ -218,7 +215,6 @@ class DashBoard extends Component {
     }
 
     getItem() {
-        const items = this.state.items
 
         fetch(`/api/v1/users/${this.state.userID}/items`)
             .then(items => {
@@ -241,7 +237,6 @@ class DashBoard extends Component {
     }
 
     render() {
-        const { currentNote } = this.props
         const { page, total, renderedItems } = this.state
         if (this.props.loggedIn === GUEST_STATUS) {
             return (
@@ -250,9 +245,8 @@ class DashBoard extends Component {
                 </div>
             )
         }
-
         return (
-            <div className="container" style={{ position: 'relative', zIndex: '1000' }}>
+            <div className="container" style={{ position: 'relative', zIndex: '1000', marginTop: '120px' }}>
                 <div className="dashboard">
                     {
                         this.state.expire === true && (
@@ -412,7 +406,7 @@ class DashBoard extends Component {
 
                     <br />
                     <div className="container" id="adddel-form">
-                        {this.state.loadingItem ? <div style={{ textAlign: 'center', zIndex: '900', position: 'relative' }}><img src="./images/loading.gif" style={{ maxHeight: '400px', maxWidth: '400px' }} /></div> :
+                        {this.state.loadingItem ? <div style={{ textAlign: 'center', zIndex: '900', position: 'relative' }}><img src="./images/loading.gif" alt="img" style={{ maxHeight: '400px', maxWidth: '400px' }} /></div> :
                             <table className="table table-striped">
                                 <thead>
                                     <tr>
@@ -448,7 +442,7 @@ class DashBoard extends Component {
                                                         </div>
                                                     </td>
                                                     {
-                                                        item.isAccept == 1 && (
+                                                        item.isAccept === 1 && (
                                                             <td><span className="badge badge-pill badge-success light-word">Accepted</span></td>
 
                                                         )

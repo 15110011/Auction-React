@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom'
-import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import './../styles/setting.css'
 import NumberFormat from 'react-number-format';
 
 
 class SearchResult extends Component {
-    constructor(props) {
-        super(props)
-    }
+    
     render() {
         var foundItems = this.props.history.location.state.results
         if (foundItems.length === 0) {

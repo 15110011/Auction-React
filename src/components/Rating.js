@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { render } from 'react-dom'
+import React from 'react'
 import StarRatingComponent from 'react-star-rating-component';
 import dateFns from 'date-fns'
+import {Link} from 'react-router-dom'
 
 
 function Rating(props) {
@@ -32,7 +32,7 @@ function Rating(props) {
                                         </div>
                                         <div className="certificate bolditalic-word" style={{ marginTop: '-20px' }}>
                                             <small style={{ fontSize: '75%' }}>
-                                                <i style={{ color: '#4caf50' }} class="fas fa-shield-alt"> Purchased certificate</i>
+                                                <i style={{ color: '#4caf50' }} className="fas fa-shield-alt"> Purchased certificate</i>
                                             </small>
                                         </div>
                                     </div>
@@ -40,7 +40,7 @@ function Rating(props) {
                                         <p>{review.comment}</p>
                                         <div className="post italic-word" style={{ marginTop: '-15px' }}>
                                             <div className="user">
-                                                <small style={{ color: '#7b7171' }}>by <a href="#">{review.buyer.userName}</a></small>
+                                                <small style={{ color: '#7b7171' }}>by <Link to="#">{review.buyer.userName}</Link></small>
                                             </div>
                                         </div>
                                     </div>

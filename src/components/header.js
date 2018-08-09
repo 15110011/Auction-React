@@ -1,13 +1,9 @@
 /*global FB*/
 import React, { Component } from 'react';
-import Items from './items';
-import { render } from 'react-dom'
 import { Link, withRouter } from 'react-router-dom'
-import SearchResult from './SearchResult'
 import '../styles/styles.css'
 import { LOADING_LOGIN_STATUS, LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config'
 import dateFns from 'date-fns'
-import _ from 'lodash'
 
 
 
@@ -55,7 +51,7 @@ class Header extends Component {
 
     }
     shouldComponentUpdate(nextProps) {
-        if (this.props.userId == '' && nextProps.userId !== '') {
+        if (this.props.userId === '' && nextProps.userId !== '') {
             console.log(nextProps.userId)
             this.props.io.socket.on('user' + nextProps.userId, (owner) => {
                 this.props.io.socket.post('/api/v1/notifications', {
@@ -168,7 +164,7 @@ class Header extends Component {
         FB.login(console.log)
     }
     render() {
-        const { keywords, results, getNoti, readNoti, seenNoti } = this.state
+        const { keywords, getNoti, seenNoti } = this.state
         let filterItem = this.state.results.filter(kw => {
             return kw.name.toLowerCase().indexOf(this.state.keywords.toLowerCase()) !== -1
         })
@@ -209,8 +205,6 @@ class Header extends Component {
                                         return (
                                             <option value={kw.name} />
                                         )
-
-
                                     })
                                 }
                             </datalist>
@@ -228,41 +222,41 @@ class Header extends Component {
                                                 {
                                                     getNoti && (
                                                         seenNoti.length !== 0 ? (
-                                                            <span style={{ position: 'absolute', top: '5px', borderRadius: '10px' }} class="badge badge-danger">{seenNoti.length} </span>
+                                                            <span style={{ position: 'absolute', top: '5px', borderRadius: '10px' }} className="badge badge-danger">{seenNoti.length} </span>
 
                                                         ) : (
-                                                                <span style={{ position: 'absolute', top: '5px', borderRadius: '10px' }} class="badge badge-danger"></span>
+                                                                <span style={{ position: 'absolute', top: '5px', borderRadius: '10px' }} className="badge badge-danger"></span>
                                                             )
                                                     )
                                                 }
                                             </Link>
-                                            <div id="a-color" style={{ width: '400px', marginLeft: '-300px' }} className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
+                                            <div id="a-color" className="dropdown-menu account-menu notification-panel" aria-labelledby="header-account-menu-link">
                                                 <div className="container row">
                                                     <div className="col-md-6">
                                                         <p>Notifications</p>
                                                     </div>
                                                     <div className="col-md-6">
-                                                        <a href="#" style={{ float: 'right' }}>Mark all as read</a>
+                                                        <Link to="#" style={{ float: 'right', marginRight: '-30px' }}>Mark all as read</Link>
                                                     </div>
                                                 </div>
                                                 <hr style={{ marginTop: '-10px' }} />
-                                                <ul className="notification" style={{ marginTop: '-12px' }}>
+                                                <ul className="notification">
                                                     {
                                                         getNoti ? (
-                                                            getNoti.map(info => {
+                                                            getNoti.map((info,i) => {
                                                                 return (
-                                                                    <Link to={`/items/${info.itemId}`} style={{ textDecoration: 'none' }} className="notification-item">
+                                                                    <Link key={i} to={`/items/${info.itemId}`} style={{ textDecoration: 'none' }} className="notification-item">
                                                                         <li className="notification">
-                                                                            <div className="media" style={{ borderBottom: '1px solid #F1F1F1', minHeight: '73px' }}>
-                                                                                <div className="avatar-noti pt-2">
-                                                                                    <img style={{ height: '50px', width: '50px', borderRadius: '50%' }} src="./images/car.jpg" alt="img" />
+                                                                            <div className="media" style={{ borderBottom: '1px solid #F1F1F1', minHeight: '55px' }}>
+                                                                                <div className="avatar-noti pb-2">
+                                                                                    <img src="./images/car.jpg" alt="img" />
                                                                                 </div>
                                                                                 <div className="container content-noti">
                                                                                     {info.isAccept ? (
-                                                                                        <strong className="notification-title">Admin accepted your item <Link to={`/items/${info.itemId}`}>{info.itemName}</Link></strong>
+                                                                                        <strong className="notification-title">Admin accepted your item <object><Link to={`/items/${info.itemId}`}>{info.itemName}</Link></object></strong>
 
                                                                                     ) : (
-                                                                                            <strong className="notification-title">Admin rejected your item <Link to={`/items/${info.itemId}`}>{info.itemName}</Link></strong>
+                                                                                            <strong className="notification-title">Admin rejected your item <object><Link to={`/items/${info.itemId}`}>{info.itemName}</Link></object></strong>
                                                                                         )
                                                                                     }
                                                                                     <div className="notification-meta">
@@ -282,8 +276,8 @@ class Header extends Component {
 
                                                     }
                                                 </ul>
-                                                <hr style={{ marginTop: '-12px' }} />
-                                                <center style={{ marginTop: '-10px' }}><a href="#">See All</a></center>
+                                                <hr style={{ marginTop: '-17px' }} />
+                                                <center id="see-all" style={{ marginTop: '-10px' }}><Link to="#">See All</Link></center>
                                             </div>
                                         </div>
                                         <div className="nav-item dropdown">
@@ -291,7 +285,7 @@ class Header extends Component {
                                             <div className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
                                                 <Link className="dropdown-item" to="">{this.props.name}</Link>
                                                 <Link className="dropdown-item" to="/dashboard">Dashboard</Link>
-                                                {this.props.isAdmin ? <Link className="dropdown-item" to="/admin">Admin Panel <span class="badge badge-danger" style={{ position: 'absolute', left: '120px', top: '77px', borderRadius: '10px' }} ></span></Link> : ''}
+                                                {this.props.isAdmin ? <Link className="dropdown-item" to="/admin">Admin Panel <span className="badge badge-danger" style={{ position: 'absolute', left: '120px', top: '77px', borderRadius: '10px' }} ></span></Link> : ''}
                                                 <Link className="dropdown-item" to="/logout" onClick={this.handleLogOut}>Sign out</Link>
                                             </div>
                                         </div>

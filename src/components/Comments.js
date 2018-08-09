@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { render } from 'react-dom'
 import dateFns from 'date-fns'
+import { Link } from 'react-router-dom'
+
 
 class Comments extends Component {
     constructor(props) {
@@ -58,7 +59,7 @@ class Comments extends Component {
                                     <li style={{ backgroundColor: '#F1F1F1', borderRadius: '10px', listStyleType: 'none', padding: '10px 10px' }} key={cmt.id}>
                                         {cmt.content}
                                         <div className="user-question">
-                                            <small style={{ color: '#7b7171' }}>by <a href="#">{cmt.user.userName}</a> - {dateFns.format(cmt.createdAt,'hh:mm DD/MM/YYYY')}</small>
+                                            <small style={{ color: '#7b7171' }}>by <Link to="#">{cmt.user.userName}</Link> - {dateFns.format(cmt.createdAt,'hh:mm DD/MM/YYYY')}</small>
                                         </div>
                                         <hr />
                                         <div className="answer italic-word">

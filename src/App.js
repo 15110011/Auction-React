@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Header from './components/header'
 import Footer from './components/footer'
-import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import HomePage from './components/homepage';
 import FAQ from './components/faq'
 import { LOADING_LOGIN_STATUS, LOADED_LOGIN_STATUS, GUEST_STATUS } from './config'
@@ -32,7 +32,6 @@ class App extends Component {
       userId: '',
       isAdmin: false,
       io: null,
-      name: ''
     }
     this.logIn = this.logIn.bind(this)
     this.logOut = this.logOut.bind(this)
