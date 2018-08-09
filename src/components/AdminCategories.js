@@ -15,7 +15,7 @@ class AdminCategories extends Component {
             console.log(e.target.action.value)
             this.setState({ enteringName: '' })
             let form = new FormData(e.target)
-            fetch('/api/v1/categories', {
+            fetch(`${root}/api/v1/categories`, {
                 method: 'POST',
                 body: form
             }).then(res => res.json())
@@ -32,7 +32,7 @@ class AdminCategories extends Component {
             let newCat = this.state.enteringName
             this.setState({ enteringName: '' })
             let form = new FormData(e.target)
-            fetch('/api/v1/categories/' + this.state.edittingId, {
+            fetch(`${root}/api/v1/categories/` + this.state.edittingId, {
                 method: 'PATCH',
                 body: form
 
@@ -59,7 +59,7 @@ class AdminCategories extends Component {
     handleDelete(e){
         console.log(e.currentTarget.value)
         let id = e.currentTarget.value
-        fetch('/api/v1/categories/'+id,{
+        fetch(`${root}/api/v1/categories/`+id,{
             method:'DELETE'
         }).then(res=>res.json()).then(res=>{
             this.props.updateCategories({id:id},DELETED_MODE)

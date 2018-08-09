@@ -11,7 +11,7 @@ class Header extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            isLoggedIn: false,
+            // isLoggedIn: false,
             name: '',
             loading: false,
             categories: [],
@@ -29,16 +29,17 @@ class Header extends Component {
     }
     handleLogOut(e) {
         e.preventDefault()
-        FB.logout(
-            resp => {
-                if (resp.status === 'unknown') {
-                    this.setState({ isLoggedIn: false })
-                }
-            }
-        )
+        // FB.logout(
+        //     resp => {
+        //         if (resp.status === 'unknown') {
+        //             this.setState({ isLoggedIn: false })
+        //         }
+        //     }
+        // )
+        this.props.logOut()
     }
     componentDidMount() {
-        fetch('/api/v1/categories').then(res => res.json()).then(res => {
+        fetch(`${root}/api/v1/categories`).then(res => res.json()).then(res => {
             let cloneCat = this.state.categories.slice()
             res.cats.map(cat => {
                 cloneCat[cat.id] = cat.name
@@ -54,7 +55,7 @@ class Header extends Component {
         if (this.props.userId === '' && nextProps.userId !== '') {
             console.log(nextProps.userId)
             this.props.io.socket.on('user' + nextProps.userId, (owner) => {
-                this.props.io.socket.post('/api/v1/notifications', {
+                this.props.io.socket.post(`${root}/api/v1/notifications`, {
                     id: owner.id,
                     isAccept: owner.isAccept,
                     itemName: owner.itemName,
@@ -62,7 +63,7 @@ class Header extends Component {
                 }, (res) => {
                     console.log(res)
                     if (!res.error) {
-                        this.props.io.socket.get('/api/v1/notifications', (body) => {
+                        this.props.io.socket.get(`${root}/api/v1/notifications`, (body) => {
                             let getNoti = body.noti
                             let seenNoti = body.noti.reduce((cur, i) => {
                                 if (i.seen !== true) {
@@ -80,8 +81,8 @@ class Header extends Component {
         return true
     }
     componentWillMount() {
-        this.props.checkStatus()
-        fetch('/api/v1/notifications')
+        // this.props.checkStatus()
+        fetch(`${root}/api/v1/notifications`)
             .then(res => res.json())
             .then(res => {
                 if (res.noti) {
@@ -102,7 +103,7 @@ class Header extends Component {
     updateKeyWord(e) {
         e.preventDefault()
         this.setState({ keywords: e.target.value })
-        fetch(`/api/v1/search?search=${e.target.value}`)
+        fetch(`${root}/api/v1/search?search=${e.target.value}`)
             .then(data => data.json())
             .then(data => {
                 if (data.resultItem) {
@@ -113,7 +114,7 @@ class Header extends Component {
     }
     handleSearch(e) {
         e.preventDefault()
-        fetch(`/api/v1/search?search=${this.state.keywords}`)
+        fetch(`${root}/api/v1/search?search=${this.state.keywords}`)
             .then(res => res.json())
             .then(res => {
                 var itemsFound = res.resultItem
@@ -143,7 +144,7 @@ class Header extends Component {
     }
     handleNoti(e) {
         e.preventDefault()
-        this.props.io.socket.patch('/api/v1/notifications', {
+        this.props.io.socket.patch(`${root}/api/v1/notifications`, {
             seen: this.state.seen,
             userId: this.props.userId
         }, (res) => {
@@ -298,7 +299,7 @@ class Header extends Component {
                                 <div className="ml-auto">
                                     <div className="form-inline">
                                         <Link className="btn btn-info" to="/faq">FAQ</Link>
-                                        <button className="loginBtn loginBtn--facebook" onClick={(e) => { this.handleLogin(e) }}>Login with Facebook</button>
+                                        <button className="loginBtn loginBtn--facebook" onClick={this.handleLogin}>Login with Facebook</button>
                                     </div>
                                 </div>
                             ) : ''

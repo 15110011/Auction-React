@@ -12,8 +12,8 @@ class Items extends Component {
             items: []
         }
     }
-    componentDidMount() {
-        fetch('/api/v1/items')
+    componentWillMount() {
+        fetch(`${root}/api/v1/items`)
             .then(res => res.json())
             .then(res => {
                 this.setState({
@@ -28,15 +28,15 @@ class Items extends Component {
             <div className="container">
                 <div className="row">
                     {
-                        items.map(item => {
+                        items && items.map(item => {
                             return (
                                 <div className="col-md-3" style={{ marginTop: '25px' }}>
                                     <div className="itemborder" style={{ borderTopLeftRadius: '10px', borderTopRightRadius: '10px' }}>
                                         <div className="item-image">
                                             {
-                                                item.imgItem.length !== 0 ? (
-                                                    <Link className="detail" to="/itemdetail">
-                                                        <img className="img-fluid" src={`http://localhost:1337/images/items/${item.imgItem[0].link}`} alt="car" style={{ borderTopLeftRadius: '10px', borderTopRightRadius: '10px', minHeight: '200px' }}
+                                                item.imgItem.lenghth !== 0  ? (
+                                                    <Link className="detail" to={`/items/${item.id}`}>
+                                                        <img className="img-fluid" src={`${root}/images/items/${item.imgItem[0].link}`} alt="car" style={{ borderTopLeftRadius: '10px', borderTopRightRadius: '10px', minHeight: '200px' }}
                                                         />
 
                                                     </Link>
