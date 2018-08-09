@@ -30,7 +30,7 @@ class Items extends Component {
             <div className="container">
                 <div className="row">
                     {
-                        items.map(item => {
+                        items.length >0 && items.map(item => {
                             return (
                                 <div className="col-md-3" style={{ marginTop: '25px' }}>
                                     <div className="itemborder" style={{ borderTopLeftRadius: '10px', borderTopRightRadius: '10px' }}>
