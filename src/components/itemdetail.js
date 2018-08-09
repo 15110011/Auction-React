@@ -222,7 +222,7 @@ class ItemDetail extends Component {
             })
     }
     render() {
-        const { current, items, itemDetail, images, newReview, loading, isApproved } = this.state
+        const { current, itemDetail, images, newReview, loading, isApproved } = this.state
         if (loading) {
             return (
                 <div role="alert" style={{ marginTop: '75px' }}>
@@ -230,7 +230,7 @@ class ItemDetail extends Component {
                 </div>
             )
         }
-        if (itemDetail && (this.props.userId != itemDetail.userId && !isApproved)) {
+        if (itemDetail && (this.props.userId !== itemDetail.userId && !isApproved)) {
             return (
                 <div role="alert" style={{ marginTop: '75px' }}>
                     <p className="alert alert-danger text-center light-word">You dont have permission to visit this page, get out</p>

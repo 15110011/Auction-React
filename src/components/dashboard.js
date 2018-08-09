@@ -134,7 +134,8 @@ class DashBoard extends Component {
         }
         fetch(`${root}/api/v1/items`, {
             method: 'POST',
-            body: form
+            body: form,
+            credentials: 'include'
         })
             .then(res => res.json())
             .then((res) => {
@@ -215,7 +216,9 @@ class DashBoard extends Component {
     }
 
     getItem() {
-        fetch(`${root}/api/v1/users/${this.props.userId}/items`)
+        fetch(`${root}/api/v1/users/${this.props.userId}/items`,{
+            credentials: 'include'
+        })
             .then(items => {
                 console.log(items)
                 return items.json()

@@ -96,7 +96,7 @@ class App extends Component {
   checkStatus() {
     this.setState({ loggedIn: LOADING_LOGIN_STATUS })
     FB.getLoginStatus((resp) => {
-      if (resp.status == 'connected') {
+      if (resp.status === 'connected') {
         FB.api('/me', data => {
           this.setState({ name: data.name })
 

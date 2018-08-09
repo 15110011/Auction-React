@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { CREATED_MODE, DELETED_MODE, UPDATED_MODE } from '../config';
 import AdminPendingItems from './AdminPendingItems';
 import AdminCategories from './AdminCategories';
+
 class AdminPanel extends Component {
     constructor(props) {
         super(props)
