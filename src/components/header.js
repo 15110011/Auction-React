@@ -15,7 +15,7 @@ class Header extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            isLoggedIn: false,
+            // isLoggedIn: false,
             name: '',
             loading: false,
             categories: [],
@@ -33,13 +33,14 @@ class Header extends Component {
     }
     handleLogOut(e) {
         e.preventDefault()
-        FB.logout(
-            resp => {
-                if (resp.status === 'unknown') {
-                    this.setState({ isLoggedIn: false })
-                }
-            }
-        )
+        // FB.logout(
+        //     resp => {
+        //         if (resp.status === 'unknown') {
+        //             this.setState({ isLoggedIn: false })
+        //         }
+        //     }
+        // )
+        this.props.logOut()
     }
     componentDidMount() {
         fetch(`${root}/api/v1/categories`).then(res => res.json()).then(res => {
@@ -84,7 +85,7 @@ class Header extends Component {
         return true
     }
     componentWillMount() {
-        this.props.checkStatus()
+        // this.props.checkStatus()
         fetch(`${root}/api/v1/notifications`)
             .then(res => res.json())
             .then(res => {
@@ -304,7 +305,7 @@ class Header extends Component {
                                 <div className="ml-auto">
                                     <div className="form-inline">
                                         <Link className="btn btn-info" to="/faq">FAQ</Link>
-                                        <button className="loginBtn loginBtn--facebook" onClick={(e) => { this.handleLogin(e) }}>Login with Facebook</button>
+                                        <button className="loginBtn loginBtn--facebook" onClick={this.handleLogin}>Login with Facebook</button>
                                     </div>
                                 </div>
                             ) : ''

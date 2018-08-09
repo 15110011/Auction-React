@@ -67,13 +67,13 @@ class DashBoard extends Component {
     }
     componentDidMount() {
 
-        FB.api('/me', data => {
-            if (!data.error) {
-                this.setState({ userID: data.id, loadingItem: false }, () => {
-                    this.getItem()
-                })
-            }
-        })
+        // FB.api('/me', data => {
+        //     if (!data.error) {
+        //         this.setState({ userID: data.id, loadingItem: false }, () => {
+        //             this.getItem()
+        //         })
+        //     }
+        // })
         fetch(`${root}/api/v1/categories`).then(res => res.json()).then(res => {
             let cloneCat = this.state.categories.slice()
             res.cats.map(cat => {
@@ -218,9 +218,7 @@ class DashBoard extends Component {
     }
 
     getItem() {
-        const items = this.state.items
-
-        fetch(`${root}/api/v1/users/${this.state.userID}/items`)
+        fetch(`${root}/api/v1/users/${this.props.userId}/items`)
             .then(items => {
                 console.log(items)
                 return items.json()
@@ -228,7 +226,7 @@ class DashBoard extends Component {
             .then(items => {
                 console.log(items)
 
-                this.setState({ items: items.findItem, renderedItems: items.findItem.slice(0, 4), total: items.findItem.length, page: 1 })
+                this.setState({ items: items.findItem, renderedItems: items.findItem.slice(0, 4), total: items.findItem.length, page: 1, loadingItem: false })
             })
 
     }
@@ -239,10 +237,15 @@ class DashBoard extends Component {
     handleChange(e) {
         this.setState({ categoriesId: e.target.value })
     }
-
+    shouldComponentUpdate(nextProps) {
+        if (nextProps.userId && this.state.loadingItem) {
+            this.getItem()
+        }
+        return true
+    }
     render() {
-        const { currentNote } = this.props
         const { page, total, renderedItems } = this.state
+
         if (this.props.loggedIn === GUEST_STATUS) {
             return (
                 <div className="container">

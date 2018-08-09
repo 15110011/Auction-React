@@ -26,7 +26,9 @@ class AdminPendingItems extends Component {
 
 
     componentDidMount() {
-        fetch('/api/v1/pendingitems/').then(res => res.json())
+        fetch('/api/v1/pendingitems/',{
+          credentials: 'include'
+        }).then(res => res.json())
             .then(items => {
                 if (!items.error) {
                     this.setState({

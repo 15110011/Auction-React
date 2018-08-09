@@ -33,7 +33,9 @@ class ItemDetail extends Component {
             newReview: {
                 rating: 1,
                 content: ''
-            }
+            },
+            loading: true,
+            isApproved: null
         }
         this.onSubmitBid = this.onSubmitBid.bind(this)
         this.onReceiveRoomMessage = this.onReceiveRoomMessage.bind(this)
@@ -78,23 +80,25 @@ class ItemDetail extends Component {
         });
     }
     componentDidMount() {
-        this.props.io.socket.get('/hello', function serverResponded(body, JWR) {
+        this.props.io.socket.get(`${root}/hello`, function serverResponded(body, JWR) {
             console.log('Sails responded with: ', body);
             console.log('with headers: ', JWR.headers);
             console.log('and with status code: ', JWR.statusCode);
         });
-        fetch(`${root}/api/v1/items/` + this.props.match.params.id)
+        fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
+            credentials: 'include'
+        })
             .then(res => res.json())
             .then(item => {
-                console.log(item)
+                this.setState({ loading: false })
                 if (!item.error) {
                     let nextStep = Math.ceil(item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice * 0.5 : item.findItem.currentPrice * 0.5)
                     let initBid = item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice : item.findItem.currentPrice
-                    this.props.io.socket.get(`${root}/socket/items/` + item.findItem.id, (body, JWR) => {
+                    this.props.io.socket.get('/socket/items/' + item.findItem.id, (body, JWR) => {
                         console.log(body.msg)
                     })
                     this.props.io.socket.on('room' + item.findItem.id, this.onReceiveRoomMessage)
-                    this.setState({ images: item.findImg, itemDetail: item.findItem, step: nextStep, currentBidding: initBid + nextStep }, function () {
+                    this.setState({ images: item.findImg, itemDetail: item.findItem, step: nextStep, currentBidding: initBid + nextStep, isApproved: item.isApproved }, function () {
                         this.setCountDown()
 
                     })
@@ -151,7 +155,7 @@ class ItemDetail extends Component {
 
         e.preventDefault()
 
-        this.props.io.socket.post(`${root}/api/v1/bid/` + this.state.itemDetail.id, {
+        this.props.io.socket.post(`${root}/api/v1/bid/${this.state.itemDetail.id}`, {
             currentPrice: this.state.currentBidding,
             userId: this.props.userId,
             isLastFiveSec: this.state.timeLeft <= 5000
@@ -191,7 +195,7 @@ class ItemDetail extends Component {
     }
     componentWillUnmount() {
         if (this.state.itemDetail && this.state.itemDetail.id) {
-            this.props.io.socket.get('/leave/items/' + this.state.itemDetail.id, (body, JWR) => {
+            this.props.io.socket.get(`${root}/leave/items/${this.state.itemDetail.id}`, (body, JWR) => {
                 console.log(body.msg)
             })
         }
@@ -199,7 +203,7 @@ class ItemDetail extends Component {
     }
     onBeginAuction() {
         let startTime = new Date().getTime()
-        fetch('/api/v1/items/' + this.props.match.params.id, {
+        fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
             method: "PATCH",
             body: JSON.stringify({
                 startedAt: startTime
@@ -222,8 +226,15 @@ class ItemDetail extends Component {
             })
     }
     render() {
-        const { current, items, itemDetail, images, newReview } = this.state
-        if (itemDetail && this.props.userId != itemDetail.userId) {
+        const { current, items, itemDetail, images, newReview, loading, isApproved } = this.state
+        if (loading) {
+            return (
+                <div role="alert" style={{ marginTop: '75px' }}>
+                    <p className="alert alert-info text-center light-word">LOADING......</p>
+                </div>
+            )
+        }
+        if (itemDetail && (this.props.userId != itemDetail.userId && !isApproved)) {
             return (
                 <div role="alert" style={{ marginTop: '75px' }}>
                     <p className="alert alert-danger text-center light-word">You dont have permission to visit this page, get out</p>
@@ -231,21 +242,24 @@ class ItemDetail extends Component {
             )
         }
 
-        else if (!itemDetail) return (
-            <div role="alert" style={{ marginTop: '75px' }}>
-                <p className="alert alert-warning text-center light-word">Item not found</p>
-            </div>
-        )
+        else if (!itemDetail)
+            return (
+                <div role="alert" style={{ marginTop: '75px' }}>
+                    <p className="alert alert-warning text-center light-word">Item not found</p>
+                </div>
+            )
         return (
             <div className="itemDetail-content" style={{ position: 'relative', zIndex: '1000' }}>
                 <div className="container">
+                    {(isApproved && !isApproved.isAccept) && <p className="alert alert-danger text-center mt-5">This item is rejected by Admin</p>}
+
                     <div className="row">
                         <div className="col-md-9">
                             <br />
                             <Link to='/'><i className="fas fa-backward"><span className="light-word"> Back to bid</span></i></Link>
                             <div className="items-info">
                                 <div className="container pt-3 ">
-                                    <h3 class="d-flex">{itemDetail.name} {itemDetail.startedAt == 0 && <button className="btn btn-primary ml-auto" onClick={this.onBeginAuction}>Begin auction</button>}</h3>
+                                    <h3 class="d-flex">{itemDetail.name} {(itemDetail.startedAt == 0 && isApproved && isApproved.isAccept && itemDetail.userId == this.props.userId) && <button className="btn btn-primary ml-auto" onClick={this.onBeginAuction}>Begin auction</button>}</h3>
                                 </div>
                                 <hr />
                                 <div className="container">
@@ -575,7 +589,7 @@ class ItemDetail extends Component {
                                 <div className="right-item pt-4">
                                     <div className="itemborder">
                                         <div className="item-image">
-                                            <Link className="detail" to="/itemdetail"><img src="http://localhost:1337/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg" alt="item" /></Link>
+                                            <Link className="detail" to="/itemdetail"><img src={`${root}/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
                                         </div>
                                         <div className="time-price">
                                             <div className="row d-flex justify-content-between">
@@ -588,7 +602,7 @@ class ItemDetail extends Component {
                                 <div className="right-item pt-4">
                                     <div className="itemborder">
                                         <div className="item-image">
-                                            <Link className="detail" to="/itemdetail"><img src="http://localhost:1337/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg" alt="item" /></Link>
+                                            <Link className="detail" to="/itemdetail"><img src={`${root}/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
                                         </div>
                                         <div className="time-price">
                                             <div className="row d-flex justify-content-between">
@@ -601,7 +615,7 @@ class ItemDetail extends Component {
                                 <div className="right-item pt-4">
                                     <div className="itemborder">
                                         <div className="item-image">
-                                            <Link className="detail" to="/itemdetail"><img src="http://localhost:1337/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg" alt="item" /></Link>
+                                            <Link className="detail" to="/itemdetail"><img src={`${root}/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
                                         </div>
                                         <div className="time-price">
                                             <div className="row d-flex justify-content-between">
@@ -614,7 +628,7 @@ class ItemDetail extends Component {
                                 <div className="right-item pt-4">
                                     <div className="itemborder">
                                         <div className="item-image">
-                                            <Link className="detail" to="/itemdetail"><img src="http://localhost:1337/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg" alt="item" /></Link>
+                                            <Link className="detail" to="/itemdetail"><img src={`${root}/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
                                         </div>
                                         <div className="time-price">
                                             <div className="row d-flex justify-content-between">
@@ -627,7 +641,7 @@ class ItemDetail extends Component {
                                 <div className="right-item pt-4">
                                     <div className="itemborder">
                                         <div className="item-image">
-                                            <Link className="detail" to="/itemdetail"><img src="http://localhost:1337/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg" alt="item" /></Link>
+                                            <Link className="detail" to="/itemdetail"><img src={`${root}/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
                                         </div>
                                         <div className="time-price">
                                             <div className="row d-flex justify-content-between">
@@ -640,7 +654,7 @@ class ItemDetail extends Component {
                                 <div className="right-item pt-4">
                                     <div className="itemborder">
                                         <div className="item-image">
-                                            <Link className="detail" to="/itemdetail"><img src="http://localhost:1337/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg" alt="item" /></Link>
+                                            <Link className="detail" to="/itemdetail"><img src={`${root}/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
                                         </div>
                                         <div className="time-price">
                                             <div className="row d-flex justify-content-between">
