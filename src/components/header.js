@@ -72,7 +72,23 @@ class Header extends Component {
                     }
                 })
             })
-        }
+       	    fetch(`${root}/api/v1/notifications`)
+            .then(res => res.json())
+            .then(res => {
+                if (res.noti) {
+                    let seenNoti = res.noti.reduce((cur, i) => {
+                        if (i.seen !== true) {
+                            cur.push(i.seen)
+                        }
+                        return cur
+                    }
+                        , [])
+                    this.setState({ getNoti: res.noti, seenNoti })
+                }
+
+            })
+
+	 }
 
 
     }
@@ -101,12 +117,7 @@ class Header extends Component {
                     }
                 })
             })
-        }
-        return true
-    }
-    componentWillMount() {
-        // this.props.checkStatus()
-        fetch(`${root}/api/v1/notifications`)
+	    fetch(`${root}/api/v1/notifications`)
             .then(res => res.json())
             .then(res => {
                 if (res.noti) {
@@ -121,7 +132,13 @@ class Header extends Component {
                 }
 
             })
+	
+        }
+        return true
     }
+    componentWillMount() {
+        // this.props.checkStatus()
+            }
     updateKeyWord(e) {
         e.preventDefault()
         this.setState({ keywords: e.target.value })
