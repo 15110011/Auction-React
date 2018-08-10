@@ -52,9 +52,9 @@ class Comments extends Component {
                     <button type="submit" className="btn btn-success mb-2" style={{ marginLeft: '-78px', marginTop: '70px' }} >Submit</button>
                 </form>
                 <ul>
-                    {this.state.comments.map(cmt => {
+                    {this.state.comments.map((cmt,i) => {
                         return (
-                            <div className="cmt light-word pt-2" style={{ marginLeft: '-40px' }}>
+                            <div className="cmt light-word pt-2" style={{ marginLeft: '-40px' }} key={i}>
                                 <div className="question italic-word">
                                     <li style={{ backgroundColor: '#F1F1F1', borderRadius: '10px', listStyleType: 'none', padding: '10px 10px' }} key={cmt.id}>
                                         {cmt.content}

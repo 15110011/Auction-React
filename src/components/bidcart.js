@@ -71,14 +71,11 @@ class Bidcart extends Component {
                         if (item && item.startedAt !== 0) {
                             this.countDownInterval[index] = setInterval(() => {
                                 let remainTime = item.timeLeft - 1000
-                                console.log(remainTime)
-
                                 if (remainTime <= 0) {
                                     clearInterval(this.countDownInterval[index])
                                 }
                                 else {
                                     item.timeLeft = remainTime
-                                    console.log(remainTime)
                                     this.setState({ remainTime })
                                 }
                             }, 1000)
@@ -95,8 +92,6 @@ class Bidcart extends Component {
                     //     this.setState({ item: itemTime })
                     // }, 1000)
                     this.setState({ items: biddingItems, bidding: true })
-
-
                 })
         }
     }
@@ -164,9 +159,9 @@ class Bidcart extends Component {
                                             this.state.bidding ? (
                                                 <tbody>
                                                     {
-                                                        this.state.items.map(item => {
+                                                        this.state.items.map((item, i) => {
                                                             return (
-                                                                <tr className="fixprop">
+                                                                <tr key={i} className="fixprop">
                                                                     <td>
                                                                         {item.itemId}
                                                                     </td>

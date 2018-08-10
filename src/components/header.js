@@ -53,7 +53,6 @@ class Header extends Component {
     }
     shouldComponentUpdate(nextProps) {
         if (this.props.userId === '' && nextProps.userId !== '') {
-            console.log(nextProps.userId)
             this.props.io.socket.on('user' + nextProps.userId, (owner) => {
                 this.props.io.socket.post(`${root}/api/v1/notifications`, {
                     id: owner.id,
@@ -93,8 +92,6 @@ class Header extends Component {
                         return cur
                     }
                         , [])
-                    console.log(seenNoti.length)
-
                     this.setState({ getNoti: res.noti, seenNoti })
                 }
 
@@ -148,7 +145,6 @@ class Header extends Component {
             seen: this.state.seen,
             userId: this.props.userId
         }, (res) => {
-            console.log(res.seenNoti)
             let seenNoti = res.seenNoti.reduce((cur, i) => {
                 if (i.seen !== true) {
                     cur.push(i.seen)

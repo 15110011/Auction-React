@@ -76,29 +76,26 @@ class ItemDetail extends Component {
         });
     }
     componentDidMount() {
+        this.mounted = true
         this.props.io.socket.get(`${root}/hello`, function serverResponded(body, JWR) {
-            console.log('Sails responded with: ', body);
-            console.log('with headers: ', JWR.headers);
-            console.log('and with status code: ', JWR.statusCode);
         });
         fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
             credentials: 'include'
         })
             .then(res => res.json())
             .then(item => {
+                if (!this.mounted) return
                 this.setState({ loading: false })
                 if (!item.error) {
                     let nextStep = Math.ceil(item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice * 0.5 : item.findItem.currentPrice * 0.5)
                     let initBid = item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice : item.findItem.currentPrice
                     this.props.io.socket.get('/socket/items/' + item.findItem.id, (body, JWR) => {
-                        console.log(body.msg)
                     })
                     this.props.io.socket.on('room' + item.findItem.id, this.onReceiveRoomMessage)
                     this.setState({ images: item.findImg, itemDetail: item.findItem, step: nextStep, currentBidding: initBid + nextStep, isApproved: item.isApproved }, function () {
                         this.setCountDown()
 
                     })
-
                 }
                 else {
                     this.setState({ itemDetail: null })
@@ -109,6 +106,7 @@ class ItemDetail extends Component {
             fetch(`${root}/api/v1/users/${this.props.userId}/rates`)
                 .then(res => res.json())
                 .then(reviews => {
+                    if (!this.mounted) return
                     if (!reviews.error)
                         this.setState({ reviews: reviews.rates })
                 })
@@ -183,19 +181,22 @@ class ItemDetail extends Component {
 
         }).bind(this))
     }
+
     fromMillisecondsToFormattedString(ms) {
         let h = Math.floor(ms / (3600 * 1000))
         let m = Math.floor((ms - (3600 * 1000 * h)) / (60 * 1000))
         let s = Math.floor((ms - (3600 * 1000 * h) - (60 * 1000 * m)) / (1000))
         return `${h < 10 ? '0' + h : h}:${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`
     }
+
     componentWillUnmount() {
+        this.mounted = false
+        clearInterval(this.countDownInterval)
         if (this.state.itemDetail && this.state.itemDetail.id) {
             this.props.io.socket.get(`${root}/leave/items/${this.state.itemDetail.id}`, (body, JWR) => {
-                console.log(body.msg)
             })
         }
-
+        // this.setState({loading: null})
     }
     onBeginAuction() {
         let startTime = new Date().getTime()
@@ -272,7 +273,7 @@ class ItemDetail extends Component {
                                                         ))}
                                                     </div></div> : <img className="img-fluid" src={`http://www.staticwhich.co.uk/static/images/products/no-image/no-image-available.png`} alt="" />}
                                         </div>
-                                        <div className="col-md-7">
+                                        <div className="col-md-7" style={{padding:'0 15px 0 30px'}}>
                                             <div className="row">
                                                 <div className="col-md-6">
                                                     <div>
@@ -348,7 +349,7 @@ class ItemDetail extends Component {
                                         <tbody className="light-word">
                                             {this.state.itemDetail.bids.map((bid, i) => {
                                                 return (
-                                                    <tr>
+                                                    <tr key={i}>
                                                         <td>{bid.userId.userName}</td>
                                                         <td>
                                                             {<NumberFormat displayType={'text'} value={bid.currentPrice} thousandSeparator={true} prefix={'$'} />}
@@ -664,7 +665,7 @@ class ItemDetail extends Component {
                         </div>
                     </div>
                 </div>
-            </div >
+            </div>
         )
     }
 }
