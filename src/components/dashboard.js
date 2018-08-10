@@ -1,4 +1,3 @@
-/*global FB */
 import React, { Component } from 'react'
 import '../styles/styles.css'
 import { GUEST_STATUS } from '../config';
@@ -160,6 +159,7 @@ class DashBoard extends Component {
 
             items[curItem].details = draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()))
             items[curItem].categoriesId = target.categories.value
+            items[curItem].period = target.period.value
             this.setState({
                 items,
                 isEditing: false,
@@ -169,7 +169,8 @@ class DashBoard extends Component {
                 currentPrice: '',
                 quantity: '',
                 editorState: '',
-                count: 0
+                count: 0,
+                period:''
             })
             setTimeout(() => {
                 this.setState({ isEdited: false })
@@ -199,7 +200,8 @@ class DashBoard extends Component {
             // details: item[0].details,
             editorState: EditorState.createWithContent(state),
             categoriesId: item[0].categoriesId,
-            itemId: item[0].id
+            itemId: item[0].id,
+            period: item[0].period
         })
 
 

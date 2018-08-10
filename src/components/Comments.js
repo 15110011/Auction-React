@@ -46,7 +46,7 @@ class Comments extends Component {
             <div>
                 <h4 className="bolditalic-word">Leave a comment here:</h4>
                 <form onSubmit={this.onSubmitComment}>
-                    <textarea name="content" id="" cols="96" rows="5" style={{ resize: 'none' }} value={this.state.newCommentContent} onChange={e => {
+                    <textarea name="content" id="" cols="96" rows="5" style={{ resize: 'none' }} onChange={e => {
                         this.setState({ newCommentContent: e.target.value })
                     }} defaultValue={this.state.newCommentContent}></textarea>
                     <button type="submit" className="btn btn-success mb-2" style={{ marginLeft: '-78px', marginTop: '70px' }} >Submit</button>

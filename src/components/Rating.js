@@ -9,9 +9,9 @@ function Rating(props) {
     return (
         <div>
             <ul>
-                {props.reviews.map(review => {
+                {props.reviews.map((review, key) => {
                     return (
-                        <div className="review-panel light-word mt-2" style={{ marginLeft: '-55px', marginRight: '-15px' }} >
+                        <div key={key} className="review-panel light-word mt-2" style={{ marginLeft: '-55px', marginRight: '-15px' }} >
                             <li style={{ listStyleType: 'none', backgroundColor: '#e3e9ec', borderRadius: '10px', paddingLeft: '50px' }} key={review.id}>
                                 <div className="review-border" style={{ marginLeft: '-40px', padding: '10px 10px' }}>
                                     <div className="count-star">
@@ -19,6 +19,7 @@ function Rating(props) {
                                             <div className="col-md-9">
                                                 <div className="dv-star-rating" style={{ fontSize: '30px' }}>
                                                     <StarRatingComponent
+                                                        name="rate"
                                                         starCount={5}
                                                         value={review.rating}
                                                     />
