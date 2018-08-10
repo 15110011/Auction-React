@@ -222,12 +222,9 @@ class DashBoard extends Component {
             credentials: 'include'
         })
             .then(items => {
-                console.log(items)
                 return items.json()
             })
             .then(items => {
-                console.log(items)
-
                 this.setState({ items: items.findItem, renderedItems: items.findItem.slice(0, 4), total: items.findItem.length, page: 1, loadingItem: false })
             })
 

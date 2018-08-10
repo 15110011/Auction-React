@@ -19,7 +19,6 @@ class Items extends Component {
                 this.setState({
                     items: res.getAllItems
                 })
-                console.log(this.state.items)
             })
     }
     render() {

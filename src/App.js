@@ -46,7 +46,6 @@ class App extends Component {
 
       if (resp.status === "connected") {
         this.state.io.socket.get(`${root}/socket/user/${resp.authResponse.userID}`, (body) => {
-          console.log(body.msg)
         })
         this.checkStatus()
 
@@ -61,7 +60,6 @@ class App extends Component {
           credentials: 'include'
         }).then(res => res.json())
           .then(resp => {
-            console.log(resp)
             this.setState({ userId: null })
           })
       }
@@ -88,7 +86,6 @@ class App extends Component {
       })
       .then(res => res.json())
       .then(userData => {
-        console.log(userData)
         this.setState({ isAdmin: userData.isAdmin })
       })
 
@@ -109,7 +106,6 @@ class App extends Component {
               body: form,
               credentials: 'include'
             }).then(res => res.json()).then((res) => {
-              console.log(res)
               if (res.success) {
                 this.setState({ name: data.name, loggedIn: LOADED_LOGIN_STATUS, userId: data.id }, () => {
                   this.checkIsAdmin()
