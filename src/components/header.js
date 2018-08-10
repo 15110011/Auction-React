@@ -48,6 +48,31 @@ class Header extends Component {
             this.setState({ categories: cloneCat })
 
         })
+	 if (this.props.userId !== '') {
+            this.props.io.socket.on('user' + this.props.userId, (owner) => {
+                this.props.io.socket.post(`${root}/api/v1/notifications`, {
+                    id: owner.id,
+                    isAccept: owner.isAccept,
+                    itemName: owner.itemName,
+                    ownerId: owner.ownerId,
+                }, (res) => {
+                    console.log(res)
+                    if (!res.error) {
+                        this.props.io.socket.get(`${root}/api/v1/notifications`, (body) => {
+                            let getNoti = body.noti
+                            let seenNoti = body.noti.reduce((cur, i) => {
+                                if (i.seen !== true) {
+                                    cur.push(i.seen)
+                                }
+                                return cur
+                            }
+                                , [])
+                            this.setState({ getNoti, seenNoti })
+                        })
+                    }
+                })
+            })
+        }
 
 
     }
