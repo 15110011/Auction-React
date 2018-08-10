@@ -477,7 +477,7 @@ class ItemDetail extends Component {
                                                             this.setState({
                                                                 newReview
                                                             })
-                                                        }} value={this.state.newReview.content} defaultValue={this.state.newReview.content}>
+                                                        }} defaultValue={this.state.newReview.content}>
                                                         </textarea>
                                                     </div>
                                                 </ModalBody>

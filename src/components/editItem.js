@@ -64,7 +64,7 @@ class EditItem extends Component {
                                     <h3>Infomation</h3>
                                 </div>
                                 <div className="row pt-2" id="detail-border">
-                                    <div className="col" style={{ marginLeft: '150px' }}>
+                                    <div className="col-md-4">
                                         <FormGroup>
                                             <Label for="exampleName">Name <span title="Nhập cmnr vào" id="force">(*)</span></Label>
                                             <Input type="text" name="name" id="exampleName" placeholder="Car..."
@@ -80,7 +80,7 @@ class EditItem extends Component {
                                             />
                                         </FormGroup>
                                     </div>
-                                    <div className="col">
+                                    <div className="col-md-4">
                                         <FormGroup>
                                             <Label for="example">Quantity <span title="Nhập cmnr vào" id="force">(*)</span></Label>
                                             <Input type="number" name="quantity" id="exampleQuantity" min="0"
@@ -97,6 +97,20 @@ class EditItem extends Component {
                                             </Input>
                                         </FormGroup>
                                     </div>
+                                    <div className="col-md-4">
+                                        <FormGroup>
+                                            <Label for="example">Duration (hours) <span title="Nhập cmn vào" id="force">(*)</span></Label>
+                                            <Input type="select" name="period" 
+                                            onChange={e => this.setState({ period: e.target.period })}
+                                            defaultValue={this.props.period}
+                                            >
+                                                <option value="1" >1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="5">5</option>
+                                            </Input>
+                                        </FormGroup>
+                                    </div>
                                 </div>
                             </div>
                             <div className="detail mt-2">
@@ -105,7 +119,7 @@ class EditItem extends Component {
                                         <h3>Details</h3>
                                     </div>
                                     <div className="row detail-field">
-                                        <p className="col alert alert-success">Describe about your item sush as type, year...</p>
+                                        <p className="col alert alert-success light-word">Describe about your item sush as type, year...</p>
                                         <div className="editor" style={{ marginTop: '-12px' }}>
                                             <Editor placeholder="Detail about your item..."
                                                 editorState={this.props.editorState}
