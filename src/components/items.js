@@ -33,7 +33,7 @@ class Items extends Component {
                                     <div className="itemborder" style={{ borderTopLeftRadius: '10px', borderTopRightRadius: '10px' }}>
                                         <div className="item-image">
                                             {
-                                                item.imgItem.lenghth !== 0  ? (
+                                                item.imgItem.length !== 0  ? (
                                                     <Link className="detail" to={`/items/${item.id}`}>
                                                         <img className="img-fluid" src={`${root}/images/items/${item.imgItem[0].link}`} alt="car" style={{ borderTopLeftRadius: '10px', borderTopRightRadius: '10px', minHeight: '200px' }}
                                                         />
