@@ -256,7 +256,7 @@ class ItemDetail extends Component {
                             <Link to='/'><i className="fas fa-backward"><span className="light-word"> Back to bid</span></i></Link>
                             <div className="items-info">
                                 <div className="container pt-3 ">
-                                    <h3 className="d-flex">{itemDetail.name} {itemDetail.startedAt === 0 && <button className="btn btn-primary ml-auto" onClick={this.onBeginAuction}>Begin auction</button>}</h3>
+                                    <h3 className="d-flex">{itemDetail.name} {(itemDetail.startedAt === 0 && this.props.userId === itemDetail.userId && isApproved) && <button className="btn btn-primary ml-auto" onClick={this.onBeginAuction}>Begin auction</button>}</h3>
                                 </div>
                                 <hr />
                                 <div className="container">
@@ -277,11 +277,18 @@ class ItemDetail extends Component {
                                             <div className="row">
                                                 <div className="col-md-6">
                                                     <div>
-                                                        {this.state.itemDetail.startedAt === 0 ? <h4>Duration: {this.state.itemDetail.period} hour(s)</h4> :
-                                                            <h4>Time left: {
+                                                        {this.state.itemDetail.startedAt === 0 && <h4>Duration: {this.state.itemDetail.period} hour(s)</h4>}
+							{( this.state.itemDetail.startedAt !== 0 && this.state.timeLeft>0 ) && 
+							    <h4>Time left: {
                                                                 this.fromMillisecondsToFormattedString(this.state.timeLeft)}
                                                             </h4>
-                                                        }
+							}
+							{( this.state.itemDetail.startedAt !== 0 && this.state.timeLeft < 0 ) && 
+							    <h4>
+							        Ended {dateFns.distanceInWordsToNow(
+									new Date(itemDetail.startedAt + itemDetail.period* 3600 *1000 + itemDetail.additionalTime))} ago
+                                                            </h4>
+							 }
                                                     </div>
                                                 </div>
                                                 <div className="col-md-6">
@@ -327,7 +334,7 @@ class ItemDetail extends Component {
                                                             }
                                                         }}
                                                         mobile={true} className="form-control pr-5" /> */}
-                                                    {this.state.itemDetail.startedAt !== 0 && <button className="btn btn-primary ml-3" type="submit"><i className="fas fa-gavel"> Bid now</i></button>}
+                                                    {(this.state.itemDetail.startedAt !== 0 && this.state.timeLeft >0 ) && <button className="btn btn-primary ml-3" type="submit"><i className="fas fa-gavel"> Bid now</i></button>}
                                                 </form>
                                                 {this.state.itemDetail.bids.length > 0 ? <p className="alert alert-info light-word mt-2">
                                                     Last bid by : {this.state.itemDetail.bids[0].userId.userName}
@@ -417,7 +424,6 @@ class ItemDetail extends Component {
                                     <div className="col-md-4">
                                         <div className="total-rate">
                                             <h3>4.0/5</h3>
-                                            <p>Số sao</p>
                                             <small>69 votes</small>
                                         </div>
                                     </div>
@@ -451,7 +457,7 @@ class ItemDetail extends Component {
                                         </Form>
                                     </div>
                                     <div className="col-md-4 light-word">
-                                        <Button style={{ float: 'right', width: '50%' }} color="danger" onClick={this.toggle}>{this.props.buttonLabel}Rate it</Button>
+                                        {( this.props.userId !== itemDetail.userId && isApproved && this.state.itemDetail.startedAt !==0 )&&<Button style={{ float: 'right', width: '50%' }} color="danger" onClick={this.toggle}>{this.props.buttonLabel}Rate it</Button>}
                                         <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
                                             <ModalHeader toggle={this.toggle}>Rate your purchased item</ModalHeader>
                                             <form onSubmit={this.onClickReview}>
@@ -541,7 +547,7 @@ class ItemDetail extends Component {
                                 <hr style={{ width: '825px', marginLeft: '-16px' }} />
                                 <div className="comment-content">
                                     <div className="comment-block">
-                                        <Comments itemId={this.props.match.params.id} userId={this.props.userId} io={this.props.io}></Comments>
+                                        <Comments itemId={this.props.match.params.id} userId={this.props.userId} startedAt={this.state.itemDetail.startedAt} io={this.props.io}></Comments>
                                     </div>
                                 </div>
                                 <div className="d-flex justify-content-end">
