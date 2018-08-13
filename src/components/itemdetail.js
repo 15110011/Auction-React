@@ -214,11 +214,11 @@ class ItemDetail extends Component {
                                         <div className="col-md-5 item-image">
                                             {images.length > 0 ?
                                                 <div>
-                                                    <ReactImageZoom width={340} height={300} zoomWidth={450} img={`${root}/images/items/` + images[current].link} />
+                                                    <ReactImageZoom width={340} height={300} zoomWidth={450} img={`${root}/uploads/` + images[current].link} />
                                                     <div className="row thumbnail mt-2" style={{ paddingLeft: '15px', marginRight: '-30px' }}>
                                                         {images.map((img, i) => (
                                                             <div className="col-sm-4 thumbnail-border" key={i}>
-                                                                <img className="img-fluid" src={`${root}/images/items/${img.link}`} style={{ height: '100px' }} onClick={e => this.setCurrentItem(i)} />
+                                                                <img className="img-fluid" src={`${root}/uploads/${img.link}`} style={{ height: '100px' }} onClick={e => this.setCurrentItem(i)} />
                                                             </div>
                                                         ))}
                                                     </div></div> : <img className="img-fluid" src={`http://www.staticwhich.co.uk/static/images/products/no-image/no-image-available.png`} alt="" />}
@@ -416,7 +416,7 @@ class ItemDetail extends Component {
                                 <div className="right-item pt-4">
                                     <div className="itemborder">
                                         <div className="item-image">
-                                            <Link className="detail" to="/itemdetail"><img src={`${root}/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
+                                            <Link className="detail" to="/itemdetail"><img src={`${root}/uploads/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
                                         </div>
                                         <div className="time-price">
                                             <div className="row d-flex justify-content-between">
@@ -429,7 +429,7 @@ class ItemDetail extends Component {
                                 <div className="right-item pt-4">
                                     <div className="itemborder">
                                         <div className="item-image">
-                                            <Link className="detail" to="/itemdetail"><img src={`${root}/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
+                                            <Link className="detail" to="/itemdetail"><img src={`${root}/uploads/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
                                         </div>
                                         <div className="time-price">
                                             <div className="row d-flex justify-content-between">
@@ -442,7 +442,7 @@ class ItemDetail extends Component {
                                 <div className="right-item pt-4">
                                     <div className="itemborder">
                                         <div className="item-image">
-                                            <Link className="detail" to="/itemdetail"><img src={`${root}/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
+                                            <Link className="detail" to="/itemdetail"><img src={`${root}/uploads/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
                                         </div>
                                         <div className="time-price">
                                             <div className="row d-flex justify-content-between">
@@ -455,7 +455,7 @@ class ItemDetail extends Component {
                                 <div className="right-item pt-4">
                                     <div className="itemborder">
                                         <div className="item-image">
-                                            <Link className="detail" to="/itemdetail"><img src={`${root}/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
+                                            <Link className="detail" to="/itemdetail"><img src={`${root}/uploads/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
                                         </div>
                                         <div className="time-price">
                                             <div className="row d-flex justify-content-between">
@@ -468,7 +468,7 @@ class ItemDetail extends Component {
                                 <div className="right-item pt-4">
                                     <div className="itemborder">
                                         <div className="item-image">
-                                            <Link className="detail" to="/itemdetail"><img src={`${root}/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
+                                            <Link className="detail" to="/itemdetail"><img src={`${root}/uploads/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
                                         </div>
                                         <div className="time-price">
                                             <div className="row d-flex justify-content-between">
@@ -481,7 +481,7 @@ class ItemDetail extends Component {
                                 <div className="right-item pt-4">
                                     <div className="itemborder">
                                         <div className="item-image">
-                                            <Link className="detail" to="/itemdetail"><img src={`${root}/images/items/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
+                                            <Link className="detail" to="/itemdetail"><img src={`${root}/uploads/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
                                         </div>
                                         <div className="time-price">
                                             <div className="row d-flex justify-content-between">

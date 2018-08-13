@@ -61,7 +61,7 @@ class Comments extends Component {
                         return (
                             <div className="cmt light-word pt-2" style={{ marginLeft: '-40px' }} key={i}>
                                 <div className="question italic-word">
-                                    <li style={{ backgroundColor: '#F1F1F1', borderRadius: '10px', listStyleType: 'none', padding: '10px 10px' }} key={cmt.id}>
+           CategoryShow.js                         <li style={{ backgroundColor: '#F1F1F1', borderRadius: '10px', listStyleType: 'none', padding: '10px 10px' }} key={cmt.id}>
                                         {cmt.content}
                                         <div className="user-question">
                                             <small style={{ color: '#7b7171' }}>by <Link to="#">{cmt.user.userName}</Link> - {dateFns.format(cmt.createdAt, 'hh:mm DD/MM/YYYY')}</small>
