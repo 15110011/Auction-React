@@ -44,22 +44,27 @@ class Comments extends Component {
     render() {
         return (
             <div>
-                <h4 className="bolditalic-word">Leave a comment here:</h4>
-                <form onSubmit={this.onSubmitComment}>
-                    <textarea name="content" id="" cols="96" rows="5" style={{ resize: 'none' }} onChange={e => {
-                        this.setState({ newCommentContent: e.target.value })
-                    }} defaultValue={this.state.newCommentContent}></textarea>
-                    <button type="submit" className="btn btn-success mb-2" style={{ marginLeft: '-78px', marginTop: '70px' }} >Submit</button>
-                </form>
+                {(this.props.startedAt !== 0) &&
+                    <div>
+                        <h4 className="bolditalic-word">Leave a comment here</h4>
+                        <form onSubmit={this.onSubmitComment}>
+                            <textarea name="content" id="" cols="96" rows="5" style={{ resize: 'none' }} onChange={e => {
+                                this.setState({ newCommentContent: e.target.value })
+                            }} defaultValue={this.state.newCommentContent}></textarea>
+                            <button type="submit" className="btn btn-success mb-2" style={{ marginLeft: '-78px', marginTop: '70px' }} >Submit</button>
+                        </form>
+                    </div>
+                }
+
                 <ul>
-                    {this.state.comments.map((cmt,i) => {
+                    {this.state.comments.map((cmt, i) => {
                         return (
                             <div className="cmt light-word pt-2" style={{ marginLeft: '-40px' }} key={i}>
                                 <div className="question italic-word">
-                                    <li style={{ backgroundColor: '#F1F1F1', borderRadius: '10px', listStyleType: 'none', padding: '10px 10px' }} key={cmt.id}>
+           CategoryShow.js                         <li style={{ backgroundColor: '#F1F1F1', borderRadius: '10px', listStyleType: 'none', padding: '10px 10px' }} key={cmt.id}>
                                         {cmt.content}
                                         <div className="user-question">
-                                            <small style={{ color: '#7b7171' }}>by <Link to="#">{cmt.user.userName}</Link> - {dateFns.format(cmt.createdAt,'hh:mm DD/MM/YYYY')}</small>
+                                            <small style={{ color: '#7b7171' }}>by <Link to="#">{cmt.user.userName}</Link> - {dateFns.format(cmt.createdAt, 'hh:mm DD/MM/YYYY')}</small>
                                         </div>
                                         <hr />
                                         <div className="answer italic-word">
