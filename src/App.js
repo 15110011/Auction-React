@@ -29,10 +29,12 @@ class App extends Component {
       isAdmin: false,
       io: null,
     }
+   
     this.logIn = this.logIn.bind(this)
     this.logOut = this.logOut.bind(this)
     this.checkStatus = this.checkStatus.bind(this)
     this.checkIsAdmin = this.checkIsAdmin.bind(this)
+
 
 
   }
@@ -45,7 +47,7 @@ class App extends Component {
     FB.Event.subscribe("auth.authResponseChange", resp => {
 
       if (resp.status === "connected") {
-        this.state.io.socket.get(`${root}/socket/user/${resp.authResponse.userID}`, (body) => {
+        this.state.io.socket.get(`${root}/socket/user/${resp.authResponse.userID} `, (body) => {
         })
         this.checkStatus()
 
@@ -65,6 +67,11 @@ class App extends Component {
       }
     })
 
+  }
+  componentDidMount() { 
+    // this.web3.eth.net.getNetworkType((err, res) => {
+    //   console.log("getNetworkType: " + res)
+    // })
   }
   logIn(e) {
     this.setState({ loggedIn: LOADING_LOGIN_STATUS })
@@ -125,10 +132,7 @@ class App extends Component {
 
 
   }
-  componentDidMount() {
 
-
-  }
   render() {
     return (
       <div className="App" style={{ marginTop: '56px' }}>

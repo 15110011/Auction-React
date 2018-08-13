@@ -8,6 +8,14 @@ import dateFns from 'date-fns'
 import BidInput from './BidInput'
 import NumberFormat from 'react-number-format';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Progress } from 'reactstrap';
+import { Form, FormGroup, Label } from 'reactstrap';
+import Web3 from 'web3';
+
+import TruffleContract from 'truffle-contract';
+import AuctionBid from '../contracts/AuctionBid.json';
+import DappToken from '../contracts/DappToken.json'
 
 
 class ItemDetail extends Component {
@@ -23,18 +31,34 @@ class ItemDetail extends Component {
             timeLeft: 0,
 
             loading: true,
-            isApproved: null
+            isApproved: null,
+            currentPrice: 0,
+            BidContract: null,
+
         }
+        if (typeof this.web3 !== 'undefined') {
+            this.web3Provider = this.web3.currentProvider
+        } else {
+            this.web3Provider = new Web3.providers.HttpProvider('https://ropsten.infura.io/99efdc0bd45147cebbdfd88e5eff1d75')
+            // this.web3Provider = new Web3.providers.HttpProvider("http://127.0.0.1:7545")
+        }
+        this.web3 = window.web3 // new Web3(this.web3Provider)
+
+
+
         this.onSubmitBid = this.onSubmitBid.bind(this)
         this.onReceiveRoomMessage = this.onReceiveRoomMessage.bind(this)
         this.onBeginAuction = this.onBeginAuction.bind(this)
         this.setCountDown = this.setCountDown.bind(this)
+
+
     }
 
 
 
     componentDidMount() {
         this.mounted = true
+
         this.props.io.socket.get(`${root}/hello`, function serverResponded(body, JWR) {
         });
         fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
@@ -45,6 +69,8 @@ class ItemDetail extends Component {
                 if (!this.mounted) return
                 this.setState({ loading: false })
                 if (!item.error) {
+
+                    this.setState({ currentPrice: item.findItem.currentPrice })
                     let nextStep = Math.ceil(item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice * 0.5 : item.findItem.currentPrice * 0.5)
                     let initBid = item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice : item.findItem.currentPrice
                     this.props.io.socket.get('/socket/items/' + item.findItem.id, (body, JWR) => {
@@ -99,6 +125,7 @@ class ItemDetail extends Component {
 
         e.preventDefault()
 
+
         this.props.io.socket.post(`${root}/api/v1/bid/${this.state.itemDetail.id}`, {
             currentPrice: this.state.currentBidding,
             userId: this.props.userId,
@@ -149,28 +176,47 @@ class ItemDetail extends Component {
         // this.setState({loading: null})
     }
     onBeginAuction() {
-        let startTime = new Date().getTime()
-        fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
-            method: "PATCH",
-            body: JSON.stringify({
-                startedAt: startTime
-            })
-        })
-            .then((res) => res.json())
-            .then((res) => {
-                if (!res.error) {
-                    console.log('begin auction', res)
-                    let modifyDetail = this.state.itemDetail
-                    modifyDetail.startedAt = startTime
-                    this.setState({ itemDetail: modifyDetail }, function () {
-                        this.setCountDown()
-                    })
+        var AuctionContract = this.web3.eth.contract(AuctionBid.abi)
+        AuctionContract.new({
+            from: window.web3.eth.accounts[0],
+            data: AuctionBid.bytecode
+        }, (error, contract) => {
+            if (error) {
+                return alert('You declined transactions in Meta Mask or did not provide enough gas')
+            }
+            if (contract.address) {
+                this.setState({ BidContract: contract })
+                contract.startBidding(this.state.currentPrice, { gas: 100000 }, (err, rs) => {
+                    if (err) {
+                        console.log(err)
+                    }
+                    if (rs) {
+                        let startTime = new Date().getTime()
+                        fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
+                            method: "PATCH",
+                            body: JSON.stringify({
+                                startedAt: startTime
+                            })
+                        })
+                            .then((res) => res.json())
+                            .then((res) => {
+                                if (!res.error) {
+                                    let modifyDetail = this.state.itemDetail
+                                    modifyDetail.startedAt = startTime
+                                    this.setState({ itemDetail: modifyDetail }, function () {
+                                        this.setCountDown()
+                                    })
 
-                }
-                else {
-                    console.log(res.msg)
-                }
-            })
+                                }
+                                else {
+                                    console.log(res.msg)
+                                }
+                            })
+                    }
+                })
+
+            }
+        })
     }
     render() {
         const { current, itemDetail, images, loading, isApproved } = this.state
