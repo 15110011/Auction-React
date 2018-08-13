@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom'
 import '../styles/styles.css'
 import { LOADING_LOGIN_STATUS, LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config'
-import dateFns from 'date-fns'
+import Notifications from './Notifications'
 
 
 
@@ -17,15 +17,12 @@ class Header extends Component {
             categories: [],
             keywords: '',
             results: [],
-            found: true,
-            readNoti: '',
-            seen: 1
+            found: true
         }
         this.handleLogOut = this.handleLogOut.bind(this)
         this.handleLogin = this.handleLogin.bind(this)
         this.handleSearch = this.handleSearch.bind(this)
         this.updateKeyWord = this.updateKeyWord.bind(this)
-        this.handleNoti = this.handleNoti.bind(this)
     }
     handleLogOut(e) {
         e.preventDefault()
@@ -48,97 +45,17 @@ class Header extends Component {
             this.setState({ categories: cloneCat })
 
         })
-	 if (this.props.userId !== '') {
-            this.props.io.socket.on('user' + this.props.userId, (owner) => {
-                this.props.io.socket.post(`${root}/api/v1/notifications`, {
-                    id: owner.id,
-                    isAccept: owner.isAccept,
-                    itemName: owner.itemName,
-                    ownerId: owner.ownerId,
-                }, (res) => {
-                    console.log(res)
-                    if (!res.error) {
-                        this.props.io.socket.get(`${root}/api/v1/notifications`, (body) => {
-                            let getNoti = body.noti
-                            let seenNoti = body.noti.reduce((cur, i) => {
-                                if (i.seen !== true) {
-                                    cur.push(i.seen)
-                                }
-                                return cur
-                            }
-                                , [])
-                            this.setState({ getNoti, seenNoti })
-                        })
-                    }
-                })
-            })
-       	    fetch(`${root}/api/v1/notifications`)
-            .then(res => res.json())
-            .then(res => {
-                if (res.noti) {
-                    let seenNoti = res.noti.reduce((cur, i) => {
-                        if (i.seen !== true) {
-                            cur.push(i.seen)
-                        }
-                        return cur
-                    }
-                        , [])
-                    this.setState({ getNoti: res.noti, seenNoti })
-                }
-
-            })
-
-	 }
+        if (this.props.userId !== '') {
 
 
-    }
-    shouldComponentUpdate(nextProps) {
-        if (this.props.userId === '' && nextProps.userId !== '') {
-            this.props.io.socket.on('user' + nextProps.userId, (owner) => {
-                this.props.io.socket.post(`${root}/api/v1/notifications`, {
-                    id: owner.id,
-                    isAccept: owner.isAccept,
-                    itemName: owner.itemName,
-                    ownerId: owner.ownerId,
-                }, (res) => {
-                    console.log(res)
-                    if (!res.error) {
-                        this.props.io.socket.get(`${root}/api/v1/notifications`, (body) => {
-                            let getNoti = body.noti
-                            let seenNoti = body.noti.reduce((cur, i) => {
-                                if (i.seen !== true) {
-                                    cur.push(i.seen)
-                                }
-                                return cur
-                            }
-                                , [])
-                            this.setState({ getNoti, seenNoti })
-                        })
-                    }
-                })
-            })
-	    fetch(`${root}/api/v1/notifications`)
-            .then(res => res.json())
-            .then(res => {
-                if (res.noti) {
-                    let seenNoti = res.noti.reduce((cur, i) => {
-                        if (i.seen !== true) {
-                            cur.push(i.seen)
-                        }
-                        return cur
-                    }
-                        , [])
-                    this.setState({ getNoti: res.noti, seenNoti })
-                }
-
-            })
-	
         }
-        return true
+
+
     }
+    
     componentWillMount() {
         // this.props.checkStatus()
-            }
+    }
     updateKeyWord(e) {
         e.preventDefault()
         this.setState({ keywords: e.target.value })
@@ -181,29 +98,13 @@ class Header extends Component {
         e.preventDefault()
         this.props.logIn()
     }
-    handleNoti(e) {
-        e.preventDefault()
-        this.props.io.socket.patch(`${root}/api/v1/notifications`, {
-            seen: this.state.seen,
-            userId: this.props.userId
-        }, (res) => {
-            let seenNoti = res.seenNoti.reduce((cur, i) => {
-                if (i.seen !== true) {
-                    cur.push(i.seen)
-                }
-                return cur
-            }
-                , [])
-            this.setState({ seenNoti })
-            // var rsNoti = _.find(seenNoti, { seen: this.state.seen})
-        })
-    }
+
     onClick(e) {
         e.preventDefault()
         FB.login(console.log)
     }
     render() {
-        const { keywords, getNoti, seenNoti } = this.state
+        const { keywords } = this.state
         let filterItem = this.state.results.filter(kw => {
             return kw.name.toLowerCase().indexOf(this.state.keywords.toLowerCase()) !== -1
         })
@@ -254,71 +155,7 @@ class Header extends Component {
                                 <div className="ml-auto">
                                     <div className="form-inline">
                                         <Link className="nav-item nav-link ml-auto" to="/bidcart" style={{ color: 'white' }}><i className="fas fa-cart-plus"></i></Link>
-                                        <div onClick={this.handleNoti} className="nav-item dropdown">
-
-                                            <Link style={{ color: 'white' }} className="nav-link" to="/notification" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i className="far fa-bell"></i>
-                                                {
-                                                    getNoti && (
-                                                        seenNoti.length !== 0 ? (
-                                                            <span style={{ position: 'absolute', top: '5px', borderRadius: '10px' }} className="badge badge-danger">{seenNoti.length} </span>
-
-                                                        ) : (
-                                                                <span style={{ position: 'absolute', top: '5px', borderRadius: '10px' }} className="badge badge-danger"></span>
-                                                            )
-                                                    )
-                                                }
-                                            </Link>
-                                            <div id="a-color" className="dropdown-menu account-menu notification-panel" aria-labelledby="header-account-menu-link">
-                                                <div className="container row">
-                                                    <div className="col-md-6">
-                                                        <p>Notifications</p>
-                                                    </div>
-                                                    <div className="col-md-6">
-                                                        <Link to="#" style={{ float: 'right', marginRight: '-30px' }}>Mark all as read</Link>
-                                                    </div>
-                                                </div>
-                                                <hr style={{ marginTop: '-10px' }} />
-                                                <ul className="notification">
-                                                    {
-                                                        getNoti ? (
-                                                            getNoti.map((info, i) => {
-                                                                return (
-                                                                    <Link key={i} to={`/items/${info.itemId}`} style={{ textDecoration: 'none' }} className="notification-item">
-                                                                        <li className="notification">
-                                                                            <div className="media" style={{ borderBottom: '1px solid #F1F1F1', minHeight: '55px' }}>
-                                                                                <div className="avatar-noti pb-2">
-                                                                                    <img src="./images/car.jpg" alt="img" />
-                                                                                </div>
-                                                                                <div className="container content-noti">
-                                                                                    {info.isAccept ? (
-                                                                                        <strong className="notification-title">Admin accepted your item <object><Link to={`/items/${info.itemId}`}>{info.itemName}</Link></object></strong>
-
-                                                                                    ) : (
-                                                                                            <strong className="notification-title">Admin rejected your item <object><Link to={`/items/${info.itemId}`}>{info.itemName}</Link></object></strong>
-                                                                                        )
-                                                                                    }
-                                                                                    <div className="notification-meta">
-                                                                                        <small className="timestamp"><strong>at {dateFns.format(info.createdAt, 'HH:mm MM/DD/YYYY')}</strong></small>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </li>
-                                                                    </Link>
-                                                                )
-                                                            })
-                                                        ) : (
-                                                                <div role="alert">
-                                                                    <p className="light-word text-center"><strong>No notifications</strong></p>
-                                                                </div>
-                                                            )
-
-                                                    }
-                                                </ul>
-                                                <hr style={{ marginTop: '-17px' }} />
-                                                <center id="see-all" style={{ marginTop: '-10px' }}><Link to="#">See All</Link></center>
-                                            </div>
-                                        </div>
+                                        {this.props.userId !== '' ? <Notifications userId={this.props.userId} io={this.props.io} ></Notifications> : <i className="far fa-bell"></i>}
                                         <div className="nav-item dropdown">
                                             <Link style={{ color: 'white' }} className="nav-link dropdown-toggle" to="/manager" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="far fa-user"></i></Link>
                                             <div className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
@@ -351,7 +188,7 @@ class Header extends Component {
                             </div> : '')}
                     </div>
                 </nav>
-            </div >
+            </div>
         )
     }
 }
