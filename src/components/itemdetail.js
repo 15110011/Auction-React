@@ -284,14 +284,14 @@ class ItemDetail extends Component {
                                                         }
                                                     </div>
                                                 </div>
-                                                <div className="col-md-6">
+                                                <div className="col-md-6" style={{wordWrap:'break-word'}}>
                                                     <h4> Current price: <NumberFormat displayType={'text'} value={this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice} thousandSeparator={true} prefix={'$'} />
                                                     </h4>
                                                     {/* <h4>Current price: ${this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice}</h4> */}
                                                 </div>
                                                 <div className="col-md-6">
                                                 </div>
-                                                <div className="col-md-6">
+                                                <div className="col-md-6" style={{wordWrap:'break-word'}}>
                                                     <h4> Current step: <NumberFormat displayType={'text'} value={this.state.step} thousandSeparator={true} prefix={'$'} />
                                                     </h4>
                                                     {/* <h4>Current step: ${this.state.step}</h4> */}

@@ -779,3 +779,15 @@ body{
   position: absolute;
   top: -12%;
 }
+.card{
+  border: none;
+}
+.card-body{
+  border: 1px solid #00000020;
+  border-bottom-left-radius: .5rem;
+  border-bottom-right-radius: .5rem;
+}
+.borderitem{
+  border: 1px solid #00000020;
+  border-bottom: none;
+}
