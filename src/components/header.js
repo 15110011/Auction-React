@@ -282,7 +282,7 @@ class Header extends Component {
                                                 <ul className="notification">
                                                     {
                                                         getNoti ? (
-                                                            getNoti.map((info,i) => {
+                                                            getNoti.map((info, i) => {
                                                                 return (
                                                                     <Link key={i} to={`/items/${info.itemId}`} style={{ textDecoration: 'none' }} className="notification-item">
                                                                         <li className="notification">
