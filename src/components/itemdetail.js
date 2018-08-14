@@ -115,10 +115,14 @@ class ItemDetail extends Component {
                 let remainTime = this.state.timeLeft - 1000
                 if (remainTime <= 0) {
                     clearInterval(this.countDownInterval)
+                    console.log(this.contract)
                     // this.watchEventEnd()
-                    this.contract.auctionEnd(() => {
-                        this.watchEventEnd()
-                    })
+                    if (window.web3.eth.accounts[0]) {
+                        this.contract.auctionEnd(() => {
+                            this.watchEventEnd()
+                        })
+                    }
+
                 }
                 else {
                     this.setState({ timeLeft: remainTime })
