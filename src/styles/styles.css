@@ -781,13 +781,16 @@ body{
 }
 .card{
   border: none;
+  border-color: darkgrey;
 }
 .card-body{
-  border: 1px solid #00000020;
+  border: 1px solid darkgrey;
   border-bottom-left-radius: .5rem;
   border-bottom-right-radius: .5rem;
 }
 .borderitem{
-  border: 1px solid #00000020;
+  border-top-left-radius: .5rem;
+  border-bottom-right-radius: .5rem;
+  border: 1px solid darkgrey;
   border-bottom: none;
 }

@@ -511,85 +511,19 @@ class ItemDetail extends Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-3">
-                            <div className="more-item" style={{ marginTop: '25px' }}>
-                                <div className="right-item pt-4">
-                                    <div className="itemborder">
-                                        <div className="item-image">
-                                            <Link className="detail" to="/itemdetail"><img src={`${root}/uploads/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
-                                        </div>
-                                        <div className="time-price">
-                                            <div className="row d-flex justify-content-between">
-                                                <div className="col-md-6">00:00:00</div>
-                                                <div className="col-md-6" id="price">$200</div>
-                                            </div>
-                                        </div>
+                        <div className="col-sm-3">
+                            <div className="col card" style={{ marginTop: '48px' }}>
+                                <Link className="borderitem" to="#">
+                                    <img className="card-img-top" src="/images/car.jpg" alt="" style={{ minHeight: '200px', maxHeight: '200px', objectFit: 'cover' }} />
+                                </Link>
+                                <div className="card-body">
+                                    <div className="text-center">
+                                        <h5>Cigar CuVu</h5>
                                     </div>
-                                </div>
-                                <div className="right-item pt-4">
-                                    <div className="itemborder">
-                                        <div className="item-image">
-                                            <Link className="detail" to="/itemdetail"><img src={`${root}/uploads/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
-                                        </div>
-                                        <div className="time-price">
-                                            <div className="row d-flex justify-content-between">
-                                                <div className="col-md-6">00:00:00</div>
-                                                <div className="col-md-6" id="price">$200</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="right-item pt-4">
-                                    <div className="itemborder">
-                                        <div className="item-image">
-                                            <Link className="detail" to="/itemdetail"><img src={`${root}/uploads/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
-                                        </div>
-                                        <div className="time-price">
-                                            <div className="row d-flex justify-content-between">
-                                                <div className="col-md-6">00:00:00</div>
-                                                <div className="col-md-6" id="price">$200</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="right-item pt-4">
-                                    <div className="itemborder">
-                                        <div className="item-image">
-                                            <Link className="detail" to="/itemdetail"><img src={`${root}/uploads/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
-                                        </div>
-                                        <div className="time-price">
-                                            <div className="row d-flex justify-content-between">
-                                                <div className="col-md-6">00:00:00</div>
-                                                <div className="col-md-6" id="price">$200</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="right-item pt-4">
-                                    <div className="itemborder">
-                                        <div className="item-image">
-                                            <Link className="detail" to="/itemdetail"><img src={`${root}/uploads/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
-                                        </div>
-                                        <div className="time-price">
-                                            <div className="row d-flex justify-content-between">
-                                                <div className="col-md-6">00:00:00</div>
-                                                <div className="col-md-6" id="price">$200</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="right-item pt-4">
-                                    <div className="itemborder">
-                                        <div className="item-image">
-                                            <Link className="detail" to="/itemdetail"><img src={`${root}/uploads/0f0c0954-687c-49be-9685-c1b150468b2b.jpg`} alt="item" /></Link>
-                                        </div>
-                                        <div className="time-price">
-                                            <div className="row d-flex justify-content-between">
-                                                <div className="col-md-6">00:00:00</div>
-                                                <div className="col-md-6" id="price">$200</div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <p className="card-title">Current bid: $200 </p>
+                                    <p className="card-price">
+                                        End: 00:00:00
+                                    </p>
                                 </div>
                             </div>
                         </div>

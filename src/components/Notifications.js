@@ -10,7 +10,6 @@ export default class Notification extends Component {
         super(props)
         this.state = {
             seen: 1
-
         }
         this.handleNoti = this.handleNoti.bind(this)
 
@@ -33,8 +32,7 @@ export default class Notification extends Component {
         })
     }
     componentDidMount() {
-        console.log("DIDMOUNT",this.props.userId);
-	this.props.io.socket.on('user' + this.props.userId, (owner) => {
+        this.props.io.socket.on('user' + this.props.userId, (owner) => {
             this.props.io.socket.post(`${root}/api/v1/notifications`, {
                 id: owner.id,
                 isAccept: owner.isAccept,

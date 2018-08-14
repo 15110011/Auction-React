@@ -1,7 +1,7 @@
 import React from 'react'
 import StarRatingComponent from 'react-star-rating-component';
 import dateFns from 'date-fns'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 
 function Rating(props) {
@@ -27,13 +27,14 @@ function Rating(props) {
                                             </div>
                                             <div className="col-md-3">
                                                 <div className="time">
-                                                    <small style={{ color: '#7b7171', float:'right' }}>{dateFns.format(review.createdAt, 'DD/MM/YYYY')}</small>
+                                                    <small style={{ color: '#7b7171', float: 'right' }}>{dateFns.format(review.createdAt, 'DD/MM/YYYY')}</small>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="certificate bolditalic-word" style={{ marginTop: '-20px' }}>
+                                        <div className="certificate bolditalic-word" style={{ marginTop: '-20px', position: 'relative', zIndex:'1000' }}>
                                             <small style={{ fontSize: '75%' }}>
-                                                <i style={{ color: '#4caf50' }} className="fas fa-shield-alt"> Purchased certificate</i>
+                                                <i style={{ color: '#3c763d' }} className="fas fa-shield-alt"> Purchased certificate -</i>
+                                                <Link className="italic-word" to="#">&nbsp;Quan dui TQ</Link>
                                             </small>
                                         </div>
                                     </div>
