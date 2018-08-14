@@ -224,9 +224,9 @@ class Bidcart extends Component {
                                             ) : (
                                                     <tbody>
                                                         {
-                                                            this.state.items.map(item => {
+                                                            this.state.items.map((item, i) => {
                                                                 return (
-                                                                    <tr className="fixprop">
+                                                                    <tr key={i} className="fixprop">
                                                                         <td>
                                                                             {item.id}
                                                                         </td>
@@ -279,9 +279,9 @@ class Bidcart extends Component {
                                             ) : (
                                                     <tbody>
                                                         {
-                                                            this.state.items.map(item => {
+                                                            this.state.items.map((item, i) => {
                                                                 return (
-                                                                    <tr className="fixprop">
+                                                                    <tr key={i} className="fixprop">
                                                                         <td>
                                                                             {item.id}
                                                                         </td>
