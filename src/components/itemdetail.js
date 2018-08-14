@@ -8,9 +8,6 @@ import dateFns from 'date-fns'
 import BidInput from './BidInput'
 import NumberFormat from 'react-number-format';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { Progress } from 'reactstrap';
-import { Form, FormGroup, Label } from 'reactstrap';
 import Web3 from 'web3';
 
 import TruffleContract from 'truffle-contract';
@@ -264,7 +261,7 @@ class ItemDetail extends Component {
                                                     <div className="row thumbnail mt-2" style={{ paddingLeft: '15px', marginRight: '-30px' }}>
                                                         {images.map((img, i) => (
                                                             <div className="col-sm-4 thumbnail-border" key={i}>
-                                                                <img className="img-fluid" src={`${root}/uploads/${img.link}`} style={{ height: '100px' }} onClick={e => this.setCurrentItem(i)} />
+                                                                <img className="img-fluid" src={`${root}/uploads/${img.link}`} alt="img" style={{ height: '100px' }} onClick={e => this.setCurrentItem(i)} />
                                                             </div>
                                                         ))}
                                                     </div></div> : <img className="img-fluid" src={`http://www.staticwhich.co.uk/static/images/products/no-image/no-image-available.png`} alt="" />}

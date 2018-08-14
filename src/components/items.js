@@ -90,13 +90,13 @@ class Items extends Component {
             <div className="container">
                 <div className="row">
                     {
-                        items.length>0 && items.map((item, i) => {
+                        items.length > 0 && items.map((item, i) => {
                             return (
                                 <div key={i} className="col-sm-3 card">
                                     {
                                         item.length !== 0 ? (
                                             <Link className="borderitem" to={`/items/${item.itemId}`}>
-                                                <img className="card-img-top" src={`${root}/images/items/${item.link}`} alt="" style={{ minHeight: '200px', maxHeight: '200px' }} />
+                                                <img className="card-img-top" src={`${root}/uploads/${item.link}`} alt="" style={{ minHeight: '200px', maxHeight: '200px', objectFit: 'cover' }} />
                                             </Link>
                                         ) : (
                                                 <img className="card-img-top" src={`http://www.staticwhich.co.uk/static/images/products/no-image/no-image-available.png`} alt="" style={{ minHeight: '200px', maxHeight: '200px' }} />
