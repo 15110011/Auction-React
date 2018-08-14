@@ -21,6 +21,7 @@ class ItemDetail extends Component {
         this.state = {
             current: 0,
             currentBidding: 0,
+            currentBiddingStr: '1.000',
             step: 5,
             itemDetail: null,
             images: [],
@@ -62,7 +63,6 @@ class ItemDetail extends Component {
                 if (res.success) {
                     var auctionContract = this.web3.eth.contract(AuctionBid.abi)
                     this.contract = auctionContract.at((res.contractAddress.contractAddress).toString())
-                    console.log(this.contract)
                 }
             })
         fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
@@ -116,6 +116,14 @@ class ItemDetail extends Component {
                 let remainTime = this.state.timeLeft - 1000
                 if (remainTime <= 0) {
                     clearInterval(this.countDownInterval)
+                    console.log(this.contract)
+                    // this.watchEventEnd()
+                    if (window.web3.eth.accounts[0]) {
+                        this.contract.auctionEnd(() => {
+                            this.watchEventEnd()
+                        })
+                    }
+
                 }
                 else {
                     this.setState({ timeLeft: remainTime })
@@ -124,10 +132,20 @@ class ItemDetail extends Component {
             this.setState({ timeLeft: timeLeft })
         }
     }
+    watchEventEnd = () => {
+        this.contract.AuctionEnded({}, {
+            fromBlock: 0,
+            toBlock: 'lastest'
+        }).watch((error, event) => {
+            if (!error) {
+                console.log('event end', event)
+            }
+        })
+    }
     watchEventBid = () => {
         this.contract.HighestBidIncrease({}, {
             fromBlock: 0,
-            toBlock: 'laster'
+            toBlock: 'lastest'
         }).watch((error, event) => {
             if (error) console.log(error)
             console.log('event', event)
@@ -135,42 +153,49 @@ class ItemDetail extends Component {
     }
     onSubmitBid(e) {
         e.preventDefault()
-        this.contract.bid({ from: window.web3.eth.accounts[0], value: this.state.currentBidding }, (err, rs) => {
-            this.watchEventBid()
-        })
+        if (!window.web3.eth.accounts[0]) {
+            this.setState({ getMetaMask: false })
+            setInterval(() => {
+                this.setState({ getMetaMask: true })
+            }, 2000)
+        } else {
+            this.contract.bid({ from: window.web3.eth.accounts[0], value: this.state.currentBidding }, (err, rs) => {
+                this.watchEventBid()
+            })
 
-        this.props.io.socket.post(`${root}/api/v1/bid/${this.state.itemDetail.id}`, {
-            currentPrice: this.state.currentBidding,
-            userId: this.props.userId,
-            isLastFiveSec: this.state.timeLeft <= 5000
-        }, res => {
-            console.log(res)
+            this.props.io.socket.post(`${root}/api/v1/bid/${this.state.itemDetail.id}`, {
+                currentPrice: this.state.currentBidding,
+                userId: this.props.userId,
+                isLastFiveSec: this.state.timeLeft <= 5000
+            }, res => {
 
-            if (!res.error) {
-                let { itemDetail } = this.state
-                if (itemDetail) {
-                    itemDetail.bids.unshift(res.newBid)
-                    itemDetail.currentPrice = itemDetail.bids[0].currentPrice
-                    let nextStep = Math.ceil(itemDetail.bids[0].currentPrice * 0.5)
-                    if (res.newAdditionalTime) {
-                        console.log('addition', res.newAdditionalTime)
-                        let modifyDetail = this.state.itemDetail
-                        modifyDetail.additionalTime = res.newAdditionalTime
-                        this.setState({
-                            itemDetail: modifyDetail
-                        }, () => {
-                            this.setCountDown()
-                        })
+                if (!res.error) {
+                    let { itemDetail } = this.state
+                    if (itemDetail) {
+                        itemDetail.bids.unshift(res.newBid)
+                        itemDetail.currentPrice = itemDetail.bids[0].currentPrice
+                        let nextStep = Math.ceil(itemDetail.bids[0].currentPrice * 0.5)
+                        if (res.newAdditionalTime) {
+                            console.log('addition', res.newAdditionalTime)
+                            let modifyDetail = this.state.itemDetail
+                            modifyDetail.additionalTime = res.newAdditionalTime
+                            this.setState({
+                                itemDetail: modifyDetail
+                            }, () => {
+                                this.setCountDown()
+                            })
+                        }
+                        this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
                     }
-                    this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
                 }
-            }
-            else {
-                alert(res.msg)
-            }
+                else {
+                    alert(res.msg)
+                }
 
-        })
+            })
+        }
     }
+
 
     fromMillisecondsToFormattedString(ms) {
         let h = Math.floor(ms / (3600 * 1000))
@@ -186,7 +211,6 @@ class ItemDetail extends Component {
             this.props.io.socket.get(`${root}/leave/items/${this.state.itemDetail.id}`, (body, JWR) => {
             })
         }
-        // this.setState({loading: null})
     }
     onBeginAuction() {
         if (!window.web3.eth.accounts[0]) {
@@ -311,19 +335,24 @@ class ItemDetail extends Component {
                                 <hr />
                                 <div className="container">
                                     <div className="row">
-                                        <div className="col-md-5 item-image">
+                                        <div className="col-md-6 item-image">
                                             {images.length > 0 ?
                                                 <div>
-                                                    <ReactImageZoom width={340} height={300} zoomWidth={450} img={`${root}/uploads/` + images[current].link} />
-                                                    <div className="row thumbnail mt-2" style={{ paddingLeft: '15px', marginRight: '-30px' }}>
+                                                    <div className="zoom-image" style={{ border: '1px solid darkgrey' }}>
+
+                                                        <ReactImageZoom id={'abc'} width={379} height={400} zoomWidth={410} left="100%" img={`${root}/uploads/` + images[current].link} />
+                                                    </div>
+                                                    <div className="row thumbnail mt-2 d-flex justify-content-center">
                                                         {images.map((img, i) => (
-                                                            <div className="col-sm-4 thumbnail-border" key={i}>
-                                                                <img className="img-fluid" src={`${root}/uploads/${img.link}`} alt="img" style={{ height: '100px' }} onClick={e => this.setCurrentItem(i)} />
+                                                            <div className="col-sm-3 thumbnail-border" key={i} style={{ paddingRight: '5px', paddingLeft: '5px' }}>
+                                                                <img className="img-fluid " src={`${root}/uploads/${img.link}`} alt="img" style={{ height: '68px' }} onClick={e => this.setCurrentItem(i)} />
                                                             </div>
                                                         ))}
-                                                    </div></div> : <img className="img-fluid" src={`http://www.staticwhich.co.uk/static/images/products/no-image/no-image-available.png`} alt="" />}
+                                                    </div>
+                                                </div> : <img className="img-fluid" src={`http://www.staticwhich.co.uk/static/images/products/no-image/no-image-available.png`} alt="" />
+                                            }
                                         </div>
-                                        <div className="col-md-7" style={{ padding: '0 15px 0 30px' }}>
+                                        <div className="col-md-6" style={{ padding: '0 15px 0 30px' }}>
                                             <div className="row">
                                                 <div className="col-md-6">
                                                     <div>
@@ -360,8 +389,9 @@ class ItemDetail extends Component {
                                                     <BidInput className="form-control pr-5"
                                                         value={this.state.currentBidding}
                                                         onChange={(e) => {
-                                                            if (!/[A-z]/.test(e.target.value))
+                                                            if (!/[A-z]/.test(e.target.value)) {
                                                                 this.setState({ currentBidding: +e.target.value })
+                                                            }
                                                         }}
                                                         onClickDecrease={e => {
                                                             e.preventDefault()
@@ -512,18 +542,20 @@ class ItemDetail extends Component {
                             </div>
                         </div>
                         <div className="col-sm-3">
-                            <div className="col card" style={{ marginTop: '48px' }}>
-                                <Link className="borderitem" to="#">
-                                    <img className="card-img-top" src="/images/car.jpg" alt="" style={{ minHeight: '200px', maxHeight: '200px', objectFit: 'cover' }} />
-                                </Link>
-                                <div className="card-body">
-                                    <div className="text-center">
-                                        <h5>Cigar CuVu</h5>
+                            <div className="col card zoom" style={{ marginTop: '48px' }}>
+                                <div className="shadow" style={{ borderBottomRightRadius: '.5rem', borderBottomLeftRadius: '.5rem' }}>
+                                    <Link className="borderitem" to="#">
+                                        <img className="card-img-top" src="/images/coin.jpg" alt="" style={{ minHeight: '200px', maxHeight: '200px', objectFit: 'cover', marginLeft: '-1px' }} />
+                                    </Link>
+                                    <div className="card-body">
+                                        <div className="text-center">
+                                            <h5>Cigar CuVu</h5>
+                                        </div>
+                                        <p className="card-title">Current bid: $200 </p>
+                                        <p className="card-price">
+                                            End: 00:00:00
+                                        </p>
                                     </div>
-                                    <p className="card-title">Current bid: $200 </p>
-                                    <p className="card-price">
-                                        End: 00:00:00
-                                    </p>
                                 </div>
                             </div>
                         </div>
