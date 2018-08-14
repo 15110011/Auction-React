@@ -8,12 +8,8 @@ import dateFns from 'date-fns'
 import BidInput from './BidInput'
 import NumberFormat from 'react-number-format';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { Progress } from 'reactstrap';
-import { Form, FormGroup, Label } from 'reactstrap';
 import Web3 from 'web3';
 
-import TruffleContract from 'truffle-contract';
 import AuctionBid from '../contracts/AuctionBid.json';
 import DappToken from '../contracts/DappToken.json'
 
@@ -33,8 +29,9 @@ class ItemDetail extends Component {
             loading: true,
             isApproved: null,
             currentPrice: 0,
-            BidContract: null,
-
+            getMetaMask: true,
+            sendTransaction: true,
+            waitForMining: false
         }
         if (typeof this.web3 !== 'undefined') {
             this.web3Provider = this.web3.currentProvider
@@ -42,9 +39,7 @@ class ItemDetail extends Component {
             this.web3Provider = new Web3.providers.HttpProvider('https://ropsten.infura.io/99efdc0bd45147cebbdfd88e5eff1d75')
             // this.web3Provider = new Web3.providers.HttpProvider("http://127.0.0.1:7545")
         }
-        this.web3 = window.web3 // new Web3(this.web3Provider)
-
-
+        this.web3 = window.web3
 
         this.onSubmitBid = this.onSubmitBid.bind(this)
         this.onReceiveRoomMessage = this.onReceiveRoomMessage.bind(this)
@@ -61,6 +56,13 @@ class ItemDetail extends Component {
 
         this.props.io.socket.get(`${root}/hello`, function serverResponded(body, JWR) {
         });
+        fetch(`${root}/api/v1/contracts/${this.props.match.params.id}`)
+            .then(res => res.json())
+            .then(res => {
+                var auctionContract = this.web3.eth.contract(AuctionBid.abi)
+                this.contract = auctionContract.at((res.contractAddress.contractAddress).toString())
+                console.log(this.contract)
+            })
         fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
             credentials: 'include'
         })
@@ -83,13 +85,11 @@ class ItemDetail extends Component {
                 }
                 else {
                     this.setState({ itemDetail: null })
-                    console.log(item.msg)
                 }
             })
 
     }
     onReceiveRoomMessage(newBid) {
-        console.log(newBid)
         // console.log(this.state.itemDetail)
         let { itemDetail } = this.state
         if (itemDetail) {
@@ -99,9 +99,11 @@ class ItemDetail extends Component {
             this.setState({ itemDetail, step: nextStep, currentBidding: newBid.currentPrice + nextStep })
         }
     }
+
     setCurrentItem(current) {
         this.setState({ current })
     }
+
     setCountDown() {
         if (this.state.itemDetail && this.state.itemDetail.startedAt !== 0) {
             let endTime = dateFns.getTime(dateFns.addHours(this.state.itemDetail.startedAt, this.state.itemDetail.period))
@@ -120,17 +122,26 @@ class ItemDetail extends Component {
             this.setState({ timeLeft: timeLeft })
         }
     }
+    watchEventBid = () => {
+        this.contract.HighestBidIncrease({}, {
+            fromBlock: 0,
+            toBlock: 'laster'
+        }).watch((error, event) => {
+            if (error) console.log(error)
+            console.log('event', event)
+        })
+    }
     onSubmitBid(e) {
-        console.log(this.props.userId)
-
         e.preventDefault()
-
+        this.contract.bid({ from: window.web3.eth.accounts[0], value: this.state.currentBidding }, (err, rs) => {
+            this.watchEventBid()
+        })
 
         this.props.io.socket.post(`${root}/api/v1/bid/${this.state.itemDetail.id}`, {
             currentPrice: this.state.currentBidding,
             userId: this.props.userId,
             isLastFiveSec: this.state.timeLeft <= 5000
-        }, (function (res) {
+        }, res => {
             console.log(res)
 
             if (!res.error) {
@@ -156,7 +167,7 @@ class ItemDetail extends Component {
                 alert(res.msg)
             }
 
-        }).bind(this))
+        })
     }
 
     fromMillisecondsToFormattedString(ms) {
@@ -176,50 +187,75 @@ class ItemDetail extends Component {
         // this.setState({loading: null})
     }
     onBeginAuction() {
-        var AuctionContract = this.web3.eth.contract(AuctionBid.abi)
-        AuctionContract.new({
-            from: window.web3.eth.accounts[0],
-            data: AuctionBid.bytecode
-        }, (error, contract) => {
-            if (error) {
-                return alert('You declined transactions in Meta Mask or did not provide enough gas')
-            }
-            if (contract.address) {
-                this.setState({ BidContract: contract })
-                contract.startBidding(this.state.currentPrice, { gas: 100000 }, (err, rs) => {
-                    if (err) {
-                        console.log(err)
-                    }
-                    if (rs) {
-                        let startTime = new Date().getTime()
-                        fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
-                            method: "PATCH",
-                            body: JSON.stringify({
-                                startedAt: startTime
-                            })
+        if (!window.web3.eth.accounts[0]) {
+            this.setState({ getMetaMask: false })
+            setInterval(() => {
+                this.setState({ getMetaMask: true })
+            }, 2000)
+        } else {
+            var AuctionContract = this.web3.eth.contract(AuctionBid.abi)
+            AuctionContract.new({
+                from: window.web3.eth.accounts[0],
+                data: AuctionBid.bytecode
+            }, (error, contract) => {
+                if (error) {
+                    this.setState({ sendTransaction: false })
+                    setInterval(() => {
+                        this.setState({ sendTransaction: true })
+                    }, 2000)
+                    return
+                }
+                if (contract.address) {
+                    this.contract = contract
+                    console.log(this.contract.address)
+                    var address = contract.address
+                    fetch(`${root}/api/v1/contracts/${this.props.match.params.id}`, {
+                        method: 'POST',
+                        body: JSON.stringify({ address })
+                    })
+                        .then(res => res.json())
+                        .then(res => {
+                            if (res.success) {
+                                contract.startBidding(this.state.currentPrice, { gas: 100000 }, (err, rs) => {
+                                    if (err) {
+                                        console.log(err)
+                                    }
+                                    if (rs) {
+
+                                        let startTime = new Date().getTime()
+                                        fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
+                                            method: 'PATCH',
+                                            body: JSON.stringify({
+                                                startedAt: startTime
+                                            })
+                                        })
+                                            .then((res) => res.json())
+                                            .then((res) => {
+                                                if (!res.error) {
+                                                    let modifyDetail = this.state.itemDetail
+                                                    modifyDetail.startedAt = startTime
+                                                    this.setState({ itemDetail: modifyDetail }, function () {
+                                                        this.setCountDown()
+                                                    })
+
+                                                }
+                                                else {
+                                                    console.log(res.msg)
+                                                }
+                                            })
+                                    }
+                                })
+                            } else {
+                                this.setState({ waitForMining: true })
+                            }
                         })
-                            .then((res) => res.json())
-                            .then((res) => {
-                                if (!res.error) {
-                                    let modifyDetail = this.state.itemDetail
-                                    modifyDetail.startedAt = startTime
-                                    this.setState({ itemDetail: modifyDetail }, function () {
-                                        this.setCountDown()
-                                    })
-
-                                }
-                                else {
-                                    console.log(res.msg)
-                                }
-                            })
-                    }
-                })
-
-            }
-        })
+                }
+            })
+        }
     }
+
     render() {
-        const { current, itemDetail, images, loading, isApproved } = this.state
+        const { current, itemDetail, images, loading, isApproved, getMetaMask, sendTransaction, waitForMining } = this.state
         if (loading) {
             return (
                 <div role="alert" style={{ marginTop: '75px' }}>
@@ -244,8 +280,24 @@ class ItemDetail extends Component {
         return (
             <div className="itemDetail-content" style={{ position: 'relative', zIndex: '1000' }}>
                 <div className="container">
-                    {(isApproved && !isApproved.isAccept) && <p className="alert alert-danger text-center mt-5">This item is rejected by Admin</p>}
-
+                    {(isApproved && !isApproved.isAccept) && (
+                        <p className="alert alert-danger text-center mt-5">This item is rejected by Admin</p>
+                    )}
+                    {
+                        !getMetaMask && (
+                            <p className="alert alert-danger text-center mt-5">Please login to Meta Mask</p>
+                        )
+                    }
+                    {
+                        !sendTransaction && (
+                            <p className="alert alert-danger text-center mt-5">You declined transaction or did't provide enough gas</p>
+                        )
+                    }
+                    {
+                        waitForMining && (
+                            <p className="alert alert-danger text-center mt-5">Please wait for transaction confirmation, be patient</p>
+                        )
+                    }
                     <div className="row">
                         <div className="col-md-9">
                             <br />
