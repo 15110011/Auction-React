@@ -62,7 +62,6 @@ class ItemDetail extends Component {
                 if (res.success) {
                     var auctionContract = this.web3.eth.contract(AuctionBid.abi)
                     this.contract = auctionContract.at((res.contractAddress.contractAddress).toString())
-                    console.log(this.contract)
                 }
             })
         fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
@@ -116,6 +115,14 @@ class ItemDetail extends Component {
                 let remainTime = this.state.timeLeft - 1000
                 if (remainTime <= 0) {
                     clearInterval(this.countDownInterval)
+                    console.log(this.contract)
+                    // this.watchEventEnd()
+                    if (window.web3.eth.accounts[0]) {
+                        this.contract.auctionEnd(() => {
+                            this.watchEventEnd()
+                        })
+                    }
+
                 }
                 else {
                     this.setState({ timeLeft: remainTime })
@@ -124,10 +131,20 @@ class ItemDetail extends Component {
             this.setState({ timeLeft: timeLeft })
         }
     }
+    watchEventEnd = () => {
+        this.contract.AuctionEnded({}, {
+            fromBlock: 0,
+            toBlock: 'lastest'
+        }).watch((error, event) => {
+            if (!error) {
+                console.log('event end', event)
+            }
+        })
+    }
     watchEventBid = () => {
         this.contract.HighestBidIncrease({}, {
             fromBlock: 0,
-            toBlock: 'laster'
+            toBlock: 'lastest'
         }).watch((error, event) => {
             if (error) console.log(error)
             console.log('event', event)
@@ -135,42 +152,49 @@ class ItemDetail extends Component {
     }
     onSubmitBid(e) {
         e.preventDefault()
-        this.contract.bid({ from: window.web3.eth.accounts[0], value: this.state.currentBidding }, (err, rs) => {
-            this.watchEventBid()
-        })
+        if (!window.web3.eth.accounts[0]) {
+            this.setState({ getMetaMask: false })
+            setInterval(() => {
+                this.setState({ getMetaMask: true })
+            }, 2000)
+        } else {
+            this.contract.bid({ from: window.web3.eth.accounts[0], value: this.state.currentBidding }, (err, rs) => {
+                this.watchEventBid()
+            })
 
-        this.props.io.socket.post(`${root}/api/v1/bid/${this.state.itemDetail.id}`, {
-            currentPrice: this.state.currentBidding,
-            userId: this.props.userId,
-            isLastFiveSec: this.state.timeLeft <= 5000
-        }, res => {
-            console.log(res)
+            this.props.io.socket.post(`${root}/api/v1/bid/${this.state.itemDetail.id}`, {
+                currentPrice: this.state.currentBidding,
+                userId: this.props.userId,
+                isLastFiveSec: this.state.timeLeft <= 5000
+            }, res => {
 
-            if (!res.error) {
-                let { itemDetail } = this.state
-                if (itemDetail) {
-                    itemDetail.bids.unshift(res.newBid)
-                    itemDetail.currentPrice = itemDetail.bids[0].currentPrice
-                    let nextStep = Math.ceil(itemDetail.bids[0].currentPrice * 0.5)
-                    if (res.newAdditionalTime) {
-                        console.log('addition', res.newAdditionalTime)
-                        let modifyDetail = this.state.itemDetail
-                        modifyDetail.additionalTime = res.newAdditionalTime
-                        this.setState({
-                            itemDetail: modifyDetail
-                        }, () => {
-                            this.setCountDown()
-                        })
+                if (!res.error) {
+                    let { itemDetail } = this.state
+                    if (itemDetail) {
+                        itemDetail.bids.unshift(res.newBid)
+                        itemDetail.currentPrice = itemDetail.bids[0].currentPrice
+                        let nextStep = Math.ceil(itemDetail.bids[0].currentPrice * 0.5)
+                        if (res.newAdditionalTime) {
+                            console.log('addition', res.newAdditionalTime)
+                            let modifyDetail = this.state.itemDetail
+                            modifyDetail.additionalTime = res.newAdditionalTime
+                            this.setState({
+                                itemDetail: modifyDetail
+                            }, () => {
+                                this.setCountDown()
+                            })
+                        }
+                        this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
                     }
-                    this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
                 }
-            }
-            else {
-                alert(res.msg)
-            }
+                else {
+                    alert(res.msg)
+                }
 
-        })
+            })
+        }
     }
+
 
     fromMillisecondsToFormattedString(ms) {
         let h = Math.floor(ms / (3600 * 1000))
@@ -186,7 +210,6 @@ class ItemDetail extends Component {
             this.props.io.socket.get(`${root}/leave/items/${this.state.itemDetail.id}`, (body, JWR) => {
             })
         }
-        // this.setState({loading: null})
     }
     onBeginAuction() {
         if (!window.web3.eth.accounts[0]) {
