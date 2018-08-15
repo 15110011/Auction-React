@@ -6,7 +6,7 @@ function BidInput(props) {
         <div>
             <button onClick={props.onClickDecrease}>-
                 </button>
-            <NumberFormat className="text-center" value={props.value} thousandSeparator={true} prefix={'$'} onValueChange={props.onChange} />
+            <NumberFormat className="text-center" value={props.value} thousandSeparator={true} suffix={' ETH'} onValueChange={props.onChange} />
             <button onClick={props.onClickIncrease}>+</button>
         </div>
     )
