@@ -12,6 +12,7 @@ import Web3 from 'web3';
 
 import AuctionBid from '../contracts/AuctionBid.json';
 import DappToken from '../contracts/DappToken.json'
+import RecommendItems from './RecommendItems';
 
 
 class ItemDetail extends Component {
@@ -535,20 +536,7 @@ class ItemDetail extends Component {
                             </div>
                         </div>
                         <div className="col-sm-3">
-                            <div className="col card" style={{ marginTop: '48px' }}>
-                                <Link className="borderitem" to="#">
-                                    <img className="card-img-top" src="/images/car.jpg" alt="" style={{ minHeight: '200px', maxHeight: '200px', objectFit: 'cover' }} />
-                                </Link>
-                                <div className="card-body">
-                                    <div className="text-center">
-                                        <h5>Cigar CuVu</h5>
-                                    </div>
-                                    <p className="card-title">Current bid: $200 </p>
-                                    <p className="card-price">
-                                        End: 00:00:00
-                                    </p>
-                                </div>
-                            </div>
+                            {this.props.userId !== '' && <RecommendItems userId={this.props.userId} itemId={this.props.match.params.id}></RecommendItems>}
                         </div>
                     </div>
                 </div>

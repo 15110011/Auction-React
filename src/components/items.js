@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import '../styles/styles.css'
 import NumberFormat from 'react-number-format';
 import dateFns from 'date-fns'
-
+import { fromMillisecondsToFormattedString } from '../config'
 
 class Items extends Component {
 
@@ -13,63 +13,33 @@ class Items extends Component {
             items: [],
             timeLeft: 0,
         }
-        this.setCountDown = this.setCountDown.bind(this)
     }
     componentWillMount() {
         clearInterval(this.countDownInterval)
-        // fetch(`${root}/api/v1/items`)
-        //     .then(res => res.json())
-        //     .then(res => {
-        //         this.setState({
-        //             items: res.getAllItems
-        //         })
-        //     })
+        
     }
-    setCountDown() {
-        if (this.state.items && this.state.items.startedAt !== 0) {
-            console.log(this.state.items)
-            let endTime = dateFns.getTime(dateFns.addHours(this.state.items.startedAt, this.state.items.period))
-            let currTime = dateFns.getTime(new Date())
-            let timeLeft = endTime + this.state.items.additionalTime - currTime
-
-            clearInterval(this.countDownInterval)
-            this.countDownInterval = setInterval(() => {
-                let remainTime = this.state.timeLeft - 1000
-                if (remainTime <= 0) {
-                    clearInterval(this.countDownInterval)
-                }
-                else {
-                    this.setState({ timeLeft: remainTime })
-                }
-            }, 1000)
-            this.setState({ timeLeft: timeLeft })
-        }
-    }
+    
     componentDidMount() {
         this.countDownInterval = []
         fetch(`${root}/api/v1/liveItems`)
             .then(item => item.json())
             .then(item => {
                 var realTimeItems = item.realTimeItems
-                console.log(item)
                 realTimeItems.map((item, i) => {
                     let index = i
-                    // let endTime = dateFns.getTime(dateFns.addHours(item.startedAt, item.period))
-                    // let curTime = dateFns.getTime(new Date())
-                    // let timeLeft = endTime + item.additionalTime - curTime
-                    // item.timeLeft = timeLeft
                     if (this.countDownInterval) {
                         clearInterval(this.countDownInterval[index])
                     }
                     if (item && item.startedAt !== 0) {
                         this.countDownInterval[index] = setInterval(() => {
-                            let remainTime = item.timeLeft - 1000
+                            let cloneRealTimeItems = [].concat(this.state.items)
+                            let remainTime = cloneRealTimeItems[index].timeLeft - 1000
                             if (remainTime <= 0) {
                                 clearInterval(this.countDownInterval[index])
                             }
                             else {
                                 item.timeLeft = remainTime
-                                this.setState({ remainTime })
+                                this.setState({ items: cloneRealTimeItems })
                             }
                         }, 1000)
                     }
@@ -78,12 +48,15 @@ class Items extends Component {
                 this.setState({ items: realTimeItems })
             })
     }
-    fromMillisecondsToFormattedString(ms) {
-        let h = Math.floor(ms / (3600 * 1000))
-        let m = Math.floor((ms - (3600 * 1000 * h)) / (60 * 1000))
-        let s = Math.floor((ms - (3600 * 1000 * h) - (60 * 1000 * m)) / (1000))
-        return `${h < 10 ? '0' + h : h}:${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`
+
+    componentWillUnmount() {
+        if (this.countDownInterval) {
+            this.countDownInterval.forEach(interval => {
+                clearInterval(interval)
+            })
+        }
     }
+    
     render() {
         const { items } = this.state
         return (
@@ -108,7 +81,7 @@ class Items extends Component {
                                         </div>
                                         <p className="card-title">Current bid:&nbsp;<NumberFormat displayType={'text'} value={item.curPrice} thousandSeparator={true} prefix={'$'} /></p>
                                         <p className="card-price">
-                                            End:&nbsp;{this.fromMillisecondsToFormattedString(item.timeLeft)}
+                                            End:&nbsp;{fromMillisecondsToFormattedString(item.timeLeft)}
                                         </p>
                                         <Link className="btn btnbid" to={`/items/${item.itemId}`} role="button" style={{ marginTop: '5px' }}><i className="fas fa-gavel"></i> Bid now</Link>
                                     </div>
