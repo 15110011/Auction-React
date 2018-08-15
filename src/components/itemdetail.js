@@ -560,6 +560,7 @@ class ItemDetail extends Component {
                       <PaginationLink href="#">
                         5
                                                 </PaginationLink>
+<<<<<<< HEAD
                     </PaginationItem>
                     <PaginationItem>
                       <PaginationLink next href="#" />
@@ -593,6 +594,32 @@ class ItemDetail extends Component {
                         <div className="col-md-6">00:00:00</div>
                         <div className="col-md-6" id="price">$200</div>
                       </div>
+=======
+                                        </PaginationItem>
+                                        <PaginationItem>
+                                            <PaginationLink next href="#" />
+                                        </PaginationItem>
+                                    </Pagination>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-sm-3">
+                            <div className="col card" style={{ marginTop: '48px' }}>
+                                <Link className="borderitem" to="#">
+                                    <img className="card-img-top" src="/images/car.jpg" alt="" style={{ minHeight: '200px', maxHeight: '200px', objectFit: 'cover' }} />
+                                </Link>
+                                <div className="card-body">
+                                    <div className="text-center">
+                                        <h5>Cigar CuVu</h5>
+                                    </div>
+                                    <p className="card-title">Current bid: $200 </p>
+                                    <p className="card-price">
+                                        End: 00:00:00
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+>>>>>>> 4432bb810f394660d63b63008e94e614f8aae572
                     </div>
                   </div>
                 </div>

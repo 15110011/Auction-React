@@ -12,9 +12,10 @@ class HomePage extends Component {
     }
 
     handleShowCate = () => {
-        this.setState({
-            showCategory: !this.state.showCategory
-        })
+        if (this.mounted)
+            this.setState({
+                showCategory: !this.state.showCategory
+            })
     }
 
     render() {
