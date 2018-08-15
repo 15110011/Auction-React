@@ -174,59 +174,62 @@ class ItemDetail extends Component {
                 this.setState({ getMetaMask: true })
             }, 2000)
         } else {
-            console.log(this.state.currentBidding)
             this.contract.bid({
                 from: window.web3.eth.accounts[0], value: (this.state.currentBidding * 1000000000000000000).toString()
             }, (err, txHash) => {
-                this.watchEventBid()
-                console.log(err, txHash)
-                if (typeof txHash !== 'undefined') {
-                    this.props.io.socket.post(`${root}/api/v1/bid/${this.state.itemDetail.id}`, {
-                        currentPrice: this.state.currentBidding,
-                        userId: this.props.userId,
-                        isLastFiveSec: this.state.timeLeft <= 5000
-                    }, res => {
-
-                        if (!res.error) {
-                            let { itemDetail } = this.state
-                            if (itemDetail) {
-                                itemDetail.bids.unshift(res.newBid)
-                                itemDetail.currentPrice = itemDetail.bids[0].currentPrice
-                                let nextStep = itemDetail.bids[0].currentPrice * 0.5
-                                if (res.newAdditionalTime) {
-                                    console.log('addition', res.newAdditionalTime)
-                                    let modifyDetail = this.state.itemDetail
-                                    modifyDetail.additionalTime = res.newAdditionalTime
-                                    this.setState({
-                                        itemDetail: modifyDetail
-                                    }, () => {
-                                        this.setCountDown()
-                                    })
-                                }
-                                this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
-                            }
-                        }
-                        else {
-                            alert(res.msg)
-                        }
-                    })
-                } else {
+                if (typeof txHash === 'undefined') {
                     this.setState({ sendTransaction: false })
                     setInterval(() => {
                         this.setState({ sendTransaction: true })
                     }, 2000)
+                } else {
+                    this.watchEventBid()
+                    var filter = this.web3.eth.filter('latest')
+                    filter.watch((error, result) => {
+                        this.web3.eth.getTransactionReceipt(txHash, (err, blockHash) => {
+                            if (err) {
+                                console.log(err)
+                            }
+                            console.log(blockHash)
+                            if (blockHash && blockHash.transactionHash == txHash) {
+                                this.setState({ waitForMining: false })
+                                filter.stopWatching()
+                                this.props.io.socket.post(`${root}/api/v1/bid/${this.state.itemDetail.id}`, {
+                                    currentPrice: this.state.currentBidding,
+                                    userId: this.props.userId,
+                                    isLastFiveSec: this.state.timeLeft <= 5000
+                                }, res => {
+
+                                    if (!res.error) {
+                                        let { itemDetail } = this.state
+                                        if (itemDetail) {
+                                            itemDetail.bids.unshift(res.newBid)
+                                            itemDetail.currentPrice = itemDetail.bids[0].currentPrice
+                                            let nextStep = itemDetail.bids[0].currentPrice * 0.5
+                                            if (res.newAdditionalTime) {
+                                                let modifyDetail = this.state.itemDetail
+                                                modifyDetail.additionalTime = res.newAdditionalTime
+                                                this.setState({
+                                                    itemDetail: modifyDetail
+                                                }, () => {
+                                                    this.setCountDown()
+                                                })
+                                            }
+                                            this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
+                                        }
+                                    }
+                                    else {
+                                        alert(`Cannot bid under the price ${this.state.currentBidding}` )
+                                    }
+                                })
+                            } else {
+                                this.setState({ waitForMining: true })
+                            }
+                        })
+
+                    })
                 }
-                // var filter = this.web3.eth.filter('latest')
-                // filter.watch((error,result) => {
-                //     var receipt = this.web3.eth.getTransactionReceipt(txHash, (err,rs) => {console.log(err,rs)})
-                //     if(receipt && receipt.transactionHash === txHash) {
-                //         console.log('Mined complete')
-                //         filter.stopWatching()
-                //     }
-                // })
             })
-
-
         }
     }
 
@@ -286,7 +289,6 @@ class ItemDetail extends Component {
                                             console.log(err)
                                         }
                                         if (rs) {
-                                            console.log(rs)
                                             let startTime = new Date().getTime()
                                             fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
                                                 method: 'PATCH',
@@ -360,7 +362,7 @@ class ItemDetail extends Component {
                     }
                     {
                         waitForMining && (
-                            <p className="alert alert-danger text-center mt-5">Please wait for transaction confirmation, be patient</p>
+                            <p className="alert alert-danger text-center mt-5">Please wait for transaction confirmed, be patient</p>
                         )
                     }
                     <div className="row">
@@ -410,7 +412,7 @@ class ItemDetail extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="col-md-6" style={{ wordWrap: 'break-word' }}>
-                                                    <h4> Current price: <NumberFormat displayType={'text'} value={this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice } thousandSeparator={true} suffix={' ETH'} />
+                                                    <h4> Current price: <NumberFormat displayType={'text'} value={this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice} thousandSeparator={true} suffix={' ETH'} />
                                                     </h4>
                                                     {/* <h4>Current price: ${this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice}</h4> */}
                                                 </div>

@@ -81,7 +81,7 @@ class Items extends Component {
                                         </div>
                                         <p className="card-title">Current bid:&nbsp;<NumberFormat displayType={'text'} value={item.curPrice} thousandSeparator={true} suffix={' ETH'} /></p>
                                         <p className="card-price">
-                                            End:&nbsp;{fromMillisecondsToFormattedString(item.timeLeft)}
+                                            Time left :&nbsp;{fromMillisecondsToFormattedString(item.timeLeft)}
                                         </p>
                                         <Link className="btn btnbid" to={`/items/${item.itemId}`} role="button" style={{ marginTop: '5px' }}><i className="fas fa-gavel"></i> Bid now</Link>
                                     </div>
