@@ -12,6 +12,7 @@ import Web3 from 'web3';
 
 import AuctionBid from '../contracts/AuctionBid.json';
 import DappToken from '../contracts/DappToken.json'
+import RecommendItems from './RecommendItems';
 
 
 class ItemDetail extends Component {
@@ -32,7 +33,8 @@ class ItemDetail extends Component {
             currentPrice: 0,
             getMetaMask: true,
             sendTransaction: true,
-            waitForMining: false
+            waitForMining: false,
+            ended: false
         }
         if (typeof this.web3 !== 'undefined') {
             this.web3Provider = this.web3.currentProvider
@@ -63,6 +65,9 @@ class ItemDetail extends Component {
                 if (res.success) {
                     var auctionContract = this.web3.eth.contract(AuctionBid.abi)
                     this.contract = auctionContract.at((res.contractAddress.contractAddress).toString())
+                    this.contract.highestBidder((err, rs) => {
+                        this.setState({ rs })
+                    })
                 }
             })
         fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
@@ -75,14 +80,21 @@ class ItemDetail extends Component {
                 if (!item.error) {
 
                     this.setState({ currentPrice: item.findItem.currentPrice })
-                    let nextStep = Math.ceil(item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice * 0.5 : item.findItem.currentPrice * 0.5)
+                    let nextStep = item.findItem.bids.length > 0 ?
+                        item.findItem.bids[0].currentPrice * 0.5 :
+                        item.findItem.currentPrice * 0.5
                     let initBid = item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice : item.findItem.currentPrice
                     this.props.io.socket.get('/socket/items/' + item.findItem.id, (body, JWR) => {
                     })
                     this.props.io.socket.on('room' + item.findItem.id, this.onReceiveRoomMessage)
-                    this.setState({ images: item.findImg, itemDetail: item.findItem, step: nextStep, currentBidding: initBid + nextStep, isApproved: item.isApproved }, function () {
+                    this.setState({
+                        images: item.findImg,
+                        itemDetail: item.findItem,
+                        step: nextStep,
+                        currentBidding: initBid + nextStep,
+                        isApproved: item.isApproved
+                    }, () => {
                         this.setCountDown()
-
                     })
                 }
                 else {
@@ -97,7 +109,7 @@ class ItemDetail extends Component {
         if (itemDetail) {
             itemDetail.bids.unshift(newBid)
             itemDetail.currentPrice = itemDetail.bids[0].currentPrice
-            let nextStep = Math.ceil(itemDetail.bids[0].currentPrice * 0.5)
+            let nextStep = itemDetail.bids[0].currentPrice * 0.5
             this.setState({ itemDetail, step: nextStep, currentBidding: newBid.currentPrice + nextStep })
         }
     }
@@ -116,13 +128,15 @@ class ItemDetail extends Component {
                 let remainTime = this.state.timeLeft - 1000
                 if (remainTime <= 0) {
                     clearInterval(this.countDownInterval)
-                    console.log(this.contract)
-                    // this.watchEventEnd()
-                    if (window.web3.eth.accounts[0]) {
-                        this.contract.auctionEnd(() => {
-                            this.watchEventEnd()
-                        })
-                    }
+                    this.contract.owner((err, owner) => {
+                        if (window.web3.eth.accounts[0] === owner) {
+                            this.contract.auctionEnd(() => {
+                                this.watchEventEnd()
+                                this.setState({ ended: true })
+                            })
+                        }
+                    })
+
 
                 }
                 else {
@@ -149,6 +163,7 @@ class ItemDetail extends Component {
         }).watch((error, event) => {
             if (error) console.log(error)
             console.log('event', event)
+            this.setState({ rs: event.args.player })
         })
     }
     onSubmitBid(e) {
@@ -159,40 +174,59 @@ class ItemDetail extends Component {
                 this.setState({ getMetaMask: true })
             }, 2000)
         } else {
-            this.contract.bid({ from: window.web3.eth.accounts[0], value: this.state.currentBidding }, (err, rs) => {
+            console.log(this.state.currentBidding)
+            this.contract.bid({
+                from: window.web3.eth.accounts[0], value: (this.state.currentBidding * 1000000000000000000).toString()
+            }, (err, txHash) => {
                 this.watchEventBid()
-            })
+                console.log(err, txHash)
+                if (typeof txHash !== 'undefined') {
+                    this.props.io.socket.post(`${root}/api/v1/bid/${this.state.itemDetail.id}`, {
+                        currentPrice: this.state.currentBidding,
+                        userId: this.props.userId,
+                        isLastFiveSec: this.state.timeLeft <= 5000
+                    }, res => {
 
-            this.props.io.socket.post(`${root}/api/v1/bid/${this.state.itemDetail.id}`, {
-                currentPrice: this.state.currentBidding,
-                userId: this.props.userId,
-                isLastFiveSec: this.state.timeLeft <= 5000
-            }, res => {
-
-                if (!res.error) {
-                    let { itemDetail } = this.state
-                    if (itemDetail) {
-                        itemDetail.bids.unshift(res.newBid)
-                        itemDetail.currentPrice = itemDetail.bids[0].currentPrice
-                        let nextStep = Math.ceil(itemDetail.bids[0].currentPrice * 0.5)
-                        if (res.newAdditionalTime) {
-                            console.log('addition', res.newAdditionalTime)
-                            let modifyDetail = this.state.itemDetail
-                            modifyDetail.additionalTime = res.newAdditionalTime
-                            this.setState({
-                                itemDetail: modifyDetail
-                            }, () => {
-                                this.setCountDown()
-                            })
+                        if (!res.error) {
+                            let { itemDetail } = this.state
+                            if (itemDetail) {
+                                itemDetail.bids.unshift(res.newBid)
+                                itemDetail.currentPrice = itemDetail.bids[0].currentPrice
+                                let nextStep = itemDetail.bids[0].currentPrice * 0.5
+                                if (res.newAdditionalTime) {
+                                    console.log('addition', res.newAdditionalTime)
+                                    let modifyDetail = this.state.itemDetail
+                                    modifyDetail.additionalTime = res.newAdditionalTime
+                                    this.setState({
+                                        itemDetail: modifyDetail
+                                    }, () => {
+                                        this.setCountDown()
+                                    })
+                                }
+                                this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
+                            }
                         }
-                        this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
-                    }
+                        else {
+                            alert(res.msg)
+                        }
+                    })
+                } else {
+                    this.setState({ sendTransaction: false })
+                    setInterval(() => {
+                        this.setState({ sendTransaction: true })
+                    }, 2000)
                 }
-                else {
-                    alert(res.msg)
-                }
-
+                // var filter = this.web3.eth.filter('latest')
+                // filter.watch((error,result) => {
+                //     var receipt = this.web3.eth.getTransactionReceipt(txHash, (err,rs) => {console.log(err,rs)})
+                //     if(receipt && receipt.transactionHash === txHash) {
+                //         console.log('Mined complete')
+                //         filter.stopWatching()
+                //     }
+                // })
             })
+
+
         }
     }
 
@@ -207,6 +241,10 @@ class ItemDetail extends Component {
     componentWillUnmount() {
         this.mounted = false
         clearInterval(this.countDownInterval)
+        // this.contract.HighestBidIncrease({}, {
+        //     fromBlock: 0,
+        //     toBlock: 'lastest'
+        // }).stopWatching()
         if (this.state.itemDetail && this.state.itemDetail.id) {
             this.props.io.socket.get(`${root}/leave/items/${this.state.itemDetail.id}`, (body, JWR) => {
             })
@@ -231,9 +269,9 @@ class ItemDetail extends Component {
                     }, 2000)
                     return
                 }
+
                 if (contract.address) {
                     this.contract = contract
-                    console.log(this.contract.address)
                     var address = contract.address
                     fetch(`${root}/api/v1/contracts/${this.props.match.params.id}`, {
                         method: 'POST',
@@ -242,35 +280,36 @@ class ItemDetail extends Component {
                         .then(res => res.json())
                         .then(res => {
                             if (res.success) {
-                                contract.startBidding(this.state.currentPrice, { gas: 100000 }, (err, rs) => {
-                                    if (err) {
-                                        console.log(err)
-                                    }
-                                    if (rs) {
-
-                                        let startTime = new Date().getTime()
-                                        fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
-                                            method: 'PATCH',
-                                            body: JSON.stringify({
-                                                startedAt: startTime
+                                contract.startBidding((this.state.currentPrice * 1000000000000000000).toString(),
+                                    { from: window.web3.eth.accounts[0], gas: 100000 }, (err, rs) => {
+                                        if (err) {
+                                            console.log(err)
+                                        }
+                                        if (rs) {
+                                            console.log(rs)
+                                            let startTime = new Date().getTime()
+                                            fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
+                                                method: 'PATCH',
+                                                body: JSON.stringify({
+                                                    startedAt: startTime
+                                                })
                                             })
-                                        })
-                                            .then((res) => res.json())
-                                            .then((res) => {
-                                                if (!res.error) {
-                                                    let modifyDetail = this.state.itemDetail
-                                                    modifyDetail.startedAt = startTime
-                                                    this.setState({ itemDetail: modifyDetail }, function () {
-                                                        this.setCountDown()
-                                                    })
+                                                .then((res) => res.json())
+                                                .then((res) => {
+                                                    if (!res.error) {
+                                                        let modifyDetail = this.state.itemDetail
+                                                        modifyDetail.startedAt = startTime
+                                                        this.setState({ itemDetail: modifyDetail }, function () {
+                                                            this.setCountDown()
+                                                        })
 
-                                                }
-                                                else {
-                                                    console.log(res.msg)
-                                                }
-                                            })
-                                    }
-                                })
+                                                    }
+                                                    else {
+                                                        console.log(res.msg)
+                                                    }
+                                                })
+                                        }
+                                    })
                             } else {
                                 this.setState({ waitForMining: true })
                             }
@@ -371,14 +410,14 @@ class ItemDetail extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="col-md-6" style={{ wordWrap: 'break-word' }}>
-                                                    <h4> Current price: <NumberFormat displayType={'text'} value={this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice} thousandSeparator={true} prefix={'$'} />
+                                                    <h4> Current price: <NumberFormat displayType={'text'} value={this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice } thousandSeparator={true} suffix={' ETH'} />
                                                     </h4>
                                                     {/* <h4>Current price: ${this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice}</h4> */}
                                                 </div>
                                                 <div className="col-md-6">
                                                 </div>
                                                 <div className="col-md-6" style={{ wordWrap: 'break-word' }}>
-                                                    <h4> Current step: <NumberFormat displayType={'text'} value={this.state.step} thousandSeparator={true} prefix={'$'} />
+                                                    <h4> Current step: <NumberFormat displayType={'text'} value={this.state.step} thousandSeparator={true} suffix={' ETH'} />
                                                     </h4>
                                                     {/* <h4>Current step: ${this.state.step}</h4> */}
                                                 </div>
@@ -405,19 +444,18 @@ class ItemDetail extends Component {
                                                             this.setState({ currentBidding: (this.state.currentBidding + this.state.step) })
                                                         }}
                                                     ></BidInput>
-                                                    {/* <NumericInput min={this.state.itemDetail.currentPrice + this.state.step} step={this.state.step} value={this.state.itemDetail.currentPrice}
-                                                        onChange={e => {
-                                                            console.log(e)
-                                                            if (e != this.state.itemDetail.currentPrice) {
-                                                                this.state.itemDetail.currentPrice = e
-                                                                this.setState({ itemDetail })
-                                                            }
-                                                        }}
-                                                        mobile={true} className="form-control pr-5" /> */}
                                                     {(this.state.itemDetail.startedAt !== 0 && this.state.timeLeft > 0) && <button className="btn btn-primary ml-3" type="submit"><i className="fas fa-gavel"> Bid now</i></button>}
+                                                    {/* {
+                                                        this.state.ended && (
+                                                            <p className="alert alert-info light-word mt-2">{this.watchEventEnd().address}</p>
+                                                        )
+                                                    } */}
                                                 </form>
                                                 {this.state.itemDetail.bids.length > 0 ? <p className="alert alert-info light-word mt-2">
-                                                    Last bid by : {this.state.itemDetail.bids[0].userId.userName}
+                                                    {/* Last bid by : {this.state.itemDetail.bids[0].userName} */}
+                                                    Last bid by : {this.state.rs}
+
+
                                                 </p> : ''}
                                             </div>
                                         </div>
@@ -439,7 +477,7 @@ class ItemDetail extends Component {
                                                     <tr key={i}>
                                                         <td>{bid.userId.userName}</td>
                                                         <td>
-                                                            {<NumberFormat displayType={'text'} value={bid.currentPrice} thousandSeparator={true} prefix={'$'} />}
+                                                            {<NumberFormat displayType={'text'} value={bid.currentPrice} thousandSeparator={true} suffix={' ETH'} />}
                                                         </td>
                                                         <td>{dateFns.format(bid.createdAt, 'HH:mm:ss MM/DD/YYYY')}</td>
                                                     </tr>
@@ -542,22 +580,7 @@ class ItemDetail extends Component {
                             </div>
                         </div>
                         <div className="col-sm-3">
-                            <div className="col card zoom" style={{ marginTop: '48px' }}>
-                                <div className="shadow" style={{ borderBottomRightRadius: '.5rem', borderBottomLeftRadius: '.5rem' }}>
-                                    <Link className="borderitem" to="#">
-                                        <img className="card-img-top" src="/images/coin.jpg" alt="" style={{ minHeight: '200px', maxHeight: '200px', objectFit: 'cover', marginLeft: '-1px' }} />
-                                    </Link>
-                                    <div className="card-body">
-                                        <div className="text-center">
-                                            <h5>Cigar CuVu</h5>
-                                        </div>
-                                        <p className="card-title">Current bid: $200 </p>
-                                        <p className="card-price">
-                                            End: 00:00:00
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+                            {this.props.userId !== '' && <RecommendItems userId={this.props.userId} itemId={this.props.match.params.id}></RecommendItems>}
                         </div>
                     </div>
                 </div>

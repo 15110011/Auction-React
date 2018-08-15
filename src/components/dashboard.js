@@ -88,7 +88,8 @@ class DashBoard extends Component {
         let value = e.currentTarget.value
         fetch(`${root}/api/v1/items/${value}`, {
             method: 'DELETE'
-        }).then(res => res.json())
+        })
+            .then(res => res.json())
             .then((rs) => {
                 if (rs.deleteItem) {
                     this.setState({ isDeleted: true })
@@ -102,6 +103,9 @@ class DashBoard extends Component {
                     const renderedItems = items.slice((this.state.page - 1) * 4, (this.state.page - 1) * 4 + 4)
                     this.setState({ items, renderedItems })
                 }
+            })
+            .catch(err=>{
+                console.log(err)
             })
     }
     onEditorStateChange(editorState) {
@@ -170,7 +174,7 @@ class DashBoard extends Component {
                 quantity: '',
                 editorState: '',
                 count: 0,
-                period:''
+                period: ''
             })
             setTimeout(() => {
                 this.setState({ isEdited: false })
@@ -218,7 +222,7 @@ class DashBoard extends Component {
     }
 
     getItem() {
-        fetch(`${root}/api/v1/users/${this.props.userId}/items`,{
+        fetch(`${root}/api/v1/users/${this.props.userId}/items`, {
             credentials: 'include'
         })
             .then(items => {
@@ -435,7 +439,7 @@ class DashBoard extends Component {
                                                 <tr className="fixprop" key={item.id}>
                                                     <th scope="row">{i + 1}</th>
                                                     <td>{item.name}</td>
-                                                    <td><NumberFormat displayType={'text'} value={item.currentPrice} thousandSeparator={true} prefix={'$'} /></td>
+                                                    <td><NumberFormat displayType={'text'} value={item.currentPrice} thousandSeparator={true} suffix={' ETH'} /></td>
                                                     <td>{item.quantity}</td>
                                                     <td>{this.state.categories[item.categoriesId]}</td>
                                                     <td>
@@ -446,7 +450,7 @@ class DashBoard extends Component {
                                                     <td>
                                                         <div className="edit-del">
                                                             <button className="btn btn-success" onClick={this.handleEdit} value={item.id}><i className="far fa-edit"></i></button>
-                                                            <button className="btn btn-danger mx-2" onClick={this.handleDelete} value={item.id}><i className="far fa-trash-alt"></i></button>
+                                                            {item.isAccept !== 1 && <button className="btn btn-danger mx-2" onClick={this.handleDelete} value={item.id}><i className="far fa-trash-alt"></i></button>}
                                                         </div>
                                                     </td>
                                                     {
