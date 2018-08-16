@@ -75,6 +75,7 @@ class ItemDetail extends Component {
                     this.contract.highestBidder((err, rs) => {
                         this.setState({ rs })
                     })
+                    // console.log(this.contract.bids)
                 }
             })
         fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
@@ -211,8 +212,7 @@ class ItemDetail extends Component {
                             if (err) {
                                 console.log(err)
                             }
-                            console.log(blockHash)
-                            this.setState({waitForMining:true})
+                            this.setState({ waitForMining: true })
                             if (blockHash && blockHash.transactionHash === txHash) {
                                 this.setState({ waitForMining: false })
                                 filter.stopWatching()
