@@ -104,7 +104,7 @@ class DashBoard extends Component {
                     this.setState({ items, renderedItems })
                 }
             })
-            .catch(err=>{
+            .catch(err => {
                 console.log(err)
             })
     }
@@ -267,7 +267,7 @@ class DashBoard extends Component {
                     }
                     <div className="intro-dashboard">
                         <center>
-                            <h2 className="bold-word">Add your items below</h2>
+                            <h2 className="light-word text-uppercase" style={{ fontWeight: '600' }}>Add your items below</h2>
                             <br />
                         </center>
                     </div>
@@ -295,8 +295,8 @@ class DashBoard extends Component {
                                     value={this.state.itemId}
                                 />
                                 <div className="info">
-                                    <div className="row info-intro bold-word">
-                                        <h3 style={{ marginTop: '5px', paddingLeft: '5px' }}>Infomation</h3>
+                                    <div className="row info-intro light-word">
+                                        <h3 style={{ marginTop: '5px', paddingLeft: '5px', fontWeight: '600' }}>Infomation</h3>
                                     </div>
                                     <div className="row pt-2" id="detail-border">
                                         <div className="col-md-4">
@@ -348,8 +348,8 @@ class DashBoard extends Component {
                                 </div>
                                 <div className="detail mt-2">
                                     <div className="detail-form mt-2">
-                                        <div className="row detai-intro mb-1 bold-word" id="detail-border">
-                                            <h3 style={{ marginTop: '5px', paddingLeft: '5px' }}>Details</h3>
+                                        <div className="row detai-intro mb-1 light-word" id="detail-border">
+                                            <h3 style={{ marginTop: '5px', paddingLeft: '5px', fontWeight: '600' }}>Details</h3>
                                         </div>
                                         <div className="row detail-field">
                                             <p className="col alert alert-success light-word">Describe about your item sush as type, year...</p>
@@ -449,8 +449,12 @@ class DashBoard extends Component {
                                                     </td>
                                                     <td>
                                                         <div className="edit-del">
-                                                            <button className="btn btn-success" onClick={this.handleEdit} value={item.id}><i className="far fa-edit"></i></button>
-                                                            {item.isAccept !== 1 && <button className="btn btn-danger mx-2" onClick={this.handleDelete} value={item.id}><i className="far fa-trash-alt"></i></button>}
+                                                            {item.isAccept !== 1 ?
+                                                                <div>
+                                                                    <button className="btn btn-success" onClick={this.handleEdit} value={item.id}><i className="far fa-edit"></i></button>
+                                                                    <button className="btn btn-danger mx-2" onClick={this.handleDelete} value={item.id}><i className="far fa-trash-alt"></i></button>
+                                                                </div> : <p className="text-info">No action</p>
+                                                            }
                                                         </div>
                                                     </td>
                                                     {
