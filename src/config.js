@@ -12,6 +12,21 @@ const API_URL = window.location.host.includes('localhost')
 const WS_URL = window.location.host.includes('localhost')
 	? 'http://localhost:1337'
 	: `${window.location.protocol}//${window.location.host}`
+function formatNumber(num) {
+	let numberStr = `${num}`
+	let result = ''
+	for (let i = numberStr.length - 1; i >= 0; i -= 1) {
+		if ((numberStr.length - i) % 3 === 0) {
+			result = `.${numberStr.charAt(i)}` + result
+		}
+		else {
+			result = numberStr.charAt(i) + result
+		}
+	}
+	return result
+}
+
+
 
 function fromMillisecondsToFormattedString(ms) {
 	let h = Math.floor(ms / (3600 * 1000))
@@ -21,6 +36,6 @@ function fromMillisecondsToFormattedString(ms) {
 }
 export {
 	GUEST_STATUS, LOADED_LOGIN_STATUS, LOADING_LOGIN_STATUS, CREATED_MODE, UPDATED_MODE, DELETED_MODE,
-	API_URL, WS_URL, fromMillisecondsToFormattedString
+	API_URL, WS_URL, fromMillisecondsToFormattedString, formatNumber
 }
 

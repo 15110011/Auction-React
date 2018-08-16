@@ -22,6 +22,7 @@ class ItemDetail extends Component {
         this.state = {
             current: 0,
             currentBidding: 0,
+            currentBiddingStr: '1.000',
             step: 5,
             itemDetail: null,
             images: [],
@@ -167,65 +168,75 @@ class ItemDetail extends Component {
     }
     onSubmitBid(e) {
         e.preventDefault()
+        if (!window.web3) {
+            this.setState({ getMetaMask: false })
+            setInterval(() => {
+                this.setState({ getMetaMask: true })
+            }, 2000)
+            return
+        }
         if (!window.web3.eth.accounts[0]) {
             this.setState({ getMetaMask: false })
             setInterval(() => {
                 this.setState({ getMetaMask: true })
             }, 2000)
         } else {
-            console.log(this.state.currentBidding)
             this.contract.bid({
                 from: window.web3.eth.accounts[0], value: (this.state.currentBidding * 1000000000000000000).toString()
             }, (err, txHash) => {
-                this.watchEventBid()
-                console.log(err, txHash)
-                if (typeof txHash !== 'undefined') {
-                    this.props.io.socket.post(`${root}/api/v1/bid/${this.state.itemDetail.id}`, {
-                        currentPrice: this.state.currentBidding,
-                        userId: this.props.userId,
-                        isLastFiveSec: this.state.timeLeft <= 5000
-                    }, res => {
-
-                        if (!res.error) {
-                            let { itemDetail } = this.state
-                            if (itemDetail) {
-                                itemDetail.bids.unshift(res.newBid)
-                                itemDetail.currentPrice = itemDetail.bids[0].currentPrice
-                                let nextStep = itemDetail.bids[0].currentPrice * 0.5
-                                if (res.newAdditionalTime) {
-                                    console.log('addition', res.newAdditionalTime)
-                                    let modifyDetail = this.state.itemDetail
-                                    modifyDetail.additionalTime = res.newAdditionalTime
-                                    this.setState({
-                                        itemDetail: modifyDetail
-                                    }, () => {
-                                        this.setCountDown()
-                                    })
-                                }
-                                this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
-                            }
-                        }
-                        else {
-                            alert(res.msg)
-                        }
-                    })
-                } else {
+                if (typeof txHash === 'undefined') {
                     this.setState({ sendTransaction: false })
                     setInterval(() => {
                         this.setState({ sendTransaction: true })
                     }, 2000)
+                } else {
+                    this.watchEventBid()
+                    var filter = this.web3.eth.filter('latest')
+                    filter.watch((error, result) => {
+                        this.web3.eth.getTransactionReceipt(txHash, (err, blockHash) => {
+                            if (err) {
+                                console.log(err)
+                            }
+                            console.log(blockHash)
+                            if (blockHash && blockHash.transactionHash == txHash) {
+                                this.setState({ waitForMining: false })
+                                filter.stopWatching()
+                                this.props.io.socket.post(`${root}/api/v1/bid/${this.state.itemDetail.id}`, {
+                                    currentPrice: this.state.currentBidding,
+                                    userId: this.props.userId,
+                                    isLastFiveSec: this.state.timeLeft <= 5000
+                                }, res => {
+
+                                    if (!res.error) {
+                                        let { itemDetail } = this.state
+                                        if (itemDetail) {
+                                            itemDetail.bids.unshift(res.newBid)
+                                            itemDetail.currentPrice = itemDetail.bids[0].currentPrice
+                                            let nextStep = itemDetail.bids[0].currentPrice * 0.5
+                                            if (res.newAdditionalTime) {
+                                                let modifyDetail = this.state.itemDetail
+                                                modifyDetail.additionalTime = res.newAdditionalTime
+                                                this.setState({
+                                                    itemDetail: modifyDetail
+                                                }, () => {
+                                                    this.setCountDown()
+                                                })
+                                            }
+                                            this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
+                                        }
+                                    }
+                                    else {
+                                        alert(`Cannot bid under the price ${this.state.currentBidding}`)
+                                    }
+                                })
+                            } else {
+                                this.setState({ waitForMining: true })
+                            }
+                        })
+
+                    })
                 }
-                // var filter = this.web3.eth.filter('latest')
-                // filter.watch((error,result) => {
-                //     var receipt = this.web3.eth.getTransactionReceipt(txHash, (err,rs) => {console.log(err,rs)})
-                //     if(receipt && receipt.transactionHash === txHash) {
-                //         console.log('Mined complete')
-                //         filter.stopWatching()
-                //     }
-                // })
             })
-
-
         }
     }
 
@@ -250,6 +261,13 @@ class ItemDetail extends Component {
         }
     }
     onBeginAuction() {
+        if (!window.web3) {
+            this.setState({ getMetaMask: false })
+            setInterval(() => {
+                this.setState({ getMetaMask: true })
+            }, 2000)
+            return
+        }
         if (!window.web3.eth.accounts[0]) {
             this.setState({ getMetaMask: false })
             setInterval(() => {
@@ -285,7 +303,6 @@ class ItemDetail extends Component {
                                             console.log(err)
                                         }
                                         if (rs) {
-                                            console.log(rs)
                                             let startTime = new Date().getTime()
                                             fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
                                                 method: 'PATCH',
@@ -361,7 +378,7 @@ class ItemDetail extends Component {
                     }
                     {
                         waitForMining && (
-                            <p className="alert alert-danger text-center mt-5">Please wait for transaction confirmation, be patient</p>
+                            <p className="alert alert-info text-center mt-5">Please wait for transaction confirmed, be patient</p>
                         )
                     }
                     <div className="row">
@@ -375,19 +392,24 @@ class ItemDetail extends Component {
                                 <hr />
                                 <div className="container">
                                     <div className="row">
-                                        <div className="col-md-5 item-image">
+                                        <div className="col-md-6 item-image">
                                             {images.length > 0 ?
                                                 <div>
-                                                    <ReactImageZoom width={340} height={300} zoomWidth={450} img={`${root}/uploads/` + images[current].link} />
-                                                    <div className="row thumbnail mt-2" style={{ paddingLeft: '15px', marginRight: '-30px' }}>
+                                                    <div className="zoom-image" style={{ border: '1px solid darkgrey' }}>
+
+                                                        <ReactImageZoom id={'abc'} width={379} height={400} zoomWidth={410} left="100%" img={`${root}/uploads/` + images[current].link} />
+                                                    </div>
+                                                    <div className="row thumbnail mt-2 d-flex justify-content-center">
                                                         {images.map((img, i) => (
-                                                            <div className="col-sm-4 thumbnail-border" key={i}>
-                                                                <img className="img-fluid" src={`${root}/uploads/${img.link}`} alt="img" style={{ height: '100px' }} onClick={e => this.setCurrentItem(i)} />
+                                                            <div className="col-sm-3 thumbnail-border" key={i} style={{ paddingRight: '5px', paddingLeft: '5px' }}>
+                                                                <img className="img-fluid " src={`${root}/uploads/${img.link}`} alt="img" style={{ height: '68px' }} onClick={e => this.setCurrentItem(i)} />
                                                             </div>
                                                         ))}
-                                                    </div></div> : <img className="img-fluid" src={`http://www.staticwhich.co.uk/static/images/products/no-image/no-image-available.png`} alt="" />}
+                                                    </div>
+                                                </div> : <img className="img-fluid" src={`http://www.staticwhich.co.uk/static/images/products/no-image/no-image-available.png`} alt="" />
+                                            }
                                         </div>
-                                        <div className="col-md-7" style={{ padding: '0 15px 0 30px' }}>
+                                        <div className="col-md-6" style={{ padding: '0 15px 0 30px' }}>
                                             <div className="row">
                                                 <div className="col-md-6">
                                                     <div>
@@ -406,7 +428,7 @@ class ItemDetail extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="col-md-6" style={{ wordWrap: 'break-word' }}>
-                                                    <h4> Current price: <NumberFormat displayType={'text'} value={this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice } thousandSeparator={true} suffix={' ETH'} />
+                                                    <h4> Current price: <NumberFormat displayType={'text'} value={this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice} thousandSeparator={true} suffix={' ETH'} />
                                                     </h4>
                                                     {/* <h4>Current price: ${this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice}</h4> */}
                                                 </div>
@@ -424,8 +446,9 @@ class ItemDetail extends Component {
                                                     <BidInput className="form-control pr-5"
                                                         value={this.state.currentBidding}
                                                         onChange={(e) => {
-                                                            if (!/[A-z]/.test(e.target.value))
+                                                            if (!/[A-z]/.test(e.target.value)) {
                                                                 this.setState({ currentBidding: +e.target.value })
+                                                            }
                                                         }}
                                                         onClickDecrease={e => {
                                                             e.preventDefault()
@@ -439,7 +462,10 @@ class ItemDetail extends Component {
                                                             this.setState({ currentBidding: (this.state.currentBidding + this.state.step) })
                                                         }}
                                                     ></BidInput>
-                                                    {(this.state.itemDetail.startedAt !== 0 && this.state.timeLeft > 0) && <button className="btn btn-primary ml-3" type="submit"><i className="fas fa-gavel"> Bid now</i></button>}
+                                                    {
+                                                        (this.state.itemDetail.startedAt !== 0 && this.state.timeLeft > 0 && waitForMining == true) &&
+                                                        <button className="btn btn-primary ml-3" type="submit"><i className="fas fa-gavel"> Bid now</i></button>
+                                                    }
                                                     {/* {
                                                         this.state.ended && (
                                                             <p className="alert alert-info light-word mt-2">{this.watchEventEnd().address}</p>
