@@ -63,6 +63,13 @@ class ItemDetail extends Component {
             .then(res => res.json())
             .then(res => {
                 if (res.success) {
+                    if (!window.web3) {
+                        this.setState({ getMetaMask: false })
+                        setInterval(() => {
+                            this.setState({ getMetaMask: true })
+                        }, 2000)
+                        return
+                    }
                     var auctionContract = this.web3.eth.contract(AuctionBid.abi)
                     this.contract = auctionContract.at((res.contractAddress.contractAddress).toString())
                     this.contract.highestBidder((err, rs) => {
@@ -128,6 +135,13 @@ class ItemDetail extends Component {
                 let remainTime = this.state.timeLeft - 1000
                 if (remainTime <= 0) {
                     clearInterval(this.countDownInterval)
+                    if (!window.web3) {
+                        this.setState({ getMetaMask: false })
+                        setInterval(() => {
+                            this.setState({ getMetaMask: true })
+                        }, 2000)
+                        return
+                    }
                     this.contract.owner((err, owner) => {
                         if (window.web3.eth.accounts[0] === owner) {
                             this.contract.auctionEnd(() => {
