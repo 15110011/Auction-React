@@ -341,6 +341,8 @@ class ItemDetail extends Component {
                     <p className="alert alert-warning text-center light-word">Item not found</p>
                 </div>
             )
+        const canBegin = itemDetail.startedAt === 0 && this.props.userId === itemDetail.userId && isApproved && isApproved.isAccept
+
         return (
             <div className="itemDetail-content" style={{ position: 'relative', zIndex: '1000' }}>
                 <div className="container">
@@ -368,7 +370,7 @@ class ItemDetail extends Component {
                             <Link to='/'><i className="fas fa-backward"><span className="light-word"> Back to bid</span></i></Link>
                             <div className="items-info">
                                 <div className="container pt-3 ">
-                                    <h3 className="d-flex">{itemDetail.name} {(itemDetail.startedAt === 0 && this.props.userId === itemDetail.userId && isApproved) && <button className="btn btn-primary ml-auto" onClick={this.onBeginAuction}>Begin auction</button>}</h3>
+                                    <h3 className="d-flex">{itemDetail.name} {(canBegin) && <button className="btn btn-primary ml-auto" onClick={this.onBeginAuction}>Begin auction</button>}</h3>
                                 </div>
                                 <hr />
                                 <div className="container">
