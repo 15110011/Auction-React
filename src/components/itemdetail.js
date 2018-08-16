@@ -212,9 +212,11 @@ class ItemDetail extends Component {
                                 console.log(err)
                             }
                             console.log(blockHash)
+                            this.setState({waitForMining:true})
                             if (blockHash && blockHash.transactionHash === txHash) {
                                 this.setState({ waitForMining: false })
                                 filter.stopWatching()
+
                                 this.props.io.socket.post(`${root}/api/v1/bid/${this.state.itemDetail.id}`, {
                                     currentPrice: this.state.currentBidding,
                                     userId: this.props.userId,
@@ -316,32 +318,46 @@ class ItemDetail extends Component {
                                         if (err) {
                                             console.log(err)
                                         }
-                                        if (rs) {
-                                            let startTime = new Date().getTime()
-                                            fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
-                                                method: 'PATCH',
-                                                body: JSON.stringify({
-                                                    startedAt: startTime
-                                                })
-                                            })
-                                                .then((res) => res.json())
-                                                .then((res) => {
-                                                    if (!res.error) {
-                                                        let modifyDetail = this.state.itemDetail
-                                                        modifyDetail.startedAt = startTime
-                                                        this.setState({ itemDetail: modifyDetail }, function () {
-                                                            this.setCountDown()
+                                        this.setState({ waitForMining: true })
+                                        var filter = this.web3.eth.filter('latest')
+                                        filter.watch((error, result) => {
+                                            this.web3.eth.getTransactionReceipt(rs, (err, blockHash) => {
+                                                if (err) {
+                                                    console.log(err)
+                                                }
+                                                console.log(blockHash)
+                                                if (blockHash && blockHash.transactionHash === rs) {
+                                                    this.setState({ waitForMining: false })
+                                                    filter.stopWatching()
+                                                    let startTime = new Date().getTime()
+                                                    fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
+                                                        method: 'PATCH',
+                                                        body: JSON.stringify({
+                                                            startedAt: startTime
+                                                        })
+                                                    })
+                                                        .then((res) => res.json())
+                                                        .then((res) => {
+                                                            if (!res.error) {
+                                                                let modifyDetail = this.state.itemDetail
+                                                                modifyDetail.startedAt = startTime
+                                                                this.setState({ itemDetail: modifyDetail }, function () {
+                                                                    this.setCountDown()
+                                                                })
+
+                                                            }
+                                                            else {
+                                                                console.log(res.msg)
+                                                            }
                                                         })
 
-                                                    }
-                                                    else {
-                                                        console.log(res.msg)
-                                                    }
-                                                })
-                                        }
+                                                }
+                                            })
+                                        })
+
                                     })
                             } else {
-                                this.setState({ waitForMining: true })
+                                console.log('bug')
                             }
                         })
                 }
@@ -476,7 +492,7 @@ class ItemDetail extends Component {
                                                             this.setState({ currentBidding: (this.state.currentBidding + this.state.step) })
                                                         }}
                                                     ></BidInput>
-                                                    {(this.state.itemDetail.startedAt !== 0 && this.state.timeLeft > 0 && waitForMining == true) && <button style={{ marginLeft: '30px', marginTop: '10px' }} className="btn btn-primary mb-2" type="submit"><i className="fas fa-gavel"> Bid now</i></button>}
+                                                    {(this.state.itemDetail.startedAt !== 0 && this.state.timeLeft > 0 && waitForMining == false) && <button style={{ marginLeft: '30px', marginTop: '10px' }} className="btn btn-primary mb-2" type="submit"><i className="fas fa-gavel"> Bid now</i></button>}
                                                     {/* {
                                                         this.state.ended && (
                                                             <p className="alert alert-info light-word mt-2">{this.watchEventEnd().address}</p>
