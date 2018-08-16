@@ -168,6 +168,13 @@ class ItemDetail extends Component {
     }
     onSubmitBid(e) {
         e.preventDefault()
+        if (!window.web3) {
+            this.setState({ getMetaMask: false })
+            setInterval(() => {
+                this.setState({ getMetaMask: true })
+            }, 2000)
+            return
+        }
         if (!window.web3.eth.accounts[0]) {
             this.setState({ getMetaMask: false })
             setInterval(() => {
@@ -254,6 +261,13 @@ class ItemDetail extends Component {
         }
     }
     onBeginAuction() {
+        if (!window.web3) {
+            this.setState({ getMetaMask: false })
+            setInterval(() => {
+                this.setState({ getMetaMask: true })
+            }, 2000)
+            return
+        }
         if (!window.web3.eth.accounts[0]) {
             this.setState({ getMetaMask: false })
             setInterval(() => {
@@ -344,6 +358,8 @@ class ItemDetail extends Component {
                     <p className="alert alert-warning text-center light-word">Item not found</p>
                 </div>
             )
+        const canBegin = itemDetail.startedAt === 0 && this.props.userId === itemDetail.userId && isApproved && isApproved.isAccept
+
         return (
             <div className="itemDetail-content" style={{ position: 'relative', zIndex: '1000' }}>
                 <div className="container">
@@ -362,7 +378,7 @@ class ItemDetail extends Component {
                     }
                     {
                         waitForMining && (
-                            <p className="alert alert-danger text-center mt-5">Please wait for transaction confirmed, be patient</p>
+                            <p className="alert alert-info text-center mt-5">Please wait for transaction confirmed, be patient</p>
                         )
                     }
                     <div className="row">
@@ -371,7 +387,7 @@ class ItemDetail extends Component {
                             <Link to='/'><i className="fas fa-backward"><span className="light-word"> Back to bid</span></i></Link>
                             <div className="items-info">
                                 <div className="container pt-3 ">
-                                    <h3 className="d-flex">{itemDetail.name} {(itemDetail.startedAt === 0 && this.props.userId === itemDetail.userId && isApproved) && <button className="btn btn-primary ml-auto" onClick={this.onBeginAuction}>Begin auction</button>}</h3>
+                                    <h3 className="d-flex">{itemDetail.name} {(canBegin) && <button className="btn btn-primary ml-auto" onClick={this.onBeginAuction}>Begin auction</button>}</h3>
                                 </div>
                                 <hr />
                                 <div className="container">
@@ -446,7 +462,7 @@ class ItemDetail extends Component {
                                                             this.setState({ currentBidding: (this.state.currentBidding + this.state.step) })
                                                         }}
                                                     ></BidInput>
-                                                    {(this.state.itemDetail.startedAt !== 0 && this.state.timeLeft > 0) && <button style={{ marginLeft: '30px', marginTop: '10px' }} className="btn btn-primary mb-2" type="submit"><i className="fas fa-gavel"> Bid now</i></button>}
+                                                    {(this.state.itemDetail.startedAt !== 0 && this.state.timeLeft > 0 && waitForMining == true) && <button style={{ marginLeft: '30px', marginTop: '10px' }} className="btn btn-primary mb-2" type="submit"><i className="fas fa-gavel"> Bid now</i></button>}
                                                     {/* {
                                                         this.state.ended && (
                                                             <p className="alert alert-info light-word mt-2">{this.watchEventEnd().address}</p>
