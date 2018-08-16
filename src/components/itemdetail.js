@@ -168,6 +168,13 @@ class ItemDetail extends Component {
     }
     onSubmitBid(e) {
         e.preventDefault()
+        if (!window.web3) {
+            this.setState({ getMetaMask: false })
+            setInterval(() => {
+                this.setState({ getMetaMask: true })
+            }, 2000)
+            return
+        }
         if (!window.web3.eth.accounts[0]) {
             this.setState({ getMetaMask: false })
             setInterval(() => {
@@ -219,7 +226,7 @@ class ItemDetail extends Component {
                                         }
                                     }
                                     else {
-                                        alert(`Cannot bid under the price ${this.state.currentBidding}` )
+                                        alert(`Cannot bid under the price ${this.state.currentBidding}`)
                                     }
                                 })
                             } else {
@@ -254,6 +261,13 @@ class ItemDetail extends Component {
         }
     }
     onBeginAuction() {
+        if (!window.web3) {
+            this.setState({ getMetaMask: false })
+            setInterval(() => {
+                this.setState({ getMetaMask: true })
+            }, 2000)
+            return
+        }
         if (!window.web3.eth.accounts[0]) {
             this.setState({ getMetaMask: false })
             setInterval(() => {
@@ -362,7 +376,7 @@ class ItemDetail extends Component {
                     }
                     {
                         waitForMining && (
-                            <p className="alert alert-danger text-center mt-5">Please wait for transaction confirmed, be patient</p>
+                            <p className="alert alert-info text-center mt-5">Please wait for transaction confirmed, be patient</p>
                         )
                     }
                     <div className="row">
@@ -446,7 +460,10 @@ class ItemDetail extends Component {
                                                             this.setState({ currentBidding: (this.state.currentBidding + this.state.step) })
                                                         }}
                                                     ></BidInput>
-                                                    {(this.state.itemDetail.startedAt !== 0 && this.state.timeLeft > 0) && <button className="btn btn-primary ml-3" type="submit"><i className="fas fa-gavel"> Bid now</i></button>}
+                                                    {
+                                                        (this.state.itemDetail.startedAt !== 0 && this.state.timeLeft > 0 && waitForMining == true) &&
+                                                        <button className="btn btn-primary ml-3" type="submit"><i className="fas fa-gavel"> Bid now</i></button>
+                                                    }
                                                     {/* {
                                                         this.state.ended && (
                                                             <p className="alert alert-info light-word mt-2">{this.watchEventEnd().address}</p>
