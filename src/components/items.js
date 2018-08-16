@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import '../styles/styles.css'
 import NumberFormat from 'react-number-format';
-import dateFns from 'date-fns'
 import { fromMillisecondsToFormattedString } from '../config'
 
 class Items extends Component {

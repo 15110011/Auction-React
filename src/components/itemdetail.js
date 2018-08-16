@@ -191,7 +191,7 @@ class ItemDetail extends Component {
                                 console.log(err)
                             }
                             console.log(blockHash)
-                            if (blockHash && blockHash.transactionHash == txHash) {
+                            if (blockHash && blockHash.transactionHash === txHash) {
                                 this.setState({ waitForMining: false })
                                 filter.stopWatching()
                                 this.props.io.socket.post(`${root}/api/v1/bid/${this.state.itemDetail.id}`, {
@@ -219,7 +219,7 @@ class ItemDetail extends Component {
                                         }
                                     }
                                     else {
-                                        alert(`Cannot bid under the price ${this.state.currentBidding}` )
+                                        alert(`Cannot bid under the price ${this.state.currentBidding}`)
                                     }
                                 })
                             } else {
@@ -446,18 +446,16 @@ class ItemDetail extends Component {
                                                             this.setState({ currentBidding: (this.state.currentBidding + this.state.step) })
                                                         }}
                                                     ></BidInput>
-                                                    {(this.state.itemDetail.startedAt !== 0 && this.state.timeLeft > 0) && <button className="btn btn-primary ml-3" type="submit"><i className="fas fa-gavel"> Bid now</i></button>}
+                                                    {(this.state.itemDetail.startedAt !== 0 && this.state.timeLeft > 0) && <button style={{ marginLeft: '30px', marginTop: '10px' }} className="btn btn-primary mb-2" type="submit"><i className="fas fa-gavel"> Bid now</i></button>}
                                                     {/* {
                                                         this.state.ended && (
                                                             <p className="alert alert-info light-word mt-2">{this.watchEventEnd().address}</p>
                                                         )
                                                     } */}
                                                 </form>
-                                                {this.state.itemDetail.bids.length > 0 ? <p className="alert alert-info light-word mt-2">
+                                                {this.state.itemDetail.bids.length > 0 ? <p style={{ wordWrap: 'break-word', marginRight: '30px' }} className="alert alert-info light-word mt-2">
                                                     {/* Last bid by : {this.state.itemDetail.bids[0].userName} */}
                                                     Last bid by : {this.state.rs}
-
-
                                                 </p> : ''}
                                             </div>
                                         </div>
