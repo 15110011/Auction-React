@@ -800,6 +800,7 @@ body{
 }
 #number-format input{
   height: 38px;
+  width: 125px;
 }
 .zoom {
   transition: transform .2s; /* Animation */

@@ -212,7 +212,7 @@ class ItemDetail extends Component {
                                 console.log(err)
                             }
                             console.log(blockHash)
-                            if (blockHash && blockHash.transactionHash == txHash) {
+                            if (blockHash && blockHash.transactionHash === txHash) {
                                 this.setState({ waitForMining: false })
                                 filter.stopWatching()
                                 this.props.io.socket.post(`${root}/api/v1/bid/${this.state.itemDetail.id}`, {
@@ -372,6 +372,8 @@ class ItemDetail extends Component {
                     <p className="alert alert-warning text-center light-word">Item not found</p>
                 </div>
             )
+        const canBegin = itemDetail.startedAt === 0 && this.props.userId === itemDetail.userId && isApproved && isApproved.isAccept
+
         return (
             <div className="itemDetail-content" style={{ position: 'relative', zIndex: '1000' }}>
                 <div className="container">
@@ -399,7 +401,7 @@ class ItemDetail extends Component {
                             <Link to='/'><i className="fas fa-backward"><span className="light-word"> Back to bid</span></i></Link>
                             <div className="items-info">
                                 <div className="container pt-3 ">
-                                    <h3 className="d-flex">{itemDetail.name} {(itemDetail.startedAt === 0 && this.props.userId === itemDetail.userId && isApproved) && <button className="btn btn-primary ml-auto" onClick={this.onBeginAuction}>Begin auction</button>}</h3>
+                                    <h3 className="d-flex">{itemDetail.name} {(canBegin) && <button className="btn btn-primary ml-auto" onClick={this.onBeginAuction}>Begin auction</button>}</h3>
                                 </div>
                                 <hr />
                                 <div className="container">
@@ -474,21 +476,16 @@ class ItemDetail extends Component {
                                                             this.setState({ currentBidding: (this.state.currentBidding + this.state.step) })
                                                         }}
                                                     ></BidInput>
-                                                    {
-                                                        (this.state.itemDetail.startedAt !== 0 && this.state.timeLeft > 0 && waitForMining == true) &&
-                                                        <button className="btn btn-primary ml-3" type="submit"><i className="fas fa-gavel"> Bid now</i></button>
-                                                    }
+                                                    {(this.state.itemDetail.startedAt !== 0 && this.state.timeLeft > 0 && waitForMining == true) && <button style={{ marginLeft: '30px', marginTop: '10px' }} className="btn btn-primary mb-2" type="submit"><i className="fas fa-gavel"> Bid now</i></button>}
                                                     {/* {
                                                         this.state.ended && (
                                                             <p className="alert alert-info light-word mt-2">{this.watchEventEnd().address}</p>
                                                         )
                                                     } */}
                                                 </form>
-                                                {this.state.itemDetail.bids.length > 0 ? <p className="alert alert-info light-word mt-2">
+                                                {this.state.itemDetail.bids.length > 0 ? <p style={{ wordWrap: 'break-word', marginRight: '30px' }} className="alert alert-info light-word mt-2">
                                                     {/* Last bid by : {this.state.itemDetail.bids[0].userName} */}
                                                     Last bid by : {this.state.rs}
-
-
                                                 </p> : ''}
                                             </div>
                                         </div>
