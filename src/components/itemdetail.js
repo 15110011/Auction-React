@@ -492,7 +492,7 @@ class ItemDetail extends Component {
                                                             this.setState({ currentBidding: (this.state.currentBidding + this.state.step) })
                                                         }}
                                                     ></BidInput>
-                                                    {(this.state.itemDetail.startedAt !== 0 && this.state.timeLeft > 0 && waitForMining == false) && <button style={{ marginLeft: '30px', marginTop: '10px' }} className="btn btn-primary mb-2" type="submit"><i className="fas fa-gavel"> Bid now</i></button>}
+                                                    {(this.state.itemDetail.startedAt !== 0 && this.state.timeLeft > 0 && waitForMining === false) && <button style={{ marginLeft: '30px', marginTop: '10px' }} className="btn btn-primary mb-2" type="submit"><i className="fas fa-gavel"> Bid now</i></button>}
                                                     {/* {
                                                         this.state.ended && (
                                                             <p className="alert alert-info light-word mt-2">{this.watchEventEnd().address}</p>

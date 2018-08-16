@@ -812,3 +812,69 @@ body{
 .shadow{
   box-shadow: 10px 13px 25px -2px rgba(0,0,0,.15)!important;
 }
+.footer{
+  background-color: #24374b;
+  box-shadow: 0 0 28px;
+}
+.envelope i, .phone i{
+  font-size: 3.5em;
+  color: #fff;
+}
+.word-right{
+  color: #fff;
+}
+.word-right h6, .word-right p{
+  color: #8d8f9d;
+}
+#remove-dot li{
+  list-style-type: none;
+  padding-bottom: 10px;
+  padding-top: 5px;
+  color: #c7c7c7;
+}
+.social-icon{
+  list-style: none;
+  padding: 0px 0px 0px 20px;
+  margin: 0px;
+  display: inline-flex;
+  color: #808189;
+}
+.social-fix{
+  list-style-type: none;
+  vertical-align: top;
+  padding: 0px 18px 0px 0px;
+  font-size: 24px;
+}
+.footer-border-right{
+  border: 1px solid #5c5d67;
+  border-left: none;
+  height: 300px;
+}
+.footer-border-left{
+  border: 1px solid #5c5d67;
+  border-right: none;
+  border-left: none;
+  height: 300px;
+}
+.blocha{
+  color: #8d8f9d;
+}
+.blocha h6:hover{
+  color: #fff;
+}
+#remove-dot a{
+  color: #8d8f9d;
+}
+#remove-dot a:hover{
+  text-decoration: none;
+  color: #fff;
+}
+.social-icon a{
+  color: #8d8f9d;
+}
+.social-icon :hover{
+  color: #fff;
+}
+#underline h3{
+  border-bottom: 2px solid darkorange;
+}

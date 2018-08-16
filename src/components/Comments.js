@@ -46,7 +46,7 @@ class Comments extends Component {
             <div>
                 {(this.props.startedAt !== 0) &&
                     <div>
-                        <h4 className="bolditalic-word">Leave a comment here</h4>
+                        <h4 className="light-word">Leave a comment here:</h4>
                         <form onSubmit={this.onSubmitComment}>
                             <textarea name="content" id="" cols="96" rows="5" style={{ resize: 'none' }} onChange={e => {
                                 this.setState({ newCommentContent: e.target.value })
