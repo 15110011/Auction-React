@@ -28,7 +28,7 @@ class Footer extends Component {
                                 </div>
                             </div>
                             <div className="col-sm-4">
-                                <button id="btncontact" style={{ width: '250px' }} className="btn btnbid">Liên hệ với chúng tôi</button>
+                                <button id="btncontact" style={{ width: '250px' }} className="btn btnbid">Call us now</button>
                             </div>
                             <div className="col-sm-3 footer-border-right pt-4">
                                 <div className="blocha">

@@ -27,7 +27,7 @@ class ItemDetail extends Component {
             itemDetail: null,
             images: [],
             timeLeft: 0,
-
+            bidders: [],
             loading: true,
             isApproved: null,
             currentPrice: 0,
@@ -52,22 +52,14 @@ class ItemDetail extends Component {
 
     }
 
-
-
     componentDidMount() {
         this.mounted = true
-
-        this.props.io.socket.get(`${root}/hello`, function serverResponded(body, JWR) {
-        });
         fetch(`${root}/api/v1/contracts/${this.props.match.params.id}`)
             .then(res => res.json())
             .then(res => {
                 if (res.success) {
                     if (!window.web3) {
                         this.setState({ getMetaMask: false })
-                        setInterval(() => {
-                            this.setState({ getMetaMask: true })
-                        }, 2000)
                         return
                     }
                     var auctionContract = this.web3.eth.contract(AuctionBid.abi)
@@ -75,8 +67,11 @@ class ItemDetail extends Component {
                     this.contract.highestBidder((err, rs) => {
                         this.setState({ rs })
                     })
+                    this.getBidder()
                 }
             })
+        this.props.io.socket.get(`${root}/hello`, function serverResponded(body, JWR) {
+        });
         fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
             credentials: 'include'
         })
@@ -85,7 +80,6 @@ class ItemDetail extends Component {
                 if (!this.mounted) return
                 this.setState({ loading: false })
                 if (!item.error) {
-
                     this.setState({ currentPrice: item.findItem.currentPrice })
                     let nextStep = item.findItem.bids.length > 0 ?
                         item.findItem.bids[0].currentPrice * 0.5 :
@@ -120,7 +114,26 @@ class ItemDetail extends Component {
             this.setState({ itemDetail, step: nextStep, currentBidding: newBid.currentPrice + nextStep })
         }
     }
+    getBidder = () => {
+        if (this.contract) {
+            this.contract.getBidLength((err, bidLength) => {
+                let promises = []
+                for (let i = 0; i < bidLength; i++) {
+                    promises.push(new Promise((resolve, reject) => {
+                        this.contract.bids(i, (err, address) => {
+                            var value = this.web3.fromWei(address[1].toNumber(), 'ether')
+                            resolve({ address: address[0], value: value, time: address[2].toNumber() })
+                        })
+                    }))
+                }
+                Promise.all(promises).then((e) => {
 
+                    this.setState({ bidders: e.reverse() })
+                })
+            })
+        }
+
+    }
     setCurrentItem(current) {
         this.setState({ current })
     }
@@ -137,9 +150,6 @@ class ItemDetail extends Component {
                     clearInterval(this.countDownInterval)
                     if (!window.web3) {
                         this.setState({ getMetaMask: false })
-                        setInterval(() => {
-                            this.setState({ getMetaMask: true })
-                        }, 2000)
                         return
                     }
                     this.contract.owner((err, owner) => {
@@ -166,7 +176,6 @@ class ItemDetail extends Component {
             toBlock: 'lastest'
         }).watch((error, event) => {
             if (!error) {
-                console.log('event end', event)
             }
         })
     }
@@ -176,7 +185,6 @@ class ItemDetail extends Component {
             toBlock: 'lastest'
         }).watch((error, event) => {
             if (error) console.log(error)
-            console.log('event', event)
             this.setState({ rs: event.args.player })
         })
     }
@@ -184,9 +192,6 @@ class ItemDetail extends Component {
         e.preventDefault()
         if (!window.web3) {
             this.setState({ getMetaMask: false })
-            setInterval(() => {
-                this.setState({ getMetaMask: true })
-            }, 2000)
             return
         }
         if (!window.web3.eth.accounts[0]) {
@@ -195,7 +200,7 @@ class ItemDetail extends Component {
                 this.setState({ getMetaMask: true })
             }, 2000)
         } else {
-            this.contract.bid({
+            this.contract.bid(new Date().getTime(), {
                 from: window.web3.eth.accounts[0], value: (this.state.currentBidding * 1000000000000000000).toString()
             }, (err, txHash) => {
                 if (typeof txHash === 'undefined') {
@@ -204,19 +209,18 @@ class ItemDetail extends Component {
                         this.setState({ sendTransaction: true })
                     }, 2000)
                 } else {
+                    this.setState({ waitForMining: true })
                     this.watchEventBid()
                     var filter = this.web3.eth.filter('latest')
                     filter.watch((error, result) => {
-                        this.web3.eth.getTransactionReceipt(txHash, (err, blockHash) => {
+                        this.web3.eth.getTransactionReceipt(txHash, (err, block) => {
                             if (err) {
                                 console.log(err)
                             }
-                            console.log(blockHash)
-                            this.setState({waitForMining:true})
-                            if (blockHash && blockHash.transactionHash === txHash) {
+                            if (block && block.transactionHash === txHash) {
+                                console.log(block.timestamp)
                                 this.setState({ waitForMining: false })
                                 filter.stopWatching()
-
                                 this.props.io.socket.post(`${root}/api/v1/bid/${this.state.itemDetail.id}`, {
                                     currentPrice: this.state.currentBidding,
                                     userId: this.props.userId,
@@ -238,6 +242,7 @@ class ItemDetail extends Component {
                                                     this.setCountDown()
                                                 })
                                             }
+                                            this.getBidder()
                                             this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
                                         }
                                     }
@@ -279,9 +284,6 @@ class ItemDetail extends Component {
     onBeginAuction() {
         if (!window.web3) {
             this.setState({ getMetaMask: false })
-            setInterval(() => {
-                this.setState({ getMetaMask: true })
-            }, 2000)
             return
         }
         if (!window.web3.eth.accounts[0]) {
@@ -398,7 +400,8 @@ class ItemDetail extends Component {
                     )}
                     {
                         !getMetaMask && (
-                            <p className="alert alert-danger text-center mt-5">Please login to Meta Mask</p>
+                            <p className="alert alert-danger  text-center mt-5">
+                                Due to security reasons, please <strong >install</strong> and <strong>login</strong> to Meta Mask</p>
                         )
                     }
                     {
@@ -408,7 +411,7 @@ class ItemDetail extends Component {
                     }
                     {
                         waitForMining && (
-                            <p className="alert alert-info text-center mt-5">Please wait for transaction confirmed, be patient</p>
+                            <p className="alert alert-info text-center mt-5">Please wait for transaction to be confirmed, be patient</p>
                         )
                     }
                     <div className="row">
@@ -512,23 +515,25 @@ class ItemDetail extends Component {
                                     <table id="placebid-border" className="table table-striped mt-4">
                                         <thead>
                                             <tr>
-                                                <th>Username</th>
+                                                <th>Wallet Address</th>
                                                 <th>Bid Amount</th>
                                                 <th>Bidding Time</th>
                                             </tr>
                                         </thead>
                                         <tbody className="light-word">
-                                            {this.state.itemDetail.bids.map((bid, i) => {
-                                                return (
-                                                    <tr key={i}>
-                                                        <td>{bid.userId.userName}</td>
-                                                        <td>
-                                                            {<NumberFormat displayType={'text'} value={bid.currentPrice} thousandSeparator={true} suffix={' ETH'} />}
-                                                        </td>
-                                                        <td>{dateFns.format(bid.createdAt, 'HH:mm:ss MM/DD/YYYY')}</td>
-                                                    </tr>
-                                                )
-                                            })}
+                                            {
+                                                this.state.bidders.map((bid, i) => {
+                                                    return (
+                                                        <tr key={i}>
+                                                            <td>{bid.address}</td>
+                                                            <td>
+                                                                {<NumberFormat displayType={'text'} value={bid.value} thousandSeparator={true} suffix={' ETH'} />}
+                                                            </td>
+                                                            <td>{dateFns.format(bid.time, 'HH:mm:ss MM/DD/YYYY')}</td>
+                                                        </tr>
+                                                    )
+                                                })
+                                            }
                                         </tbody>
                                     </table>
                                     <div className="d-flex justify-content-center">
