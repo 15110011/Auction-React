@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import '../styles/styles.css'
 import Features from './hotfeatures';
 import Items from './items';
+import Carousel from './Carousel';
 
 
 class HomePage extends Component {
@@ -49,6 +50,7 @@ class HomePage extends Component {
                     {/* <button className="btn btn-primary position-fixed" style={{ top: '8%' }} onClick={this.handleShowCate}>Category</button>
                     <CategoryShow show={this.state.showCategory} /> */}
                 </div>
+                <Carousel />
                 <Features />
                 <br />
                 <hr />

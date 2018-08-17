@@ -4,7 +4,7 @@ body{
   height: 100vh;
 }
 .bg-dark {
-  background-color: #265c94 !important;
+  background-color: #0a3159!important;
 }
 .logo{
   background-color: #030721;
@@ -60,9 +60,6 @@ body{
 .btn-info:hover{
   color: #50b3e4;
   background-color: transparent;
-}
-.feat{
-  margin-top: 120px;
 }
 .dropdown-menu{
   position: absolute;
@@ -877,4 +874,7 @@ body{
 }
 #underline h3{
   border-bottom: 2px solid darkorange;
+}
+.slick-next{
+  display: none!important;
 }
