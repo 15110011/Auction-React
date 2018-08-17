@@ -304,69 +304,71 @@ class ItemDetail extends Component {
                     }, 2000)
                     return
                 }
-
+                this.setState({ waitForMining: true })
                 if (contract.address) {
                     this.contract = contract
-                    var address = contract.address
-                    fetch(`${root}/api/v1/contracts/${this.props.match.params.id}`, {
-                        method: 'POST',
-                        body: JSON.stringify({ address })
-                    })
-                        .then(res => res.json())
-                        .then(res => {
-                            if (res.success) {
-                                contract.startBidding((this.state.currentPrice * 1000000000000000000).toString(),
-                                    { from: window.web3.eth.accounts[0], gas: 100000 }, (err, rs) => {
-                                        if (err) {
-                                            console.log(err)
-                                        }
-                                        this.setState({ waitForMining: true })
-                                        var filter = this.web3.eth.filter('latest')
-                                        filter.watch((error, result) => {
-                                            this.web3.eth.getTransactionReceipt(rs, (err, blockHash) => {
-                                                if (err) {
-                                                    console.log(err)
-                                                }
-                                                console.log(blockHash)
-                                                if (blockHash && blockHash.transactionHash === rs) {
-                                                    this.setState({ waitForMining: false })
-                                                    filter.stopWatching()
-                                                    let startTime = new Date().getTime()
-                                                    fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
-                                                        method: 'PATCH',
-                                                        body: JSON.stringify({
-                                                            startedAt: startTime
-                                                        })
-                                                    })
-                                                        .then((res) => res.json())
-                                                        .then((res) => {
-                                                            if (!res.error) {
-                                                                let modifyDetail = this.state.itemDetail
-                                                                modifyDetail.startedAt = startTime
-                                                                this.setState({ itemDetail: modifyDetail }, function () {
-                                                                    this.setCountDown()
-                                                                })
-
-                                                            }
-                                                            else {
-                                                                console.log(res.msg)
-                                                            }
-                                                        })
-
-                                                }
-                                            })
-                                        })
-
-                                    })
-                            } else {
-                                console.log('bug')
-                            }
-                        })
+                    this.setState({ waitForMining: false })
+                    this.startBidding()
                 }
             })
         }
     }
+    startBidding = () => {
+        var address = this.contract.address
+        fetch(`${root}/api/v1/contracts/${this.props.match.params.id}`, {
+            method: 'POST',
+            body: JSON.stringify({ address })
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.success) {
+                    this.contract.startBidding((this.state.currentPrice * 1000000000000000000).toString(),
+                        { from: window.web3.eth.accounts[0], gas: 100000 }, (err, rs) => {
+                            if (err) {
+                                console.log(err)
+                            }
+                            this.setState({ waitForMining: true })
+                            var filter = this.web3.eth.filter('latest')
+                            filter.watch((error, result) => {
+                                this.web3.eth.getTransactionReceipt(rs, (err, blockHash) => {
+                                    if (err) {
+                                        console.log(err)
+                                    }
+                                    if (blockHash && blockHash.transactionHash === rs) {
+                                        this.setState({ waitForMining: false })
+                                        filter.stopWatching()
+                                        let startTime = new Date().getTime()
+                                        fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
+                                            method: 'PATCH',
+                                            body: JSON.stringify({
+                                                startedAt: startTime
+                                            })
+                                        })
+                                            .then((res) => res.json())
+                                            .then((res) => {
+                                                if (!res.error) {
+                                                    let modifyDetail = this.state.itemDetail
+                                                    modifyDetail.startedAt = startTime
+                                                    this.setState({ itemDetail: modifyDetail }, function () {
+                                                        this.setCountDown()
+                                                    })
 
+                                                }
+                                                else {
+                                                    alert(res.msg)
+                                                }
+                                            })
+
+                                    }
+                                })
+                            })
+
+                        })
+                } else {
+                    alert('There is some bug, please try again')
+                }
+            })
+    }
     render() {
         const { current, itemDetail, images, loading, isApproved, getMetaMask, sendTransaction, waitForMining } = this.state
         if (loading) {
