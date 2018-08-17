@@ -33,7 +33,7 @@ class Footer extends Component {
                             <div className="col-sm-3 footer-border-right pt-4">
                                 <div className="blocha">
                                     <h1 style={{ color: '#fff', fontWeight: '600' }}>BLOCHA</h1>
-                                    <h6>42b Ho Ba Phan, district 9, HCM city</h6>
+                                    <h6>42B Ho Ba Phan, district 9, HCM city</h6>
                                 </div>
                                 <ul id="remove-dot">
                                     <li>

@@ -168,7 +168,7 @@ class Bidcart extends Component {
                                                                     <td>{item.itemName}</td>
 
                                                                     <td>
-                                                                        <NumberFormat displayType={'text'} value={item.curPrice} thousandSeparator={true} prefix={'$'} />
+                                                                        <NumberFormat displayType={'text'} value={item.curPrice} thousandSeparator={true} suffix={' ETH'} />
                                                                     </td>
                                                                     <td>{item.quantity}</td>
                                                                     <td>{item.categoryName}</td>
