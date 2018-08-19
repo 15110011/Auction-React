@@ -24,7 +24,7 @@ class Footer extends Component {
                                 </div>
                                 <div className="word-right light-word pt-1 pl-1">
                                     <h6>&nbsp;(+84) 1674 834 476</h6>
-                                    <p>&nbsp;Saturday - Sunday: 8:00 AM - 22:00 PM</p>
+                                    <p>&nbsp;Sunday - Saturday: 8:00 AM - 22:00 PM</p>
                                 </div>
                             </div>
                             <div className="col-sm-4">
