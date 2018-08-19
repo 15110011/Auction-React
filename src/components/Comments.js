@@ -68,7 +68,7 @@ class Comments extends Component {
                                         </div>
                                         <hr />
                                         <div className="answer italic-word">
-                                            <small>Hỏi cmm - <strong>Aution Blocha team</strong></small>
+                                            <small>Have a nice day - <strong>Aution Blocha Team</strong></small>
                                         </div>
                                     </li>
                                 </div>

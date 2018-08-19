@@ -100,7 +100,7 @@ export default class RatingList extends Component {
                 <div className="review-titles pt-3">
                     <div className="row">
                         <div className="col-md-12 review-left">
-                            <h3>Review</h3>
+                            <h3>Reviews</h3>
                         </div>
                     </div>
                 </div>
@@ -109,7 +109,7 @@ export default class RatingList extends Component {
                     <div className="col-md-4">
                         <div className="total-rate">
                             <h4>{averageRate}/5</h4>
-                            {(reviews.length === 0 || reviews.length === 1) && <small>{reviews.length} vote</small>}
+                            {(reviews.length === 0 || reviews.length === 1) && <small>{reviews.length} votes</small>}
                             {(reviews.length > 1) && <small>{reviews.length} votes</small>}
                         </div>
                     </div>

@@ -419,7 +419,7 @@ class ItemDetail extends Component {
                     <div className="row">
                         <div className="col-md-9">
                             <br />
-                            <Link to='/'><i className="fas fa-backward"><span className="light-word"> Back to bid</span></i></Link>
+                            <Link to='/'><i className="fas fa-backward"><span className="light-word"> Back To Homepage</span></i></Link>
                             <div className="items-info">
                                 <div className="container pt-3 ">
                                     <h3 className="d-flex">{itemDetail.name} {(canBegin && waitForMining === false) && <button className="btn btn-primary ml-auto" onClick={this.onBeginAuction}>Begin auction</button>}</h3>

@@ -8,7 +8,7 @@ class Features extends Component {
                 <div className="about-wrapper bgrfeat">
                     <div className="container feat">
                         <div className="about text-center">
-                            <h2>Today feature's collection</h2>
+                            <h2>Today Feature's Collection</h2>
                         </div>
                         <div className="features text-center">
                             <div className="row">

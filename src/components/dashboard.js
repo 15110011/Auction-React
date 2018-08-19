@@ -352,7 +352,7 @@ class DashBoard extends Component {
                                             <h3 style={{ marginTop: '5px', paddingLeft: '5px', fontWeight: '600' }}>Details</h3>
                                         </div>
                                         <div className="row detail-field">
-                                            <p className="col alert alert-success light-word">Describe about your item sush as type, year...</p>
+                                            <p className="col alert alert-success light-word">Describe about your item, for example: type, materials, etc...</p>
                                             <div className="editor" style={{ marginTop: '-12px' }}>
                                                 <Editor placeholder="Detail about your item..."
                                                     editorState={this.state.editorState}
