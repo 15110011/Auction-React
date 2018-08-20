@@ -34,6 +34,8 @@ class ItemDetail extends Component {
             getMetaMask: true,
             sendTransaction: true,
             waitForMining: false,
+            deployContract: true,
+            startBidding: false,
             ended: false
         }
         if (typeof this.web3 !== 'undefined') {
@@ -62,6 +64,7 @@ class ItemDetail extends Component {
                         this.setState({ getMetaMask: false })
                         return
                     }
+                    this.setState({ deployContract: false, startBidding: true })
                     var auctionContract = this.web3.eth.contract(AuctionBid.abi)
                     this.contract = auctionContract.at((res.contractAddress.contractAddress).toString())
                     this.contract.highestBidder((err, rs) => {
@@ -304,69 +307,81 @@ class ItemDetail extends Component {
                     }, 2000)
                     return
                 }
+
                 this.setState({ waitForMining: true })
                 if (contract.address) {
                     this.contract = contract
                     this.setState({ waitForMining: false })
-                    this.startBidding()
+                    var address = this.contract.address
+                    fetch(`${root}/api/v1/contracts/${this.props.match.params.id}`, {
+                        method: 'POST',
+                        body: JSON.stringify({ address })
+                    })
+                        .then(res => res.json())
+                        .then(res => {
+                            if (res.success) {
+                                this.setState({ deployContract: false, startBidding: true })
+                            }
+                        })
                 }
-            })
+            }
+            )
         }
     }
-    startBidding = () => {
-        var address = this.contract.address
-        fetch(`${root}/api/v1/contracts/${this.props.match.params.id}`, {
-            method: 'POST',
-            body: JSON.stringify({ address })
-        })
-            .then(res => res.json())
-            .then(res => {
-                if (res.success) {
-                    this.contract.startBidding((this.state.currentPrice * 1000000000000000000).toString(),
-                        { from: window.web3.eth.accounts[0], gas: 100000 }, (err, rs) => {
-                            if (err) {
-                                console.log(err)
-                            }
-                            this.setState({ waitForMining: true })
-                            var filter = this.web3.eth.filter('latest')
-                            filter.watch((error, result) => {
-                                this.web3.eth.getTransactionReceipt(rs, (err, blockHash) => {
-                                    if (err) {
-                                        console.log(err)
-                                    }
-                                    if (blockHash && blockHash.transactionHash === rs) {
-                                        this.setState({ waitForMining: false })
-                                        filter.stopWatching()
-                                        let startTime = new Date().getTime()
-                                        fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
-                                            method: 'PATCH',
-                                            body: JSON.stringify({
-                                                startedAt: startTime
-                                            })
-                                        })
-                                            .then((res) => res.json())
-                                            .then((res) => {
-                                                if (!res.error) {
-                                                    let modifyDetail = this.state.itemDetail
-                                                    modifyDetail.startedAt = startTime
-                                                    this.setState({ itemDetail: modifyDetail }, function () {
-                                                        this.setCountDown()
-                                                    })
-
-                                                }
-                                                else {
-                                                    alert(res.msg)
-                                                }
-                                            })
-
-                                    }
+    startBidding = (e) => {
+        e.preventDefault()
+        if (!window.web3) {
+            this.setState({ getMetaMask: false })
+            return
+        }
+        if (!window.web3.eth.accounts[0]) {
+            this.setState({ getMetaMask: false })
+            setInterval(() => {
+                this.setState({ getMetaMask: true })
+            }, 2000)
+            return
+        }
+        this.contract.startBidding((this.state.currentPrice * 1000000000000000000).toString(),
+            { from: window.web3.eth.accounts[0], gas: 100000 }, (err, txHash) => {
+                if (err) {
+                    console.log(err)
+                }
+                this.setState({ waitForMining: true })
+                var filter = this.web3.eth.filter('latest')
+                filter.watch((error, result) => {
+                    this.web3.eth.getTransactionReceipt(txHash, (err, blockHash) => {
+                        if (err) {
+                            console.log(err)
+                        }
+                        if (blockHash && blockHash.transactionHash === txHash) {
+                            this.setState({ waitForMining: false })
+                            txHash = this.beginAuction
+                            filter.stopWatching()
+                            this.setState({ startBidding: false })
+                            let startTime = new Date().getTime()
+                            fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
+                                method: 'PATCH',
+                                body: JSON.stringify({
+                                    startedAt: startTime
                                 })
                             })
+                                .then((res) => res.json())
+                                .then((res) => {
+                                    if (!res.error) {
+                                        let modifyDetail = this.state.itemDetail
+                                        modifyDetail.startedAt = startTime
+                                        this.setState({ itemDetail: modifyDetail }, function () {
+                                            this.setCountDown()
+                                        })
+                                    }
+                                    else {
+                                        alert(res.msg)
+                                    }
+                                })
+                        }
+                    })
+                })
 
-                        })
-                } else {
-                    alert('There is some bug, please try again')
-                }
             })
     }
     render() {
@@ -422,7 +437,16 @@ class ItemDetail extends Component {
                             <Link to='/'><i className="fas fa-backward"><span className="light-word"> Back To Homepage</span></i></Link>
                             <div className="items-info">
                                 <div className="container pt-3 ">
-                                    <h3 className="d-flex">{itemDetail.name} {(canBegin && waitForMining === false) && <button className="btn btn-primary ml-auto" onClick={this.onBeginAuction}>Begin auction</button>}</h3>
+                                    <h3 className="d-flex">{itemDetail.name} {(canBegin && waitForMining === false && this.state.deployContract === true)
+                                        && <button className="btn btn-primary ml-auto" onClick={this.onBeginAuction}>Deploy an auction contract</button>}
+                                        {
+                                            this.state.startBidding === true && (
+
+                                                (this.state.deployContract === false && waitForMining === false && itemDetail.startedAt === 0)
+                                                && <button className="btn btn-primary ml-auto" onClick={this.startBidding}>Start An Auction</button>
+                                            )
+                                        }
+                                    </h3>
                                 </div>
                                 <hr />
                                 <div className="container">

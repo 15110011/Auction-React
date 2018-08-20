@@ -78,7 +78,7 @@ class Items extends Component {
                                         <div className="text-center">
                                             <h5>{item.itemName}</h5>
                                         </div>
-                                        <p className="card-title">Current bid:&nbsp;<NumberFormat displayType={'text'} value={item.curPrice} thousandSeparator={true} suffix={' ETH'} /></p>
+                                        <p className="card-title">Current bidding:&nbsp;<NumberFormat displayType={'text'} value={item.curPrice} thousandSeparator={true} suffix={' ETH'} /></p>
                                         <p className="card-price">
                                             Time left :&nbsp;{fromMillisecondsToFormattedString(item.timeLeft)}
                                         </p>
