@@ -442,7 +442,7 @@ class ItemDetail extends Component {
                                         {
                                             this.state.startBidding === true && (
 
-                                                (this.state.deployContract === false && waitForMining === false && itemDetail.startedAt === 0)
+                                                (this.state.deployContract === false && waitForMining === false && canBegin)
                                                 && <button className="btn btn-primary ml-auto" onClick={this.startBidding}>Start An Auction</button>
                                             )
                                         }
