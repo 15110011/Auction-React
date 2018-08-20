@@ -7,7 +7,7 @@ import RatingList from './RatingList'
 import dateFns from 'date-fns'
 import BidInput from './BidInput'
 import NumberFormat from 'react-number-format';
-import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
+import Pagination from './Pagination'
 import Web3 from 'web3';
 
 import AuctionBid from '../contracts/AuctionBid.json';
@@ -36,7 +36,10 @@ class ItemDetail extends Component {
             waitForMining: false,
             deployContract: true,
             startBidding: false,
-            ended: false
+            ended: false,
+            pageBid: 1,
+            renderedBids: [],
+            bidPerPage: 3
         }
         if (typeof this.web3 !== 'undefined') {
             this.web3Provider = this.web3.currentProvider
@@ -109,12 +112,24 @@ class ItemDetail extends Component {
     }
     onReceiveRoomMessage(newBid) {
         // console.log(this.state.itemDetail)
-        let { itemDetail } = this.state
-        if (itemDetail) {
+        // let { itemDetail } = this.state
+        // if (itemDetail) {
+        //     itemDetail.bids.unshift(newBid)
+        //     itemDetail.currentPrice = itemDetail.bids[0].currentPrice
+        //     let nextStep = itemDetail.bids[0].currentPrice * 0.5
+        //     this.setState({ itemDetail, step: nextStep, currentBidding: newBid.currentPrice + nextStep })
+        // }
+        //??????????????????????????????????????
+        let { bidders, itemDetail } = this.state
+        if (bidders) {
+            bidders.unshift(newBid)
             itemDetail.bids.unshift(newBid)
-            itemDetail.currentPrice = itemDetail.bids[0].currentPrice
-            let nextStep = itemDetail.bids[0].currentPrice * 0.5
-            this.setState({ itemDetail, step: nextStep, currentBidding: newBid.currentPrice + nextStep })
+            itemDetail.currentPrice = bidders[0].currentPrice
+
+            let nextStep = bidders[0].currentPrice * 0.5
+            this.setState({ itemDetail, bidders, step: nextStep, currentBidding: newBid.currentPrice + nextStep }, ()=>{
+                this.handleBidPageChange(1)
+            })
         }
     }
     getBidder = () => {
@@ -131,7 +146,9 @@ class ItemDetail extends Component {
                 }
                 Promise.all(promises).then((e) => {
 
-                    this.setState({ bidders: e.reverse() })
+                    this.setState({ bidders: e.reverse() }, () => {
+                        this.handleBidPageChange(1)
+                    })
                 })
             })
         }
@@ -384,8 +401,16 @@ class ItemDetail extends Component {
 
             })
     }
+
+    handleBidPageChange= (page) => {
+        const renderedBids = this.state.bidders.slice((page - 1) * this.state.bidPerPage, 
+            (page - 1) * this.state.bidPerPage + this.state.bidPerPage)
+        this.setState({ pageBid: page, renderedBids })
+    }
+
     render() {
-        const { current, itemDetail, images, loading, isApproved, getMetaMask, sendTransaction, waitForMining } = this.state
+        const { current, itemDetail, images, loading, isApproved, getMetaMask,
+            sendTransaction, waitForMining, bidPerPage, pageBid, bidders } = this.state
         if (loading) {
             return (
                 <div role="alert" style={{ marginTop: '75px' }}>
@@ -548,7 +573,7 @@ class ItemDetail extends Component {
                                         </thead>
                                         <tbody className="light-word">
                                             {
-                                                this.state.bidders.map((bid, i) => {
+                                                this.state.renderedBids.map((bid, i) => {
                                                     return (
                                                         <tr key={i}>
                                                             <td>{bid.address}</td>
@@ -563,39 +588,12 @@ class ItemDetail extends Component {
                                         </tbody>
                                     </table>
                                     <div className="d-flex justify-content-center">
-                                        <Pagination aria-label="Page navigation example">
-                                            <PaginationItem>
-                                                <PaginationLink previous href="#" />
-                                            </PaginationItem>
-                                            <PaginationItem>
-                                                <PaginationLink href="#">
-                                                    1
-                                                </PaginationLink>
-                                            </PaginationItem>
-                                            <PaginationItem>
-                                                <PaginationLink href="#">
-                                                    2
-                                                </PaginationLink>
-                                            </PaginationItem>
-                                            <PaginationItem>
-                                                <PaginationLink href="#">
-                                                    3
-                                                </PaginationLink>
-                                            </PaginationItem>
-                                            <PaginationItem>
-                                                <PaginationLink href="#">
-                                                    4
-                                                </PaginationLink>
-                                            </PaginationItem>
-                                            <PaginationItem>
-                                                <PaginationLink href="#">
-                                                    5
-                                                </PaginationLink>
-                                            </PaginationItem>
-                                            <PaginationItem>
-                                                <PaginationLink next href="#" />
-                                            </PaginationItem>
-                                        </Pagination>
+                                        <Pagination
+                                            margin={2}
+                                            page={pageBid}
+                                            count={Math.ceil(bidders.length / bidPerPage)}
+                                            onPageChange={this.handleBidPageChange}
+                                        />
                                     </div>
                                 </div>
                                 <hr />
@@ -610,50 +608,18 @@ class ItemDetail extends Component {
                                 {(this.props.userId !== '' && itemDetail) && <RatingList userId={this.props.userId} itemDetail={itemDetail} itemId={this.props.match.params.id} isApproved={isApproved}></RatingList>}
                             </div>
                             <div className="col-md-12 items-info mt-2">
-                                <div className="comment-titles pt-3">
+                                {/* <div className="comment-titles pt-3">
                                     <h3>Comments</h3>
                                 </div>
                                 <hr style={{ width: '825px', marginLeft: '-16px' }} />
                                 <div className="comment-content">
-                                    <div className="comment-block">
-                                        <Comments itemId={this.props.match.params.id} userId={this.props.userId} startedAt={this.state.itemDetail.startedAt} io={this.props.io}></Comments>
-                                    </div>
+                                    <div className="comment-block"> */}
+                                <Comments itemId={this.props.match.params.id} userId={this.props.userId} startedAt={this.state.itemDetail.startedAt} io={this.props.io}></Comments>
+                                {/* </div>
                                 </div>
-                                <div className="d-flex justify-content-end">
-                                    <Pagination aria-label="Page navigation example">
-                                        <PaginationItem>
-                                            <PaginationLink previous href="#" />
-                                        </PaginationItem>
-                                        <PaginationItem>
-                                            <PaginationLink href="#">
-                                                1
-                                                </PaginationLink>
-                                        </PaginationItem>
-                                        <PaginationItem>
-                                            <PaginationLink href="#">
-                                                2
-                                                </PaginationLink>
-                                        </PaginationItem>
-                                        <PaginationItem>
-                                            <PaginationLink href="#">
-                                                3
-                                                </PaginationLink>
-                                        </PaginationItem>
-                                        <PaginationItem>
-                                            <PaginationLink href="#">
-                                                4
-                                                </PaginationLink>
-                                        </PaginationItem>
-                                        <PaginationItem>
-                                            <PaginationLink href="#">
-                                                5
-                                                </PaginationLink>
-                                        </PaginationItem>
-                                        <PaginationItem>
-                                            <PaginationLink next href="#" />
-                                        </PaginationItem>
-                                    </Pagination>
-                                </div>
+                                <div className="d-flex justify-content-end"> */}
+                                {/*pagin*/}
+                                {/* </div> */}
                             </div>
                         </div>
                         <div className="col-sm-3">
