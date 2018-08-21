@@ -43,7 +43,8 @@ class DashBoard extends Component {
             count: 0,
             period: 1,
             page: 1,
-            renderedItems: []
+            renderedItems: [],
+            itemPerPage: 3
         }
         this.handleAddItem = this.handleAddItem.bind(this)
         this.getItem = this.getItem.bind(this)
@@ -100,7 +101,7 @@ class DashBoard extends Component {
                     items = items.filter((item) => {
                         return item.id !== +value
                     })
-                    const renderedItems = items.slice((this.state.page - 1) * 4, (this.state.page - 1) * 4 + 4)
+                    const renderedItems = items.slice((this.state.page - 1) * this.state.itemPerPage, (this.state.page - 1) * this.state.itemPerPage + this.state.itemPerPage)
                     this.setState({ items, renderedItems })
                 }
             })
@@ -229,12 +230,12 @@ class DashBoard extends Component {
                 return items.json()
             })
             .then(items => {
-                this.setState({ items: items.findItem, renderedItems: items.findItem.slice(0, 4), total: items.findItem.length, page: 1, loadingItem: false })
+                this.setState({ items: items.findItem, renderedItems: items.findItem.slice(0, this.state.itemPerPage), total: items.findItem.length, page: 1, loadingItem: false })
             })
 
     }
     handlePageChange(page) {
-        const renderedItems = this.state.items.slice((page - 1) * 4, (page - 1) * 4 + 4)
+        const renderedItems = this.state.items.slice((page - 1) * this.state.itemPerPage, (page - 1) * this.state.itemPerPage + this.state.itemPerPage)
         this.setState({ page, renderedItems })
     }
     handleChange(e) {
@@ -247,7 +248,7 @@ class DashBoard extends Component {
         return true
     }
     render() {
-        const { page, total, renderedItems } = this.state
+        const { page, total, renderedItems, itemPerPage } = this.state
 
         if (this.props.loggedIn === GUEST_STATUS) {
             return (
@@ -352,7 +353,7 @@ class DashBoard extends Component {
                                             <h3 style={{ marginTop: '5px', paddingLeft: '5px', fontWeight: '600' }}>Details</h3>
                                         </div>
                                         <div className="row detail-field">
-                                            <p className="col alert alert-success light-word">Describe about your item sush as type, year...</p>
+                                            <p className="col alert alert-success light-word">Describe about your item, for example: type, materials, etc...</p>
                                             <div className="editor" style={{ marginTop: '-12px' }}>
                                                 <Editor placeholder="Detail about your item..."
                                                     editorState={this.state.editorState}
@@ -489,7 +490,7 @@ class DashBoard extends Component {
                         <Pagination aria-label="Page navigation example"
                             margin={2}
                             page={page}
-                            count={Math.ceil(total / 2)}
+                            count={Math.ceil(total / itemPerPage)}
                             onPageChange={this.handlePageChange}
                         />
 

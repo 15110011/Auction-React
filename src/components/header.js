@@ -52,7 +52,7 @@ class Header extends Component {
 
 
     }
-    
+
     componentWillMount() {
         // this.props.checkStatus()
     }
@@ -63,36 +63,32 @@ class Header extends Component {
             .then(data => data.json())
             .then(data => {
                 if (data.resultItem) {
-                    console.log(data.resultItem)
                     this.setState({ results: data.resultItem })
                 }
             })
     }
     handleSearch(e) {
         e.preventDefault()
-        fetch(`${root}/api/v1/search?search=${this.state.keywords}`)
-            .then(res => res.json())
-            .then(res => {
-                var itemsFound = res.resultItem
-                if (itemsFound.length === 0) {
-                    // this.setState({ found: false })
-                    // setTimeout(() => {
-                    //     this.setState({ found: true })
-                    // }, 800)
-                    this.props.history.push({
-                        pathname: '/results',
-                        state: { results: itemsFound }
-                    })
-                }
-                else {
-                    this.setState({ found: true })
-                    this.props.history.push({
-                        pathname: '/results',
-                        state: { results: itemsFound }
-                    })
-                }
-            })
-
+        if (this.state.keywords !== '') {
+            fetch(`${root}/api/v1/search?search=${this.state.keywords}`)
+                .then(res => res.json())
+                .then(res => {
+                    var itemsFound = res.resultItem
+                    if (itemsFound.length === 0) {
+                        this.props.history.push({
+                            pathname: '/results',
+                            state: { results: itemsFound }
+                        })
+                    }
+                    else {
+                        this.setState({ found: true })
+                        this.props.history.push({
+                            pathname: '/results',
+                            state: { results: itemsFound }
+                        })
+                    }
+                })
+        }
     }
     handleLogin(e) {
         e.preventDefault()

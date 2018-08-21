@@ -14,8 +14,8 @@ class Footer extends Component {
                                     <i className="far fa-envelope"></i>
                                 </div>
                                 <div className="word-right light-word pt-1 pl-1">
-                                    <h6>&nbsp;Do you have any question?</h6>
-                                    <p>&nbsp;blocha@gmail.com</p>
+                                    <h6>&nbsp;Do you have any questions?</h6>
+                                    <p>&nbsp;Contact: blocha@gmail.com</p>
                                 </div>
                             </div>
                             <div className="col-sm-4 d-flex justify-content-center" style={{ display: 'inline-flex' }}>
@@ -24,7 +24,7 @@ class Footer extends Component {
                                 </div>
                                 <div className="word-right light-word pt-1 pl-1">
                                     <h6>&nbsp;(+84) 1674 834 476</h6>
-                                    <p>&nbsp;Mon - Sun: 8:00 - 22:00</p>
+                                    <p>&nbsp;Sunday - Saturday: 8:00 AM - 22:00 PM</p>
                                 </div>
                             </div>
                             <div className="col-sm-4">
@@ -92,7 +92,7 @@ class Footer extends Component {
                                 </div>
                                 <ul id="remove-dot">
                                     <li>
-                                        <Link to="#">&nbsp;Company Info</Link>
+                                        <Link to="#">&nbsp;Company Information</Link>
                                     </li>
                                     <li>
                                         <Link to="#">&nbsp;News</Link>
@@ -108,7 +108,7 @@ class Footer extends Component {
                                 </div>
                                 <ul id="remove-dot">
                                     <li>
-                                        <Link to="#">&nbsp;Contact us</Link>
+                                        <Link to="#">&nbsp;Contact Us</Link>
                                     </li>
                                     <li>
                                         <Link to="#">&nbsp;Blocha Return</Link>
@@ -119,7 +119,7 @@ class Footer extends Component {
                                 </ul>
                             </div>
                             <div className="col-sm-12 d-flex justify-content-center pt-3">
-                                <p style={{ color: '#808189' }}>Copyright &copy; 2018 The BlochaTeam. All rights reserved.</p>
+                                <p style={{ color: '#808189' }}>Copyright &copy; 2018 The BlochaTeam. All Rights Reserved.</p>
                             </div>
                         </div>
                     </div>

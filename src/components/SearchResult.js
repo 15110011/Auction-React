@@ -38,7 +38,7 @@ class SearchResult extends Component {
                                     <tr className="fixprop" key={item.id}>
                                         <th scope="row">{i + 1}</th>
                                         <td>{item.name}</td>
-                                        <td><NumberFormat displayType={'text'} value={item.currentPrice} thousandSeparator={true} prefix={'$'} /></td>
+                                        <td><NumberFormat displayType={'text'} value={item.currentPrice} thousandSeparator={true} suffix={' ETH'} /></td>
                                         <td>{item.quantity}</td>
                                         <td>{item.categoryName}</td>
                                         <td>

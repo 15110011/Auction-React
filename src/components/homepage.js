@@ -36,13 +36,13 @@ class HomePage extends Component {
                                 </p>
                                 <p>You will have:</p>
                                 <ul>
-                                    <li>Bidding of the world's rarest items.</li>
-                                    <li>All items have been verified by experts.</li>
-                                    <li>Measured by experienced people.</li>
+                                    <li>Bidding of the world's rarest items</li>
+                                    <li>All items have been verified by experts</li>
+                                    <li>Measured by experienced people</li>
                                 </ul>
                                 <center>
-                                    <span className="text-muted">♥</span>
                                     <Link to="/faq" id="quote"> The Blocha Team</Link>
+                                    <span className="text-muted"> ♥</span>
                                 </center>
                             </div>
                         </div>
