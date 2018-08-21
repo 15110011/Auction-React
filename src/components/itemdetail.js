@@ -67,6 +67,7 @@ class ItemDetail extends Component {
                     this.setState({ deployContract: false, startBidding: true })
                     var auctionContract = this.web3.eth.contract(AuctionBid.abi)
                     this.contract = auctionContract.at((res.contractAddress.contractAddress).toString())
+                    this.contractEnded = res.contractAddress.ended
                     this.contract.highestBidder((err, rs) => {
                         this.setState({ rs })
                     })
@@ -156,15 +157,23 @@ class ItemDetail extends Component {
                         return
                     }
                     this.contract.owner((err, owner) => {
-                        if (window.web3.eth.accounts[0] === owner) {
-                            this.contract.auctionEnd(() => {
-                                this.watchEventEnd()
+                        if (window.web3.eth.accounts[0] === owner && !this.contractEnded) {
+                            console.log(this.contractEnded)
+                            this.contract.auctionEnd((err, success) => {
+                                console.log(err,success)
+                                if (err) {
+                                    return console.log(err)
+                                } else {
+                                    fetch(`${root}/api/v1/contracts/${this.props.match.params.id}`, {
+                                        method: 'PATCH',
+                                        body: JSON.stringify({ ended: true })
+                                    })
+                                    this.watchEventEnd()
+                                }
                                 this.setState({ ended: true })
                             })
                         }
                     })
-
-
                 }
                 else {
                     this.setState({ timeLeft: remainTime })
@@ -315,7 +324,7 @@ class ItemDetail extends Component {
                     var address = this.contract.address
                     fetch(`${root}/api/v1/contracts/${this.props.match.params.id}`, {
                         method: 'POST',
-                        body: JSON.stringify({ address })
+                        body: JSON.stringify({ address: address, ended: false })
                     })
                         .then(res => res.json())
                         .then(res => {
