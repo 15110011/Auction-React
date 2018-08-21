@@ -56,11 +56,11 @@ export default class RecommendItems extends Component {
             <Fragment>
                 {recItems.map(item => {
                     return (
-                        <div className="col card" style={{ marginTop: '48px' }} key={item.itemId}>
+                        <div className="col card zoom" style={{ marginTop: '48px' }} key={item.itemId}>
                             <Link className="borderitem" to={`/items/${item.itemId}`}>
-                                <img className="card-img-top" src={`/uploads/${item.link}`} alt="" style={{ minHeight: '200px', maxHeight: '200px', objectFit: 'cover' }} />
+                                <img className="card-img-top" src={item.link ? `/uploads/${item.link}` : `http://www.staticwhich.co.uk/static/images/products/no-image/no-image-available.png`} alt="" style={{ minHeight: '200px', maxHeight: '200px', objectFit: 'cover' }} />
                             </Link>
-                            <div className="card-body">
+                            <div className="card-body shadow">
                                 <div className="text-center">
                                     <h5>{item.itemName}</h5>
                                 </div>

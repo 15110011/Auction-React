@@ -28,12 +28,12 @@ class Footer extends Component {
                                 </div>
                             </div>
                             <div className="col-sm-4">
-                                <button id="btncontact" style={{ width: '250px' }} className="btn btnbid">Call us now</button>
+                                <button id="btncontact" style={{ width: '200px' }} className="btn btnbid">Contact us</button>
                             </div>
                             <div className="col-sm-3 footer-border-right pt-4">
                                 <div className="blocha">
                                     <h1 style={{ color: '#fff', fontWeight: '600' }}>BLOCHA</h1>
-                                    <h6>42b Ho Ba Phan, district 9, HCM city</h6>
+                                    <h6>42<small>B</small> Ho Ba Phan, district 9, Ho Chi Minh city</h6>
                                 </div>
                                 <ul id="remove-dot">
                                     <li>

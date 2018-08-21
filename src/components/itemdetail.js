@@ -57,6 +57,7 @@ class ItemDetail extends Component {
         fetch(`${root}/api/v1/contracts/${this.props.match.params.id}`)
             .then(res => res.json())
             .then(res => {
+                if (!this.mounted) return
                 if (res.success) {
                     if (!window.web3) {
                         this.setState({ getMetaMask: false })
@@ -99,6 +100,7 @@ class ItemDetail extends Component {
                     })
                 }
                 else {
+                    if (!this.mounted) return
                     this.setState({ itemDetail: null })
                 }
             })
