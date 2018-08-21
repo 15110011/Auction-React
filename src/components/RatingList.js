@@ -17,7 +17,10 @@ export default class RatingList extends Component {
                 content: ''
             },
             rateType: {},
-            averageRate: 0
+            averageRate: 0,
+            pageReview: 1,
+            renderedReviews: [],
+            reviewPerPage: 3,
         }
         this.toggle = this.toggle.bind(this)
         this.onClickReview = this.onClickReview.bind(this)
@@ -31,6 +34,7 @@ export default class RatingList extends Component {
                     this.setState({ reviews: reviews.rates }, () => {
                         this.calculateAverageRate()
                         this.calculateNumOfRateType()
+                        this.handleReviewPageChange(1)
                     })
             })
     }
@@ -57,7 +61,9 @@ export default class RatingList extends Component {
                 if (!res.error) {
                     let reviews = this.state.reviews.slice()
                     reviews.unshift(res.newReview)
-                    this.setState({ reviews })
+                    this.setState({ reviews },()=>{
+                        this.handleReviewPageChange(1)
+                    })
                 }
                 else {
                     alert(res.msg)
@@ -91,9 +97,16 @@ export default class RatingList extends Component {
             rateType: tempRateType
         })
     }
+
+    handleReviewPageChange = (page) => {
+        const renderedReviews = this.state.reviews.slice((page - 1) * this.state.reviewPerPage,
+            (page - 1) * this.state.reviewPerPage + this.state.reviewPerPage)
+        this.setState({ pageReview: page, renderedReviews })
+    }
+
     render() {
         const { itemDetail, isApproved } = this.props
-        const { newReview, reviews, averageRate, rateType } = this.state
+        const { newReview, reviews, averageRate, rateType, reviewPerPage, pageReview } = this.state
 
         return (
             <Fragment>
@@ -204,39 +217,12 @@ export default class RatingList extends Component {
                     </div>
                 </div>
                 <div className="d-flex justify-content-end">
-                    <Pagination aria-label="Page navigation example">
-                        <PaginationItem>
-                            <PaginationLink previous href="#" />
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink href="#">
-                                1
-                                                </PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink href="#">
-                                2
-                                                </PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink href="#">
-                                3
-                                                </PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink href="#">
-                                4
-                                                </PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink href="#">
-                                5
-                                                </PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink next href="#" />
-                        </PaginationItem>
-                    </Pagination>
+                    <Pagination
+                        margin={2}
+                        page={pageReview}
+                        count={Math.ceil(reviews.length / reviewPerPage)}
+                        onPageChange={this.handleReviewPageChange}
+                    />
                 </div>
             </Fragment>
         )

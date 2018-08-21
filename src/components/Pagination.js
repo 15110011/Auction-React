@@ -5,7 +5,7 @@ import '../styles/setting.css'
 class Pagination extends Component {
     constructor(props) {
         super(props)
-        this.state={}
+        this.state = {}
         this.onPageChange = this.onPageChange.bind(this)
         this.goFirstPage = this.goFirstPage.bind(this)
         this.goLastPage = this.goLastPage.bind(this)
@@ -13,16 +13,16 @@ class Pagination extends Component {
         this.goNextPage = this.goNextPage.bind(this)
     }
     componentWillReceiveProps(newProps) {
-        
+
         if (newProps === this.props) return;
         const { margin, page, count } = newProps;
         const startPage = page > margin ? page - margin : 1;
         let endPage
-        if(endPage+1>count){
-            endPage=page
-        }
-        else
-            endPage = page+margin > count ? count : page + margin;
+        // if(endPage+1>count){
+        //     endPage=page
+        // }
+        // else
+        endPage = page + margin > count ? count : page + margin;
         this.setState({ startPage, endPage, count });
     }
     onPageChange(e) {
