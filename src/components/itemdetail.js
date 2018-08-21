@@ -39,7 +39,7 @@ class ItemDetail extends Component {
             ended: false,
             pageBid: 1,
             renderedBids: [],
-            bidPerPage: 3
+            bidPerPage: 10
         }
         if (typeof this.web3 !== 'undefined') {
             this.web3Provider = this.web3.currentProvider

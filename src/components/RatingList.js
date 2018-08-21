@@ -61,7 +61,7 @@ export default class RatingList extends Component {
                 if (!res.error) {
                     let reviews = this.state.reviews.slice()
                     reviews.unshift(res.newReview)
-                    this.setState({ reviews },()=>{
+                    this.setState({ reviews }, () => {
                         this.handleReviewPageChange(1)
                     })
                 }
@@ -107,6 +107,12 @@ export default class RatingList extends Component {
     render() {
         const { itemDetail, isApproved } = this.props
         const { newReview, reviews, averageRate, rateType, reviewPerPage, pageReview } = this.state
+        const canReview = (this.props.userId !== itemDetail.userId && isApproved && itemDetail.startedAt !== 0 &&
+            itemDetail.startedAt + itemDetail.additionalTime + itemDetail.period * 3600 * 1000 < new Date().getTime()
+            && reviews.filter(review => {
+                return review.itemId === this.props.itemId
+            }).length === 0
+        )
 
         return (
             <Fragment>
@@ -170,7 +176,8 @@ export default class RatingList extends Component {
                         </Form>
                     </div>
                     <div className="col-md-4 light-word">
-                        {(this.props.userId !== itemDetail.userId && isApproved && itemDetail.startedAt !== 0) && <Button style={{ float: 'right', width: '50%' }} color="danger" onClick={this.toggle}>{this.props.buttonLabel}Rate it</Button>}
+                        {canReview &&
+                            <Button style={{ float: 'right', width: '50%' }} color="danger" onClick={this.toggle}>{this.props.buttonLabel}Rate it</Button>}
                         <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
                             <ModalHeader toggle={this.toggle}>Rate your purchased item</ModalHeader>
                             <form onSubmit={this.onClickReview}>
