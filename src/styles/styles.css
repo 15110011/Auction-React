@@ -316,11 +316,6 @@ body{
     width: 350px;
   }
 }
-@media (min-width: 1200px){
-  .container{
-    max-width: none;
-  }
-}
 .adminpanel{
   min-height: 100vh;  
 }

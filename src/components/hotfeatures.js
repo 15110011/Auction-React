@@ -94,7 +94,7 @@ class Features extends Component {
                                     <div className="title-cate">Jewelry</div>
                                     <div className="icon-cate"><i className="fas fa-gem"></i></div>
                                 </div>
-                                <small>Online jewelry auctions where you can bid now and save money – diamonds, gemstones, gold and silver...</small>
+                                <small>Online jewelry auctions where you can bid now diamonds, gemstones, gold and silver...</small>
                                 {/* JEWELRY START */}
                                 <div className="row pt-2">
                                     <div className="col-sm-6">
