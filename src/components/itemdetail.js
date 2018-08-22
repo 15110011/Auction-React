@@ -114,23 +114,14 @@ class ItemDetail extends Component {
 
     }
     onReceiveRoomMessage(newBid) {
-        // console.log(this.state.itemDetail)
-        // let { itemDetail } = this.state
-        // if (itemDetail) {
-        //     itemDetail.bids.unshift(newBid)
-        //     itemDetail.currentPrice = itemDetail.bids[0].currentPrice
-        //     let nextStep = itemDetail.bids[0].currentPrice * 0.5
-        //     this.setState({ itemDetail, step: nextStep, currentBidding: newBid.currentPrice + nextStep })
-        // }
-        //??????????????????????????????????????
-        let { bidders, itemDetail } = this.state
-        if (bidders) {
-            bidders.unshift(newBid)
-            itemDetail.bids.unshift(newBid)
-            itemDetail.currentPrice = bidders[0].currentPrice
+        let { itemDetail } = this.state
+        let bid = newBid.newBid
+        if (itemDetail) {
+            itemDetail.bids.unshift(bid)
+            itemDetail.currentPrice = itemDetail.bids[0].currentPrice
 
-            let nextStep = bidders[0].currentPrice * 0.5
-            this.setState({ itemDetail, bidders, step: nextStep, currentBidding: newBid.currentPrice + nextStep }, ()=>{
+            let nextStep = itemDetail.currentPrice * 0.5
+            this.setState({ itemDetail, step: nextStep, currentBidding: bid.currentPrice + nextStep }, ()=>{
                 this.handleBidPageChange(1)
             })
         }
@@ -216,7 +207,10 @@ class ItemDetail extends Component {
             toBlock: 'lastest'
         }).watch((error, event) => {
             if (error) console.log(error)
-            this.setState({ rs: event.args.player })
+            let newBidders = [].concat(this.state.bidders)
+            newBidders.unshift({address: event.args.address, time: event.args.time, value: event.args.value})
+
+            this.setState({ rs: event.args.player, bidders: newBidders })
         })
     }
     onSubmitBid(e) {
