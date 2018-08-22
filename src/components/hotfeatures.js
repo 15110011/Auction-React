@@ -34,7 +34,7 @@ class Features extends Component {
                                 </Link>
                                 <div className="cate-product-panel pt-2">
                                     <Link to="#">
-                                        Quang Trung Quốc
+                                        Lamborghini
                                     </Link>
                                     <p>Time Left: 05:30:30 | Current: 3 ETH</p>
                                 </div>
@@ -50,7 +50,7 @@ class Features extends Component {
                                 </Link>
                                 <div className="cate-product-panel pt-2">
                                     <Link to="#">
-                                        Quang Trung Quốc
+                                        Lamborghini
                                     </Link>
                                     <p>Time Left: 05:30:30 | Current: 3 ETH</p>
                                 </div>
@@ -66,7 +66,7 @@ class Features extends Component {
                                 </Link>
                                 <div className="cate-product-panel pt-2">
                                     <Link to="#">
-                                        Quang Trung Quốc
+                                        Lamborghini
                                     </Link>
                                     <p>Time Left: 05:30:30 | Current: 3 ETH</p>
                                 </div>
@@ -82,7 +82,7 @@ class Features extends Component {
                                 </Link>
                                 <div className="cate-product-panel pt-2">
                                     <Link to="#">
-                                        Quang Trung Quốc
+                                        Lamborghini
                                     </Link>
                                     <p>Time Left: 05:30:30 | Current: 3 ETH</p>
                                 </div>
@@ -94,7 +94,7 @@ class Features extends Component {
                                     <div className="title-cate">Jewelry</div>
                                     <div className="icon-cate"><i className="fas fa-gem"></i></div>
                                 </div>
-                                <small>Online jewelry auctions where you can bid now and save money – diamonds, gemstones, gold and silver...</small>
+                                <small>Online jewelry auctions where you can bid now and save money </small>
                                 {/* JEWELRY START */}
                                 <div className="row pt-2">
                                     <div className="col-sm-6">
@@ -108,7 +108,7 @@ class Features extends Component {
                                         </Link>
                                         <div className="cate-product-panel pt-2">
                                             <Link to="#">
-                                                Quang Trung Quốc 1
+                                                Lamborghini 1
                                             </Link>
                                             <p>Time Left: 05:30:30 | Current: 3 ETH</p>
                                         </div>
@@ -124,7 +124,7 @@ class Features extends Component {
                                         </Link>
                                         <div className="cate-product-panel pt-2">
                                             <Link to="#">
-                                                Quang Trung Quốc 1
+                                                Lamborghini 1
                                             </Link>
                                             <p>Time Left: 05:30:30 | Current: 3 ETH</p>
                                         </div>
@@ -152,7 +152,7 @@ class Features extends Component {
                                         </Link>
                                         <div className="cate-product-panel pt-2">
                                             <Link to="#">
-                                                Quang Trung Quốc 1
+                                                Lamborghini 1
                                             </Link>
                                             <p>Time Left: 05:30:30 | Current: 3 ETH</p>
                                         </div>
@@ -168,7 +168,7 @@ class Features extends Component {
                                         </Link>
                                         <div className="cate-product-panel pt-2">
                                             <Link to="#">
-                                                Quang Trung Quốc 1
+                                                Lamborghini 1
                                             </Link>
                                             <p>Time Left: 05:30:30 | Current: 3 ETH</p>
                                         </div>
@@ -203,7 +203,7 @@ class Features extends Component {
                                         </Link>
                                         <div className="cate-product-panel pt-2">
                                             <Link to="#">
-                                                Quang Trung Quốc
+                                                Lamborghini
                                         </Link>
                                             <p>Time Left: 05:30:30 | Current: 3 ETH</p>
                                         </div>
@@ -219,7 +219,7 @@ class Features extends Component {
                                         </Link>
                                         <div className="cate-product-panel pt-2">
                                             <Link to="#">
-                                                Quang Trung Quốc
+                                                Lamborghini
                                             </Link>
                                             <p>Time Left: 05:30:30 | Current: 3 ETH</p>
                                         </div>
@@ -235,7 +235,7 @@ class Features extends Component {
                                         </Link>
                                         <div className="cate-product-panel pt-2">
                                             <Link to="#">
-                                                Quang Trung Quốc
+                                                Lamborghini
                                             </Link>
                                             <p>Time Left: 05:30:30 | Current: 3 ETH</p>
                                         </div>
@@ -251,7 +251,7 @@ class Features extends Component {
                                         </Link>
                                         <div className="cate-product-panel pt-2">
                                             <Link to="#">
-                                                Quang Trung Quốc
+                                                Lamborghini
                                             </Link>
                                             <p>Time Left: 05:30:30 | Current: 3 ETH</p>
                                         </div>
@@ -263,7 +263,7 @@ class Features extends Component {
                                             <div className="title-cate">Art</div>
                                             <div className="icon-cate"><i className="fas fa-image"></i></div>
                                         </div>
-                                        <small>Online jewelry auctions where you can bid now and save money – diamonds, gemstones, gold and silver...</small>
+                                        <small>Online jewelry auctions where you can bid now and save money </small>
                                         {/* ARTS START */}
                                         <div className="row pt-2">
                                             <div className="col-sm-6">
@@ -277,7 +277,7 @@ class Features extends Component {
                                                 </Link>
                                                 <div className="cate-product-panel pt-2">
                                                     <Link to="#">
-                                                        Quang Trung Quốc 1
+                                                        Lamborghini 1
                                             </Link>
                                                     <p>Time Left: 05:30:30 | Current: 3 ETH</p>
                                                 </div>
@@ -293,7 +293,7 @@ class Features extends Component {
                                                 </Link>
                                                 <div className="cate-product-panel pt-2">
                                                     <Link to="#">
-                                                        Quang Trung Quốc 1
+                                                        Lamborghini 1
                                             </Link>
                                                     <p>Time Left: 05:30:30 | Current: 3 ETH</p>
                                                 </div>
@@ -321,7 +321,7 @@ class Features extends Component {
                                                 </Link>
                                                 <div className="cate-product-panel pt-2">
                                                     <Link to="#">
-                                                        Quang Trung Quốc 1
+                                                        Lamborghini 1
                                                     </Link>
                                                     <p>Time Left: 05:30:30 | Current: 3 ETH</p>
                                                 </div>
@@ -337,7 +337,7 @@ class Features extends Component {
                                                 </Link>
                                                 <div className="cate-product-panel pt-2">
                                                     <Link to="#">
-                                                        Quang Trung Quốc 1
+                                                        Lamborghini 1
                                                     </Link>
                                                     <p>Time Left: 05:30:30 | Current: 3 ETH</p>
                                                 </div>
