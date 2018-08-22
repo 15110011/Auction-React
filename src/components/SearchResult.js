@@ -10,7 +10,7 @@ class SearchResult extends Component {
         var foundItems = this.props.history.location.state.results
         if (foundItems.length === 0) {
             return (
-                <div role="alert" style={{ marginTop: '75px' }}>
+                <div role="alert" style={{ marginTop: '75px', minHeight: '100vh' }}>
                     <p className="alert alert-warning text-center light-word">Item not found</p>
                 </div>
             )
