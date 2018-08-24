@@ -26,13 +26,6 @@ class Header extends Component {
     }
     handleLogOut(e) {
         e.preventDefault()
-        // FB.logout(
-        //     resp => {
-        //         if (resp.status === 'unknown') {
-        //             this.setState({ isLoggedIn: false })
-        //         }
-        //     }
-        // )
         this.props.logOut()
     }
     componentDidMount() {
@@ -74,6 +67,7 @@ class Header extends Component {
                 .then(res => res.json())
                 .then(res => {
                     var itemsFound = res.resultItem
+                    console.log(itemsFound)
                     if (itemsFound.length === 0) {
                         this.props.history.push({
                             pathname: '/results',
@@ -89,6 +83,7 @@ class Header extends Component {
                     }
                 })
         }
+        this.setState({keywords:''})
     }
     handleLogin(e) {
         e.preventDefault()

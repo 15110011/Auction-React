@@ -2,10 +2,18 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import './../styles/setting.css'
 import NumberFormat from 'react-number-format';
+import dateFns from 'date-fns'
+import { fromMillisecondsToFormattedString } from '../config.js'
+
 
 
 class SearchResult extends Component {
-    
+    constructor(props) {
+        super(props)
+        this.state = {
+            timeLeft: ''
+        }
+    }
     render() {
         var foundItems = this.props.history.location.state.results
         if (foundItems.length === 0) {
@@ -15,43 +23,62 @@ class SearchResult extends Component {
                 </div>
             )
         }
+
         return (
             <div className="container" id="adddel-form" style={{ position: 'relative', zIndex: '1000', minHeight: '100vh' }}>
-                <div className="page-header" style={{ marginTop: '100px' }}>
+                <div className="text-center page-header" style={{ marginTop: '100px' }}>
                     <h1>Search results</h1>
                 </div>
-                <table className="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Category</th>
-                            <th scope="col">Details</th>
-                        </tr>
-                    </thead>
-                    <tbody className="light-word">
+                <hr></hr>
+                <div className="container pt-4">
+                    <div className="row">
                         {
                             foundItems.map((item, i) => {
+                                let endTime = dateFns.getTime(dateFns.addHours(item.startedAt, item.period))
+                                let curTime = dateFns.getTime(new Date())
+                                let timeLeft = endTime + item.additionalTime - curTime
+                                clearInterval(this.countDownInterval)
+                                this.countDownInterval = setInterval(() => {
+                                    var remainTime = timeLeft - 1000
+                                    this.setState({ timeLeft: remainTime })
+                                    if (remainTime <= 0) {
+                                        clearInterval(this.countDownInterval)
+                                    }
+                                })
                                 return (
-                                    <tr className="fixprop" key={item.id}>
-                                        <th scope="row">{i + 1}</th>
-                                        <td>{item.name}</td>
-                                        <td><NumberFormat displayType={'text'} value={item.currentPrice} thousandSeparator={true} suffix={' ETH'} /></td>
-                                        <td>{item.quantity}</td>
-                                        <td>{item.categoryName}</td>
-                                        <td>
-                                            <div className="edit-del">
-                                                <Link className="btn btn-info" style={{ color: '#1d93c1' }} to={`/items/${item.id}`}><i className="fas fa-eye"></i></Link>
+                                    <div key={i} className="col-sm-3 card">
+                                        {
+                                            item.length !== 0 ? (
+                                                <Link className="borderitem" to={`/items/${item.itemId}`}>
+                                                    <img className="card-img-top" src={`${root}/uploads/${item.link}`} alt="" style={{ minHeight: '200px', maxHeight: '200px', objectFit: 'cover' }} />
+                                                </Link>
+                                            ) : (
+                                                    <img className="card-img-top" src={`http://www.staticwhich.co.uk/static/images/products/no-image/no-image-available.png`} alt="" style={{ minHeight: '200px', maxHeight: '200px' }} />
+                                                )
+                                        }
+                                        <div className="card-body">
+                                            <div className="text-center">
+                                                <h5>{item.name}</h5>
                                             </div>
-                                        </td>
-                                    </tr>
+                                            <p className="card-title">Current price:&nbsp;<NumberFormat displayType={'text'} value={item.currentPrice} thousandSeparator={true} suffix={' ETH'} /></p>
+                                            {
+                                                item.startedAt === 0 ? (
+                                                    <p classname="card-price" style={{ flex: '1' }}>Auction haven't started yet</p>
+                                                ) : (
+                                                        <p className="card-price" style={{ flex: '1' }}>
+                                                            Time left :&nbsp; {fromMillisecondsToFormattedString(this.state.timeLeft)}
+                                                        </p>
+                                                    )
+                                            }
+
+                                            <Link className="btn btnbid" to={`/items/${item.id}`} role="button" style={{ marginTop: '5px' }}><i className="fas fa-gavel"></i> Bid now</Link>
+                                        </div>
+                                    </div>
                                 )
                             })
                         }
-                    </tbody>
-                </table>
+                    </div>
+                </div>
             </div>
         )
     }
