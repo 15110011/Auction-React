@@ -64,7 +64,7 @@ export default class RecommendItems extends Component {
                                 <div className="text-center">
                                     <h5>{item.itemName}</h5>
                                 </div>
-                                <p className="card-title">Current bid: <NumberFormat displayType={'text'} value={item.curPrice} thousandSeparator={true} prefix={'$'} /> </p>
+                                <p className="card-title">Current bid: <NumberFormat displayType={'text'} value={item.curPrice} thousandSeparator={true} suffix={' ETH'} /> </p>
                                 <p className="card-price">
                                     End in: {fromMillisecondsToFormattedString(item.timeLeft)}
                                 </p>
