@@ -63,7 +63,7 @@ class SearchResult extends Component {
                                             <p className="card-title">Current price:&nbsp;<NumberFormat displayType={'text'} value={item.currentPrice} thousandSeparator={true} suffix={' ETH'} /></p>
                                             {
                                                 item.startedAt === 0 ? (
-                                                    <p classname="card-price" style={{ flex: '1' }}>Auction haven't started yet</p>
+                                                    <p classname="card-price" style={{ flex: '1' }}>Auction hasn't started yet</p>
                                                 ) : (
                                                         <p className="card-price" style={{ flex: '1' }}>
                                                             Time left :&nbsp; {fromMillisecondsToFormattedString(this.state.timeLeft)}
