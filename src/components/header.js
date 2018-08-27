@@ -5,6 +5,7 @@ import '../styles/styles.css'
 import { LOADING_LOGIN_STATUS, LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config'
 import Notifications from './Notifications'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
+import Web3 from 'web3';
 
 
 
@@ -25,12 +26,19 @@ class Header extends Component {
 		this.handleLogin = this.handleLogin.bind(this)
 		this.handleSearch = this.handleSearch.bind(this)
 		this.updateKeyWord = this.updateKeyWord.bind(this)
-		this.toggle = this.toggle.bind(this)
+		this.toggle = this.toggle.bind(this);
+
+		if (typeof this.web3 !== 'undefined') {
+			this.web3Provider = this.web3.currentProvider
+		} else {
+			this.web3Provider = new Web3.providers.HttpProvider('https://ropsten.infura.io/99efdc0bd45147cebbdfd88e5eff1d75')
+		}
+		this.web3 = window.web3
 	}
 	toggle() {
 		this.setState({
 			modal: !this.state.modal
-		})
+		});
 	}
 	handleLogOut(e) {
 		e.preventDefault()
@@ -156,29 +164,39 @@ class Header extends Component {
 										<Link className="nav-item nav-link ml-auto" to="/bidcart" style={{ color: 'white' }}><i className="fas fa-cart-plus"></i></Link>
 										{this.props.userId !== '' ? <Notifications userId={this.props.userId} io={this.props.io} ></Notifications> : <i className="far fa-bell"></i>}
 										<div className="nav-item dropdown">
-											<Link style={{ color: 'white' }} className="nav-link dropdown-toggle" to="/manager" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="far fa-user"></i></Link>
+											<Link style={{ color: 'white' }} className="nav-link dropdown-toggle" to="" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="far fa-user"></i></Link>
 											<div className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
-												<Link className="dropdown-item" to="" onClick={this.toggle}>{this.props.name}
-													<Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
-														<ModalHeader toggle={this.toggle}>{this.props.name}</ModalHeader>
-														<ModalBody>
-															<Form>
-																<FormGroup>
-																	<Label for="exampleAddress">Wallet Address</Label>
-																	<Input type="text" name="wallet" id="exampleAddress" disabled placeholder="" style={{ width: '100%'}} />
-																</FormGroup>
-																<FormGroup>
-																	<Label for="exampleBalance">Balance</Label>
-																	<Input type="text" name="balance" id="exampleBalance" disabled placeholder="" style={{ width: '100%'}} />
-																</FormGroup>
-															</Form>
-														</ModalBody>
-														<ModalFooter>
-															<Button color="primary" onClick={this.toggle}>Buy Token</Button>{' '}
-															<Button color="secondary" onClick={this.toggle}>Cancel</Button>
-														</ModalFooter>
-													</Modal>
-												</Link>
+												<Link className="dropdown-item" to="#" onClick={this.toggle}>{this.props.name}</Link>
+												<Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
+													<ModalHeader toggle={this.toggle}>{this.props.name}</ModalHeader>
+													<ModalBody>
+														{
+															window.web3 ? (
+																<Form>
+																	<FormGroup>
+																		<Label for="exampleAddress">Wallet Address</Label>
+																		<Input type="text" value={window.web3.eth.accounts[0]} name="wallet" id="exampleAddress" disabled placeholder="" style={{ width: '100%' }} />
+																	</FormGroup>
+																	<FormGroup>
+																		<Label for="exampleBalance">Balance</Label>
+																		<Input type="text" name="balance" id="exampleBalance" disabled placeholder="" style={{ width: '100%' }} />
+																	</FormGroup>
+																	<FormGroup>
+																		<Label for="exampleToken">Buy Token</Label>
+																		<Input type="number" name="token" id="exampleToken" min="0" placeholder="" style={{ width: '100%' }} />
+																	</FormGroup>
+																	<Button color="primary" type="submit" style={{ marginLeft: '40%', width: '100px' }}>Buy</Button>{' '}
+																</Form>
+															) : (
+																	<p className="alert alert-danger text-center">
+																		Due to security reasons, please <strong >install</strong> and <strong>login</strong> to Meta Mask</p>
+																)
+														}
+													</ModalBody>
+													<ModalFooter>
+														<Button color="secondary" onClick={this.toggle}>Cancel</Button>
+													</ModalFooter>
+												</Modal>
 												<Link className="dropdown-item" to="/dashboard">Dashboard</Link>
 												{this.props.isAdmin ? <Link className="dropdown-item" to="/admin">Admin Panel <span className="badge badge-danger" style={{ position: 'absolute', left: '120px', top: '77px', borderRadius: '10px' }} ></span></Link> : ''}
 												<Link className="dropdown-item" to="/logout" onClick={this.handleLogOut}>Sign out</Link>
