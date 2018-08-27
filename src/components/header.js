@@ -6,6 +6,7 @@ import { LOADING_LOGIN_STATUS, LOADED_LOGIN_STATUS, GUEST_STATUS } from '../conf
 import Notifications from './Notifications'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 import Web3 from 'web3';
+import NumberFormat from 'react-number-format';
 
 
 
@@ -20,7 +21,8 @@ class Header extends Component {
 			keywords: '',
 			results: [],
 			found: true,
-			modal: false
+			modal: false,
+			amount: 0
 		}
 		this.handleLogOut = this.handleLogOut.bind(this)
 		this.handleLogin = this.handleLogin.bind(this)
@@ -179,7 +181,8 @@ class Header extends Component {
 																	</FormGroup>
 																	<FormGroup>
 																		<Label for="exampleBalance">Balance</Label>
-																		<Input type="text" name="balance" id="exampleBalance" disabled placeholder="" style={{ width: '100%' }} />
+																		{/* {<NumberFormat displayType={'text'} value={this.state.amount} thousandSeparator={true} suffix={' ETH'} />} */}
+																		<Input type="text" value={this.state.amount + ' BLC'} name="balance" id="exampleBalance" disabled placeholder="" style={{ width: '100%' }} />
 																	</FormGroup>
 																	<FormGroup>
 																		<Label for="exampleToken">Buy Token</Label>
