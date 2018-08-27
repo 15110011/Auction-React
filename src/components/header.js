@@ -6,7 +6,6 @@ import { LOADING_LOGIN_STATUS, LOADED_LOGIN_STATUS, GUEST_STATUS } from '../conf
 import Notifications from './Notifications'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 import Web3 from 'web3';
-import NumberFormat from 'react-number-format';
 
 
 
@@ -181,7 +180,6 @@ class Header extends Component {
 																	</FormGroup>
 																	<FormGroup>
 																		<Label for="exampleBalance">Balance</Label>
-																		{/* {<NumberFormat displayType={'text'} value={this.state.amount} thousandSeparator={true} suffix={' ETH'} />} */}
 																		<Input type="text" value={this.state.amount + ' BLC'} name="balance" id="exampleBalance" disabled placeholder="" style={{ width: '100%' }} />
 																	</FormGroup>
 																	<FormGroup>
@@ -196,13 +194,10 @@ class Header extends Component {
 																)
 														}
 													</ModalBody>
-													<ModalFooter>
-														<Button color="secondary" onClick={this.toggle}>Cancel</Button>
-													</ModalFooter>
 												</Modal>
 												<Link className="dropdown-item" to="/dashboard">Dashboard</Link>
 												{this.props.isAdmin ? <Link className="dropdown-item" to="/admin">Admin Panel <span className="badge badge-danger" style={{ position: 'absolute', left: '120px', top: '77px', borderRadius: '10px' }} ></span></Link> : ''}
-												<Link className="dropdown-item" to="/logout" onClick={this.handleLogOut}>Sign out</Link>
+												<Link className="dropdown-item" to="/logout" onClick={this.handleLogOut}>Sign Out</Link>
 											</div>
 										</div>
 									</div>
