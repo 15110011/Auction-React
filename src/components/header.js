@@ -4,6 +4,7 @@ import { Link, withRouter } from 'react-router-dom'
 import '../styles/styles.css'
 import { LOADING_LOGIN_STATUS, LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config'
 import Notifications from './Notifications'
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 
 
 
@@ -17,12 +18,19 @@ class Header extends Component {
 			categories: [],
 			keywords: '',
 			results: [],
-			found: true
+			found: true,
+			modal: false
 		}
 		this.handleLogOut = this.handleLogOut.bind(this)
 		this.handleLogin = this.handleLogin.bind(this)
 		this.handleSearch = this.handleSearch.bind(this)
 		this.updateKeyWord = this.updateKeyWord.bind(this)
+		this.toggle = this.toggle.bind(this)
+	}
+	toggle() {
+		this.setState({
+			modal: !this.state.modal
+		})
 	}
 	handleLogOut(e) {
 		e.preventDefault()
@@ -150,7 +158,27 @@ class Header extends Component {
 										<div className="nav-item dropdown">
 											<Link style={{ color: 'white' }} className="nav-link dropdown-toggle" to="/manager" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="far fa-user"></i></Link>
 											<div className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
-												<Link className="dropdown-item" to="">{this.props.name}</Link>
+												<Link className="dropdown-item" to="" onClick={this.toggle}>{this.props.name}
+													<Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
+														<ModalHeader toggle={this.toggle}>{this.props.name}</ModalHeader>
+														<ModalBody>
+															<Form>
+																<FormGroup>
+																	<Label for="exampleAddress">Wallet Address</Label>
+																	<Input type="text" name="wallet" id="exampleAddress" disabled placeholder="" style={{ width: '100%'}} />
+																</FormGroup>
+																<FormGroup>
+																	<Label for="exampleBalance">Balance</Label>
+																	<Input type="text" name="balance" id="exampleBalance" disabled placeholder="" style={{ width: '100%'}} />
+																</FormGroup>
+															</Form>
+														</ModalBody>
+														<ModalFooter>
+															<Button color="primary" onClick={this.toggle}>Buy Token</Button>{' '}
+															<Button color="secondary" onClick={this.toggle}>Cancel</Button>
+														</ModalFooter>
+													</Modal>
+												</Link>
 												<Link className="dropdown-item" to="/dashboard">Dashboard</Link>
 												{this.props.isAdmin ? <Link className="dropdown-item" to="/admin">Admin Panel <span className="badge badge-danger" style={{ position: 'absolute', left: '120px', top: '77px', borderRadius: '10px' }} ></span></Link> : ''}
 												<Link className="dropdown-item" to="/logout" onClick={this.handleLogOut}>Sign out</Link>
