@@ -780,10 +780,12 @@ body{
   border: none;
   border-color: darkgrey;
 }
-.card-body{
+.card-body {
   border: 1px solid darkgrey;
   border-bottom-left-radius: .5rem;
   border-bottom-right-radius: .5rem;
+  display: flex;
+  flex-direction: column;
 }
 .borderitem{
   border-top-left-radius: .5rem;
