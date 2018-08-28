@@ -56,60 +56,60 @@ class ItemDetail extends Component {
 
   }
 
-  componentDidMount() {
-    this.mounted = true
-    fetch(`${root}/api/v1/contracts/${this.props.match.params.id}`)
-      .then(res => res.json())
-      .then(res => {
-        if (!this.mounted) return
-        if (res.success) {
-          if (!window.web3) {
-            this.setState({ getMetaMask: false })
-            return
-          }
-          this.setState({ deployContract: false, startBidding: true })
-          var auctionContract = this.web3.eth.contract(AuctionBid.abi)
-          this.contract = auctionContract.at((res.contractAddress.contractAddress).toString())
-          this.contractEnded = res.contractAddress.ended
-          this.contract.highestBidder((err, rs) => {
-            this.setState({ rs })
-          })
-          this.getBidder()
-        }
-      })
-    this.props.io.socket.get(`${root}/hello`, function serverResponded(body, JWR) {
-    });
-    fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
-      credentials: 'include'
-    })
-      .then(res => res.json())
-      .then(item => {
-        if (!this.mounted) return
-        this.setState({ loading: false })
-        if (!item.error) {
-          this.setState({ currentPrice: item.findItem.currentPrice })
-          let nextStep = item.findItem.bids.length > 0 ?
-            item.findItem.bids[0].currentPrice * 0.5 :
-            item.findItem.currentPrice * 0.5
-          let initBid = item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice : item.findItem.currentPrice
-          this.props.io.socket.get('/socket/items/' + item.findItem.id, (body, JWR) => {
-          })
-          this.props.io.socket.on('room' + item.findItem.id, this.onReceiveRoomMessage)
-          this.setState({
-            images: item.findImg,
-            itemDetail: item.findItem,
-            step: nextStep,
-            currentBidding: initBid + nextStep,
-            isApproved: item.isApproved
-          }, () => {
-            this.setCountDown()
-          })
-        }
-        else {
-          if (!this.mounted) return
-          this.setState({ itemDetail: null })
-        }
-      })
+    componentDidMount() {
+        this.mounted = true
+        fetch(`${root}/api/v1/contracts/${this.props.match.params.id}`)
+            .then(res => res.json())
+            .then(res => {
+                if (!this.mounted) return
+                if (res.success) {
+                    if (!window.web3) {
+                        this.setState({ getMetaMask: false })
+                        return
+                    }
+                    this.setState({ deployContract: false, startBidding: true })
+                    var auctionContract = this.web3.eth.contract(AuctionBid.abi)
+                    this.contract = auctionContract.at((res.contractAddress.contractAddress).toString())
+                    this.contractEnded = res.contractAddress.ended
+                    this.contract.highestBidder((err, rs) => {
+                        this.setState({ rs })
+                    })
+                    this.getBidder()
+                }
+            })
+        // this.props.io.socket.get(`${root}/hello`, function serverResponded(body, JWR) {
+        // });
+        fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
+            credentials: 'include'
+        })
+            .then(res => res.json())
+            .then(item => {
+                if (!this.mounted) return
+                this.setState({ loading: false })
+                if (!item.error) {
+                    this.setState({ currentPrice: item.findItem.currentPrice })
+                    let nextStep = item.findItem.bids.length > 0 ?
+                        item.findItem.bids[0].currentPrice * 0.5 :
+                        item.findItem.currentPrice * 0.5
+                    let initBid = item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice : item.findItem.currentPrice
+                    this.props.io.socket.get('/socket/items/' + item.findItem.id, (body, JWR) => {
+                    })
+                    this.props.io.socket.on('room' + item.findItem.id, this.onReceiveRoomMessage)
+                    this.setState({
+                        images: item.findImg,
+                        itemDetail: item.findItem,
+                        step: nextStep,
+                        currentBidding: initBid + nextStep,
+                        isApproved: item.isApproved
+                    }, () => {
+                        this.setCountDown()
+                    })
+                }
+                else {
+                    if (!this.mounted) return
+                    this.setState({ itemDetail: null })
+                }
+            })
 
   }
   onReceiveRoomMessage(newBid) {
