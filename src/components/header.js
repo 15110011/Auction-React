@@ -61,7 +61,6 @@ class Header extends Component {
 		if (window.web3) {
 			var tokenContract = this.web3.eth.contract(DappToken.abi)
 			this.blcToken = tokenContract.at('0x3347c9bca8040e7A5bf0E0dF1D0F4Af343e09557')
-
 			setInterval(() => {
 				this.blcToken.balanceOf(window.web3.eth.accounts[0], (err, balance) => {
 					this.setState({ balance: balance.toNumber() })
@@ -118,8 +117,9 @@ class Header extends Component {
 	handleBuyToken = (e) => {
 		e.preventDefault()
 		const { amount } = this.state
-		this.saleToken.buyTokens(amount,
-			{ from: window.web3.eth.accounts[0], gas: 500000, value: (amount * 1000000000000000) },
+		console.log(typeof +amount)
+		this.saleToken.buyTokens(+amount,
+			{ from: window.web3.eth.accounts[0], gas: 500000, value: (+amount * 1000000000000000) },
 			(err, txHash) => {
 				if (err) {
 					console.log(err)
