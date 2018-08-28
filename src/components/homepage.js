@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import '../styles/styles.css'
 import Features from './hotfeatures';
-import Items from './items';
 import Carousel from './Carousel';
 
 

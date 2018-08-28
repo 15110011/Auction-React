@@ -83,6 +83,7 @@ class Features extends Component {
                                                     </div>
                                                 )
                                             }
+                                            return null
                                         }) :
                                             <div className='d-flex col-12 justify-content-center pt-5 pb-2'>
                                                 <p className="text-uppercase h5">No items in this category</p>
@@ -128,11 +129,7 @@ class Features extends Component {
                                                             </div>
                                                         </div>)
                                                     }
-                                                    {/* else if (jewelry.endTime - currentTime <= 0) {
-                                                        let cloneJel = [].concat(Jewelry)
-                                                        cloneJel = cloneJel.slice(0, i).concat(cloneJel.slice(i + 1))
-                                                        this.setState({ Jewelry: cloneJel })
-                                                    } */}
+                                                    return null
                                                 }
                                                 ) :
                                                     <div className='d-flex col-12 justify-content-center pt-5 pb-2'>
@@ -184,6 +181,7 @@ class Features extends Component {
                                                             </div>
                                                         </div>)
                                                     }
+                                                    return null
                                                 }
                                                 )
                                                     :
@@ -243,6 +241,7 @@ class Features extends Component {
                                                             </div>
                                                         )
                                                     }
+                                                    return null
                                                 }) :
                                                     <div className='d-flex col-12 justify-content-center pt-5 pb-2'>
                                                         <p className="text-uppercase h5">No items in this category</p>
@@ -289,6 +288,7 @@ class Features extends Component {
                                                                     </div>
                                                                 </div>)
                                                             }
+                                                            return null
                                                         }
                                                         ) :
                                                             <div className='d-flex col-12 justify-content-center pt-5 pb-2'>
@@ -315,7 +315,6 @@ class Features extends Component {
                                                     {
                                                         Electronics.length > 0 ? Electronics.map((electronic, i) => {
                                                             if (electronic.endTime - currentTime > 0 && i <= 1) {
-
                                                                 return (<div className="col-sm-6">
                                                                     <Link to="#">
                                                                         <div className="cate-product">
@@ -339,6 +338,7 @@ class Features extends Component {
                                                                     </div>
                                                                 </div>)
                                                             }
+                                                            return null
                                                         }
                                                         ) :
                                                             <div className='d-flex col-12 justify-content-center pt-5 pb-2'>
