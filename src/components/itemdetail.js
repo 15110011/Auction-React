@@ -11,7 +11,6 @@ import Pagination from './Pagination'
 import Web3 from 'web3';
 
 import AuctionBid from '../contracts/AuctionBid.json';
-import DappToken from '../contracts/DappToken.json'
 import RecommendItems from './RecommendItems';
 
 

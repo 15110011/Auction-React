@@ -4,8 +4,11 @@ import { Link, withRouter } from 'react-router-dom'
 import '../styles/styles.css'
 import { LOADING_LOGIN_STATUS, LOADED_LOGIN_STATUS, GUEST_STATUS } from '../config'
 import Notifications from './Notifications'
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input } from 'reactstrap';
 import Web3 from 'web3';
+import DappTokenSale from '../contracts/DappTokenSale.json'
+import DappToken from '../contracts/DappToken.json'
+
 
 
 
@@ -21,7 +24,8 @@ class Header extends Component {
 			results: [],
 			found: true,
 			modal: false,
-			amount: 0
+			balance: 0,
+			amount: ''
 		}
 		this.handleLogOut = this.handleLogOut.bind(this)
 		this.handleLogin = this.handleLogin.bind(this)
@@ -53,14 +57,19 @@ class Header extends Component {
 				return true
 			})
 			this.setState({ categories: cloneCat })
-
 		})
-		if (this.props.userId !== '') {
+		if (window.web3) {
+			var tokenContract = this.web3.eth.contract(DappToken.abi)
+			this.blcToken = tokenContract.at('0x3347c9bca8040e7A5bf0E0dF1D0F4Af343e09557')
 
-
+			setInterval(() => {
+				this.blcToken.balanceOf(window.web3.eth.accounts[0], (err, balance) => {
+					this.setState({ balance: balance.toNumber() })
+				})
+			}, 100)
+			var saleTokenContract = this.web3.eth.contract(DappTokenSale.abi)
+			this.saleToken = saleTokenContract.at('0x9015bE8db734884845698Cde0fc5020A575De76B')
 		}
-
-
 	}
 
 	componentWillMount() {
@@ -106,7 +115,9 @@ class Header extends Component {
 		e.preventDefault()
 		this.props.logIn()
 	}
-
+	handleBuyToken = (e) => {
+		e.preventDefault()
+	}
 	onClick(e) {
 		e.preventDefault()
 		FB.login(console.log)
@@ -180,13 +191,22 @@ class Header extends Component {
 																	</FormGroup>
 																	<FormGroup>
 																		<Label for="exampleBalance">Balance</Label>
-																		<Input type="text" value={this.state.amount + ' BLC'} name="balance" id="exampleBalance" disabled placeholder="" style={{ width: '100%' }} />
+																		<Input type="text" value={this.state.balance + ' BLC'} name="balance" id="exampleBalance" disabled placeholder="" style={{ width: '100%' }} />
 																	</FormGroup>
 																	<FormGroup>
-																		<Label for="exampleToken">Buy Token</Label>
-																		<Input type="number" name="token" id="exampleToken" min="0" placeholder="" style={{ width: '100%' }} />
+																		<Label for="exampleToken">Number Of BlochaCoins (BLC)</Label>
+																		<Input
+																			value={this.state.amount}
+																			onChange={(e) => {
+																				if (/^-{0,0}[0-9]{1,}(\.{1,1}[0-9]{1,}|\.{0,0})$/.test(+e.target.value)) {
+																					this.setState({ amount: e.target.value })
+																				}
+																			}}
+																			name="token" id="exampleToken" placeholder="" style={{ width: '100%' }}
+																		/>
+																		<p className="alert alert-danger text-center mt-4">{this.state.amount} BLC = {this.state.amount * 0.001} ETH</p>
 																	</FormGroup>
-																	<Button color="primary" type="submit" style={{ marginLeft: '40%', width: '100px' }}>Buy</Button>{' '}
+																	<Button color="primary" onClick={this.handleBuyToken} type="submit" style={{ marginLeft: '40%', width: '100px' }}>Buy</Button>{' '}
 																</Form>
 															) : (
 																	<p className="alert alert-danger text-center">
