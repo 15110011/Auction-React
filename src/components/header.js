@@ -137,9 +137,9 @@ class Header extends Component {
 
                             <datalist id="suggestions">
                                 {
-                                    filterItem.map((kw) => {
+                                    filterItem.map((kw,i) => {
                                         return (
-                                            <option value={kw.name} />
+                                            <option value={kw.name} key={i}/>
                                         )
                                     })
                                 }

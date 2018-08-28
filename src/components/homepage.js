@@ -53,8 +53,7 @@ class HomePage extends Component {
                 <Carousel />
                 <Features />
                 <br />
-                <hr />
-                <Items />
+                
             </div>
         )
     }

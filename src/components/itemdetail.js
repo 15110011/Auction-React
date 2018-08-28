@@ -78,8 +78,8 @@ class ItemDetail extends Component {
                     this.getBidder()
                 }
             })
-        this.props.io.socket.get(`${root}/hello`, function serverResponded(body, JWR) {
-        });
+        // this.props.io.socket.get(`${root}/hello`, function serverResponded(body, JWR) {
+        // });
         fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
             credentials: 'include'
         })

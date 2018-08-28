@@ -4,7 +4,7 @@ import StarRatingComponent from 'react-star-rating-component';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Progress } from 'reactstrap';
 import { Form, FormGroup, Label } from 'reactstrap';
-import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
+import { Pagination } from 'reactstrap';
 
 export default class RatingList extends Component {
     constructor(props) {
