@@ -117,6 +117,16 @@ class Header extends Component {
 	}
 	handleBuyToken = (e) => {
 		e.preventDefault()
+		const { amount } = this.state
+		this.saleToken.buyTokens(amount,
+			{ from: window.web3.eth.accounts[0], gas: 500000, value: (amount * 1000000000000000) },
+			(err, txHash) => {
+				if (err) {
+					console.log(err)
+				} else {
+					console.log(txHash)
+				}
+			})
 	}
 	onClick(e) {
 		e.preventDefault()
@@ -179,7 +189,10 @@ class Header extends Component {
 											<Link style={{ color: 'white' }} className="nav-link dropdown-toggle" to="" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="far fa-user"></i></Link>
 											<div className="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
 												<Link className="dropdown-item" to="#" onClick={this.toggle}>{this.props.name}</Link>
-												<Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
+												<Modal isOpen={this.state.modal} onClosed={e => {
+													this.setState({ amount: '' })
+												}}
+													toggle={this.toggle} className={this.props.className}>
 													<ModalHeader toggle={this.toggle}>{this.props.name}</ModalHeader>
 													<ModalBody>
 														{
@@ -204,7 +217,13 @@ class Header extends Component {
 																			}}
 																			name="token" id="exampleToken" placeholder="" style={{ width: '100%' }}
 																		/>
-																		<p className="alert alert-danger text-center mt-4">{this.state.amount} BLC = {this.state.amount * 0.001} ETH</p>
+																		{
+																			this.state.amount === '' ? (
+																				<p className="alert alert-danger text-center mt-4">1 BLC = 0.001 ETH</p>
+																			) : (
+																					<p className="alert alert-danger text-center mt-4">{this.state.amount} BLC = {this.state.amount * 0.001} ETH</p>
+																				)
+																		}
 																	</FormGroup>
 																	<Button color="primary" onClick={this.handleBuyToken} type="submit" style={{ marginLeft: '40%', width: '100px' }}>Buy</Button>{' '}
 																</Form>
