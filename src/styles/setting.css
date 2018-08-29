@@ -11,7 +11,7 @@
     position: absolute;
     top: 10%;
 }
-.form-control{
+/* .form-control{
     display: block;
     width: 320px;
     padding: .375rem .75rem;
@@ -23,7 +23,7 @@
     border: 1px solid #ced4da;
     border-radius: 10px;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-}
+} */
 .signupbtn{
     position: relative;
     left: 35%;

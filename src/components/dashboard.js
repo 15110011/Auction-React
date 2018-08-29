@@ -5,11 +5,15 @@ import EditItem from './editItem'
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw } from 'draft-js';
 import _ from 'lodash'
-import { Link } from 'react-router-dom'
+import { Link, Route } from 'react-router-dom'
 import { convertFromHTML, ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Form, FormGroup, Label, ButtonGroup } from 'reactstrap';
+import {
+    Modal, ModalHeader, ModalBody, ModalFooter,
+    Button, Input, Form, FormGroup, Label, ButtonGroup,
+    Row, Container
+} from 'reactstrap';
 import Pagination from './Pagination'
 import NumberFormat from 'react-number-format';
 
@@ -42,9 +46,12 @@ class DashBoard extends Component {
             images: [],
             count: 0,
             period: 1,
+            total: 0,
             page: 1,
             renderedItems: [],
-            itemPerPage: 3
+            itemPerPage: 10,
+            search: '',
+            filteredItems: []
         }
         this.handleAddItem = this.handleAddItem.bind(this)
         this.getItem = this.getItem.bind(this)
@@ -57,6 +64,7 @@ class DashBoard extends Component {
         this.toggle = this.toggle.bind(this)
         this.onInputFileChange = this.onInputFileChange.bind(this)
         this.handlePageChange = this.handlePageChange.bind(this)
+        this.uploadImage = React.createRef();
     }
     toggle() {
         this.setState({
@@ -235,8 +243,16 @@ class DashBoard extends Component {
 
     }
     handlePageChange(page) {
-        const renderedItems = this.state.items.slice((page - 1) * this.state.itemPerPage, (page - 1) * this.state.itemPerPage + this.state.itemPerPage)
+        const { filteredItems } = this.state
+        let renderedItems
+        if (filteredItems.length === 0) {
+            renderedItems = this.state.items.slice((page - 1) * this.state.itemPerPage, (page - 1) * this.state.itemPerPage + this.state.itemPerPage)
+        }
+        else {
+            renderedItems = filteredItems.slice((page - 1) * this.state.itemPerPage, (page - 1) * this.state.itemPerPage + this.state.itemPerPage)
+        }
         this.setState({ page, renderedItems })
+
     }
     handleChange(e) {
         this.setState({ categoriesId: e.target.value })
@@ -247,8 +263,28 @@ class DashBoard extends Component {
         }
         return true
     }
+    handleSearch = (e) => {
+        e.preventDefault()
+        const { items, categories } = this.state
+        let cloneItems = [].concat(items)
+        cloneItems = cloneItems.filter((cur) => {
+            let temp = {}
+            Object.assign(temp, cur)
+            if (temp.isAccept == 1) {
+                temp.isAccept = 'Accepted'
+            }
+            else if (temp.isAccept == 0) {
+                temp.isAccept = 'Rejected'
+            }
+            else temp.isAccept = 'Pending'
+            temp.categoriesId = categories[temp.categoriesId]
+            return JSON.stringify(Object.values(temp)).toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1
+        })
+        this.setState({ renderedItems: cloneItems, page: 1, total: cloneItems.length })
+    }
+
     render() {
-        const { page, total, renderedItems, itemPerPage } = this.state
+        const { page, total, renderedItems, itemPerPage, filteredItems, items } = this.state
 
         if (this.props.loggedIn === GUEST_STATUS) {
             return (
@@ -272,6 +308,7 @@ class DashBoard extends Component {
                             <br />
                         </center>
                     </div>
+                    <input type="file" name="files" ref={this.uploadImage} id="inputFile" accept="image/*" style={{ opacity: '0' }} multiple onChange={this.onInputFileChange} />
                     <EditItem
                         {...this.state}
                         handleEdit={this.handleEdit}
@@ -282,155 +319,224 @@ class DashBoard extends Component {
                         onEditorStateChange={this.onEditorStateChange}
                         onContentStateChange={this.onContentStateChange}
                     />
-                    {
-                        this.state.isAdding === true && (
-                            <Form onSubmit={this.handleAddItem} encType="multipart/form-data">
-                                <input
-                                    type="hidden"
-                                    name="userId"
-                                    value={this.props.userId}
-                                />
-                                <input
-                                    type="hidden"
-                                    name="itemId"
-                                    value={this.state.itemId}
-                                />
-                                <div className="info">
-                                    <div className="row info-intro light-word">
-                                        <h3 style={{ marginTop: '5px', paddingLeft: '5px', fontWeight: '600' }}>Infomation</h3>
-                                    </div>
-                                    <div className="row pt-2" id="detail-border">
-                                        <div className="col-md-4">
-                                            <FormGroup>
-                                                <Label for="exampleName">Name <span title="Nhập cmn vào" id="force">(*)</span></Label>
-                                                <Input type="text" name="name" id="exampleName" placeholder="Car..."
-                                                    value={this.state.name}
-                                                    onChange={e => this.setState({ name: e.target.value })}
-                                                />
-                                            </FormGroup>
-                                            <FormGroup>
-                                                <Label for="exampleEmail">Price <span id="force">(*)</span></Label>
-                                                <Input type="number" name="currentPrice" title="Nhập cmn vào" id="examplePrice" min="0"
-                                                    value={this.state.currentPrice}
-                                                    onChange={e => this.setState({ currentPrice: e.target.value })}
-                                                />
-                                            </FormGroup>
-                                        </div>
-                                        <div className="col-md-4">
-                                            <FormGroup>
-                                                <Label for="example">Quantity <span title="Nhập cmn vào" id="force">(*)</span></Label>
-                                                <Input type="number" name="quantity" id="exampleQuantity" min="0"
-                                                    value={this.state.quantity}
-                                                    onChange={e => this.setState({ quantity: e.target.value })}
-                                                />
-                                            </FormGroup>
-                                            <FormGroup>
-                                                <Label for="example">Category <span title="Nhập cmn vào" id="force">(*)</span></Label>
-                                                <Input type="select" name="categories" id="exampleSelect" onChange={this.handleChange}>
-                                                    <option defaultValue></option>
-                                                    {this.state.categories.map((cat, index) => {
-                                                        return (<option value={index} key={index}>{cat}</option>)
-                                                    })}
-                                                </Input>
-                                            </FormGroup>
-                                        </div>
-                                        <div className="col-md-4">
-                                            <FormGroup>
-                                                <Label for="example">Duration (hours) <span title="Nhập cmn vào" id="force">(*)</span></Label>
-                                                <Input type="select" name="period" onChange={e => this.setState({ period: e.target.value })}>
-                                                    <option value="1" defaultValue>1</option>
-                                                    <option value="2">2</option>
-                                                    <option value="3">3</option>
-                                                    <option value="5">5</option>
-                                                </Input>
-                                            </FormGroup>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="detail mt-2">
-                                    <div className="detail-form mt-2">
-                                        <div className="row detai-intro mb-1 light-word" id="detail-border">
-                                            <h3 style={{ marginTop: '5px', paddingLeft: '5px', fontWeight: '600' }}>Details</h3>
-                                        </div>
-                                        <div className="row detail-field">
-                                            <p className="col alert alert-success light-word">Describe about your item, for example: type, materials, etc...</p>
-                                            <div className="editor" style={{ marginTop: '-12px' }}>
-                                                <Editor placeholder="Detail about your item..."
-                                                    editorState={this.state.editorState}
-                                                    onEditorStateChange={this.onEditorStateChange}
-                                                />
+                    <Route path="/dashboard/add" render={() => (
+                        <Modal isOpen={true} size="lg" >
+                            <ModalHeader style={{ width: '100%' }}>Add new item <Link className='btn text-dark' to="/dashboard">X</Link> </ModalHeader>
+                            <ModalBody>
+                                <Container>
+                                    <Row>
+                                        {
+                                            !this.state.checkValidInput ? (
+                                                <p className="errorsInput" id="validFile">Only 3 images allowed!!</p>
+
+                                            ) : ''
+                                        }
+                                        {
+                                            this.state.isAdded === true && (
+                                                <div className="alert alert-warning" role="alert">
+                                                    <strong>Item added</strong>
+                                                </div>
+
+                                            )
+                                        }
+                                        <Form onSubmit={this.handleAddItem} encType="multipart/form-data">
+                                            <input
+                                                type="hidden"
+                                                name="userId"
+                                                value={this.props.userId}
+                                            />
+                                            <input
+                                                type="hidden"
+                                                name="itemId"
+                                                value={this.state.itemId}
+                                            />
+                                            <div className="info">
+                                                <div className="row light-word">
+                                                    <h3 style={{ marginTop: '5px', paddingLeft: '5px', fontWeight: '600' }}>Infomation</h3>
+                                                </div>
+                                                <Row>
+                                                    <div className="col-md-6 col-xs-12">
+                                                        <FormGroup>
+                                                            <Label for="exampleName">Name <span title="Nhập cmn vào" id="force">(*)</span></Label>
+                                                            <Input type="text" name="name" id="exampleName" placeholder="Car..."
+                                                                value={this.state.name}
+                                                                onChange={e => this.setState({ name: e.target.value })}
+                                                            />
+                                                        </FormGroup>
+                                                    </div>
+                                                    <div className="col-md-6 col-xs-12">
+                                                        <FormGroup>
+                                                            <Label for="exampleEmail">Price <span id="force">(*)</span></Label>
+                                                            <Input type="number" name="currentPrice" title="Nhập cmn vào" id="examplePrice" min="0"
+                                                                value={this.state.currentPrice}
+                                                                onChange={e => this.setState({ currentPrice: e.target.value })}
+                                                            />
+                                                        </FormGroup>
+                                                    </div>
+                                                    <div className="col-md-6 col-xs-12">
+                                                        <FormGroup>
+                                                            <Label for="example">Quantity <span title="Nhập cmn vào" id="force">(*)</span></Label>
+                                                            <Input type="number" name="quantity" id="exampleQuantity" min="0"
+                                                                value={this.state.quantity}
+                                                                onChange={e => this.setState({ quantity: e.target.value })}
+                                                            />
+                                                        </FormGroup>
+                                                    </div>
+                                                    <div className="col-md-6 col-xs-12">
+                                                        <FormGroup>
+                                                            <Label for="example">Category <span title="Nhập cmn vào" id="force">(*)</span></Label>
+                                                            <Input type="select" name="categories" id="exampleSelect" onChange={this.handleChange}>
+                                                                <option defaultValue></option>
+                                                                {this.state.categories.map((cat, index) => {
+                                                                    return (<option value={index} key={index}>{cat}</option>)
+                                                                })}
+                                                            </Input>
+                                                        </FormGroup>
+                                                    </div>
+                                                    <div className="col-md-6 col-xs-12">
+                                                        <FormGroup>
+                                                            <Label for="example">Duration (hours) <span title="Nhập cmn vào" id="force">(*)</span></Label>
+                                                            <Input type="select" name="period" onChange={e => this.setState({ period: e.target.value })}>
+                                                                <option value="1" defaultValue>1</option>
+                                                                <option value="2">2</option>
+                                                                <option value="3">3</option>
+                                                                <option value="5">5</option>
+                                                            </Input>
+                                                        </FormGroup>
+                                                    </div>
+                                                    <div className="col-md-6 col-xs-12">
+                                                        <FormGroup>
+                                                            <Label>Images</Label>
+                                                            <div>
+                                                                <Button style={{ width: '150px' }} type="button" color="success" onClick={() => {
+                                                                    this.uploadImage.current.click()
+                                                                }}>Choose ({this.state.count})</Button>
+                                                            </div>
+
+                                                        </FormGroup>
+
+                                                    </div>
+                                                </Row>
                                             </div>
-                                        </div>
-                                    </div>
+                                            <div className="detail mt-2">
+                                                <div className="detail-form mt-2">
+                                                    <div className="row detai-intro mb-1 light-word" >
+                                                        <h3 style={{ marginTop: '5px', paddingLeft: '5px', fontWeight: '600' }}>Details</h3>
+                                                    </div>
+                                                    <div className="row detail-field">
+                                                        <p className="col alert alert-success light-word">Describe about your item, for example: type, materials, etc...</p>
+                                                        <div className="editor" style={{ marginTop: '-12px' }}>
+                                                            <Editor placeholder="Detail about your item..."
+                                                                editorState={this.state.editorState}
+                                                                onEditorStateChange={this.onEditorStateChange}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <ButtonGroup className="d-flex justify-content-center pb-3" style={{ marginTop: '80px' }}>
+                                                <Button style={{ width: '150px' }} type="submit" color="primary">Submit</Button>
+                                            </ButtonGroup>
+
+                                            {
+                                                this.state.isDeleted === true && (
+                                                    <div className="alert alert-warning" role="alert">
+                                                        <strong>Item deleted</strong>
+                                                    </div>
+
+                                                )
+                                            }
+                                            {
+                                                this.state.isEdited === true && (
+                                                    <div className="alert alert-warning" role="alert">
+                                                        <strong>Item edited</strong>
+                                                    </div>
+                                                )
+                                            }
+                                        </Form>
+                                    </Row>
+                                </Container>
+                            </ModalBody>
+                        </Modal>
+                    )} />
+                    <div className="d-flex justify-content-between">
+
+                        <div className="input-group" style={{ width: '30%' }}>
+                            <Form inline onSubmit={this.handleSearch}>
+                                <Input className='form-control' type="search" value={this.state.search} onChange={(e) => {
+                                    this.setState({ search: e.target.value })
+                                }} placeholder="Search ...">
+                                </Input>
+                                <div className="input-group-append">
+                                    <Button color="primary" type="submit" onClick={this.handleSearch}>
+                                        <i className='fas fa-search'></i>
+                                    </Button>
+                                    <Button color="secondary" onClick={(e) => {
+                                        this.setState({ search: '' },
+                                            () => {
+                                                this.handleSearch(e)
+                                            }
+                                        )
+                                    }}>
+                                        <i className='fas fa-sync'></i>
+                                    </Button>
                                 </div>
-                                <ButtonGroup className="d-flex justify-content-center pb-3" style={{ marginTop: '80px' }}>
-                                    <Button style={{ width: '150px' }} type="button" color="success" onClick={this.toggle}>{this.props.buttonLabel}Images({this.state.count})</Button>
-                                    <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className} onClosed={() => { this.setState({ checkValidInput: true }) }}>
-                                        <ModalHeader toggle={this.toggle}>Item's Image</ModalHeader>
-                                        <ModalBody>
-                                            <Input type="file" name="files" id="inputFile" accept="image/*" multiple onChange={this.onInputFileChange} />
-                                            {
-                                                !this.state.checkValidInput ? (
-                                                    <p className="errorsInput" id="validFile">Only 3 images allowed!!</p>
-
-                                                ) : ''
-                                            }
-                                        </ModalBody>
-                                        <ModalFooter>
-                                            {
-                                                !this.state.checkValidInput ? (
-                                                    <Button disabled color="primary" onClick={this.toggle}>Add</Button>
-
-                                                ) : (
-                                                        <Button color="primary" onClick={this.toggle}>Add</Button>
-                                                    )
-                                            }
-                                            <Button color="secondary" onClick={this.toggle}>Cancel</Button>
-                                        </ModalFooter>
-                                    </Modal>
-                                    <Button style={{ width: '150px' }} type="submit" color="primary">Add</Button>
-                                </ButtonGroup>
-                                {
-                                    this.state.isAdded === true && (
-                                        <div className="alert alert-warning" role="alert">
-                                            <strong>Item added</strong>
-                                        </div>
-
-                                    )
-                                }
-                                {
-                                    this.state.isDeleted === true && (
-                                        <div className="alert alert-warning" role="alert">
-                                            <strong>Item deleted</strong>
-                                        </div>
-
-                                    )
-                                }
-                                {
-                                    this.state.isEdited === true && (
-                                        <div className="alert alert-warning" role="alert">
-                                            <strong>Item edited</strong>
-                                        </div>
-                                    )
-                                }
                             </Form>
-                        )
-                    }
+                        </div>
 
-                    <br />
-                    <div className="container" id="adddel-form">
+
+
+                        <Link className="btn btn-primary" to="/dashboard/add">Add</Link>
+                    </div>
+                    <div className="mt-3 pt-3" id="adddel-form">
                         {this.state.loadingItem ? <div style={{ textAlign: 'center', zIndex: '900', position: 'relative' }}><img src="./images/loading.gif" alt="img" style={{ maxHeight: '400px', maxWidth: '400px' }} /></div> :
                             <table className="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Price</th>
-                                        <th scope="col">Quantity</th>
-                                        <th scope="col">Category</th>
-                                        <th scope="col">Details</th>
-                                        <th scope="col">Action</th>
-                                        <th scope="col">Status</th>
+                                        <th scope="col">
+                                            #
+                                            <Button color="info" className="ml-5 text-dark">
+                                                <i class="fas fa-sort-amount-down"></i>
+                                            </Button>
+                                        </th>
+                                        <th scope="col">
+                                            Name
+                                            <Button color="info" className="ml-5 text-dark">
+                                                <i class="fas fa-sort-alpha-down"></i>
+                                            </Button>
+                                        </th>
+                                        <th scope="col">
+                                            Price
+                                            <Button color="info" className="ml-5 text-dark">
+                                                <i class="fas fa-sort-amount-down"></i>
+                                            </Button>
+                                        </th>
+                                        <th scope="col">
+                                            Quantity
+                                            <Button color="info" className="ml-5 text-dark">
+                                                <i class="fas fa-sort-amount-down"></i>
+                                            </Button>
+                                        </th>
+                                        <th scope="col">
+                                            Category
+                                            <Button color="info" className="ml-5 text-dark">
+                                                <i class="fas fa-sort-alpha-down"></i>
+                                            </Button>
+                                        </th>
+                                        <th scope="col">
+                                            <Input type="select" value="Details" disabled>
+                                               <option defaultValue>Details</option> 
+                                            </Input>
+                                        </th>
+                                        <th scope="col">
+                                           
+                                        </th>
+                                        <th scope="col">
+                                            Status
+                                            <Button color="info" className="ml-5 text-dark">
+                                                <i class="fas fa-sort-alpha-down"></i>
+                                            </Button>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody className="light-word">
@@ -438,7 +544,7 @@ class DashBoard extends Component {
                                         renderedItems.map((item, i) => {
                                             return (
                                                 <tr className="fixprop" key={item.id}>
-                                                    <th scope="row">{i + 1}</th>
+                                                    <th scope="row"> {(page - 1) * itemPerPage + (i + 1)}</th>
                                                     <td>{item.name}</td>
                                                     <td><NumberFormat displayType={'text'} value={item.currentPrice} thousandSeparator={true} suffix={' ETH'} /></td>
                                                     <td>{item.quantity}</td>
@@ -479,8 +585,6 @@ class DashBoard extends Component {
                                                         )
 
                                                     }
-                                                    {/* <td><span className="badge badge-pill badge-danger light-word">Rejected</span></td>
-                                                    <td><span className="badge badge-pill badge-secondary light-word">Pending</span></td> */}
                                                 </tr>
                                             )
                                         })
