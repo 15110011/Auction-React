@@ -218,7 +218,7 @@ class Header extends Component {
 																					this.setState({ amount: e.target.value })
 																				}
 																			}}
-																			name="token" id="exampleToken" placeholder="" style={{ width: '100%' }}
+																			name="token" id="exampleToken" autoComplete="off" placeholder="" style={{ width: '100%' }}
 																		/>
 																		{
 																			this.state.amount === '' ? (
