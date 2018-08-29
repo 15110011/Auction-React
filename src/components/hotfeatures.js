@@ -59,7 +59,7 @@ class Features extends Component {
                                             if (vehicle.endTime - currentTime > 0 && i <= 3) {
                                                 return (
                                                     <div className="col-sm-6 col-md-4 col-lg-3" key={vehicle.itemId}>
-                                                        <Link to={`${API_URL}/api/v1/items/${vehicle.itemId}`}>
+                                                        <Link to={`/items/${vehicle.itemId}`}>
                                                             <div className="cate-product">
                                                                 {vehicle.link ?
                                                                     <img style={{ borderRadius: '5px' }} className="img-fluid" src={`${root}/uploads/${vehicle.link}`} alt="category" />
@@ -73,7 +73,7 @@ class Features extends Component {
                                                             </div>
                                                         </Link>
                                                         <div className="cate-product-panel pt-2">
-                                                            <Link to={`${API_URL}/api/v1/items/${vehicle.itemId}`}>
+                                                            <Link to={`/items/${vehicle.itemId}`}>
                                                                 {vehicle.itemName}
                                                             </Link>
                                                             <p>Time Left: {fromMillisecondsToFormattedString(vehicle.endTime - currentTime)}
@@ -83,6 +83,7 @@ class Features extends Component {
                                                     </div>
                                                 )
                                             }
+                                            return null
                                         }) :
                                             <div className='d-flex col-12 justify-content-center pt-5 pb-2'>
                                                 <p className="text-uppercase h5">No items in this category</p>
@@ -121,18 +122,14 @@ class Features extends Component {
                                                                 </div>
                                                             </Link>
                                                             <div className="cate-product-panel pt-2">
-                                                                <Link to={`${API_URL}/api/v1/items/${jewelry.itemId}`}>
+                                                                <Link to={`/items/${jewelry.itemId}`}>
                                                                     {jewelry.itemName}
                                                                 </Link>
                                                                 <p>Time Left: {fromMillisecondsToFormattedString(jewelry.endTime - currentTime)} | Current: {jewelry.curPrice}</p>
                                                             </div>
                                                         </div>)
                                                     }
-                                                    {/* else if (jewelry.endTime - currentTime <= 0) {
-                                                        let cloneJel = [].concat(Jewelry)
-                                                        cloneJel = cloneJel.slice(0, i).concat(cloneJel.slice(i + 1))
-                                                        this.setState({ Jewelry: cloneJel })
-                                                    } */}
+                                                    return null
                                                 }
                                                 ) :
                                                     <div className='d-flex col-12 justify-content-center pt-5 pb-2'>
@@ -177,13 +174,14 @@ class Features extends Component {
                                                                 </div>
                                                             </Link>
                                                             <div className="cate-product-panel pt-2">
-                                                                <Link to={`${API_URL}/api/v1/items/${coin.itemId}`}>
+                                                                <Link to={`/items/${coin.itemId}`}>
                                                                     {coin.itemName}
                                                                 </Link>
                                                                 <p>Time Left: {fromMillisecondsToFormattedString(coin.endTime - currentTime)} | Current: {coin.curPrice}</p>
                                                             </div>
                                                         </div>)
                                                     }
+                                                    return null
                                                 }
                                                 )
                                                     :
@@ -219,7 +217,7 @@ class Features extends Component {
                                                     if (book.endTime - currentTime > 0 && i <= 3) {
                                                         return (
                                                             <div className="col-sm-6 col-md-4 col-lg-3" key={book.itemId}>
-                                                                <Link to={`${API_URL}/api/v1/items/${book.itemId}`}>
+                                                                <Link to={`/items/${book.itemId}`}>
                                                                     <div className="cate-product">
                                                                         {book.link ?
                                                                             <img style={{ borderRadius: '5px' }} className="img-fluid" src={`${root}/uploads/${book.link}`} alt="category" />
@@ -233,7 +231,7 @@ class Features extends Component {
                                                                     </div>
                                                                 </Link>
                                                                 <div className="cate-product-panel pt-2">
-                                                                    <Link to={`${API_URL}/api/v1/items/${book.itemId}`}>
+                                                                    <Link to={`/items/${book.itemId}`}>
                                                                         {book.itemName}
                                                                     </Link>
                                                                     <p>Time Left: {fromMillisecondsToFormattedString(book.endTime - currentTime)}
@@ -243,6 +241,7 @@ class Features extends Component {
                                                             </div>
                                                         )
                                                     }
+                                                    return null
                                                 }) :
                                                     <div className='d-flex col-12 justify-content-center pt-5 pb-2'>
                                                         <p className="text-uppercase h5">No items in this category</p>
@@ -282,13 +281,14 @@ class Features extends Component {
                                                                         </div>
                                                                     </Link>
                                                                     <div className="cate-product-panel pt-2">
-                                                                        <Link to={`${API_URL}/api/v1/items/${art.itemId}`}>
+                                                                        <Link to={`/items/${art.itemId}`}>
                                                                             {art.itemName}
                                                                         </Link>
                                                                         <p>Time Left: {fromMillisecondsToFormattedString(art.endTime - currentTime)} | Current: {art.curPrice}</p>
                                                                     </div>
                                                                 </div>)
                                                             }
+                                                            return null
                                                         }
                                                         ) :
                                                             <div className='d-flex col-12 justify-content-center pt-5 pb-2'>
@@ -315,7 +315,6 @@ class Features extends Component {
                                                     {
                                                         Electronics.length > 0 ? Electronics.map((electronic, i) => {
                                                             if (electronic.endTime - currentTime > 0 && i <= 1) {
-
                                                                 return (<div className="col-sm-6">
                                                                     <Link to="#">
                                                                         <div className="cate-product">
@@ -332,13 +331,14 @@ class Features extends Component {
                                                                         </div>
                                                                     </Link>
                                                                     <div className="cate-product-panel pt-2">
-                                                                        <Link to={`${API_URL}/api/v1/items/${electronic.itemId}`}>
+                                                                        <Link to={`/items/${electronic.itemId}`}>
                                                                             {electronic.itemName}
                                                                         </Link>
                                                                         <p>Time Left: {fromMillisecondsToFormattedString(electronic.endTime - currentTime)} | Current: {electronic.curPrice}</p>
                                                                     </div>
                                                                 </div>)
                                                             }
+                                                            return null
                                                         }
                                                         ) :
                                                             <div className='d-flex col-12 justify-content-center pt-5 pb-2'>
