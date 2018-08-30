@@ -366,8 +366,8 @@ class DashBoard extends Component {
                                                     </div>
                                                     <div className="col-md-6 col-xs-12">
                                                         <FormGroup>
-                                                            <Label for="exampleEmail">Price <span id="force">(*)</span></Label>
-                                                            <Input type="number" name="currentPrice" title="Nhập cmn vào" id="examplePrice" min="0"
+                                                            <Label for="exampleEmail">Price (in BLC) <span id="force">(*)</span></Label>
+                                                            <Input type="number" name="currentPrice" title="Price in BLC" id="examplePrice" min="0"
                                                                 value={this.state.currentPrice}
                                                                 onChange={e => this.setState({ currentPrice: e.target.value })}
                                                             />
@@ -506,7 +506,7 @@ class DashBoard extends Component {
                                             </Button>
                                         </th>
                                         <th scope="col">
-                                            Price
+                                            Price 
                                             <Button color="info" className="ml-5 text-dark">
                                                 <i class="fas fa-sort-amount-down"></i>
                                             </Button>
@@ -546,7 +546,7 @@ class DashBoard extends Component {
                                                 <tr className="fixprop" key={item.id}>
                                                     <th scope="row"> {(page - 1) * itemPerPage + (i + 1)}</th>
                                                     <td>{item.name}</td>
-                                                    <td><NumberFormat displayType={'text'} value={item.currentPrice} thousandSeparator={true} suffix={' ETH'} /></td>
+                                                    <td><NumberFormat displayType={'text'} value={item.currentPrice} thousandSeparator={true} suffix={' BLC'} /></td>
                                                     <td>{item.quantity}</td>
                                                     <td>{this.state.categories[item.categoriesId]}</td>
                                                     <td>
