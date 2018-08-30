@@ -366,7 +366,7 @@ class DashBoard extends Component {
                                                     </div>
                                                     <div className="col-md-6 col-xs-12">
                                                         <FormGroup>
-                                                            <Label for="exampleEmail">Price (in BLC) <span id="force">(*)</span></Label>
+                                                            <Label for="exampleEmail">Price (BLC) <span id="force">(*)</span></Label>
                                                             <Input type="number" name="currentPrice" title="Price in BLC" id="examplePrice" min="0"
                                                                 value={this.state.currentPrice}
                                                                 onChange={e => this.setState({ currentPrice: e.target.value })}
