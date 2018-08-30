@@ -11,7 +11,7 @@ function BidInput(props) {
                 </button>
             </span>
             <div id="number-format" style={{ display: 'inline' }}>
-                <NumberFormat className="text-center" value={props.value} thousandSeparator={true} suffix={' ETH'} onValueChange={props.onChange} />
+                <NumberFormat className="text-center" value={props.value} thousandSeparator={true} suffix={' BLC'} onValueChange={props.onChange} />
             </div>
             <span className="input-group-btn">
                 <button onClick={props.onClickIncrease} type="button" className="btn btn-secondary" data-type="plus" data-field="quant[2]" style={{ borderTopLeftRadius: 'unset', borderBottomLeftRadius: 'unset', marginTop: '-3px' }}>

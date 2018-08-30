@@ -11,6 +11,7 @@ import Pagination from './Pagination'
 import Web3 from 'web3';
 
 import AuctionBid from '../contracts/AuctionBid.json';
+import DappToken from '../contracts/DappToken.json'
 import RecommendItems from './RecommendItems';
 
 
@@ -56,60 +57,64 @@ class ItemDetail extends Component {
 
   }
 
-    componentDidMount() {
-        this.mounted = true
-        fetch(`${root}/api/v1/contracts/${this.props.match.params.id}`)
-            .then(res => res.json())
-            .then(res => {
-                if (!this.mounted) return
-                if (res.success) {
-                    if (!window.web3) {
-                        this.setState({ getMetaMask: false })
-                        return
-                    }
-                    this.setState({ deployContract: false, startBidding: true })
-                    var auctionContract = this.web3.eth.contract(AuctionBid.abi)
-                    this.contract = auctionContract.at((res.contractAddress.contractAddress).toString())
-                    this.contractEnded = res.contractAddress.ended
-                    this.contract.highestBidder((err, rs) => {
-                        this.setState({ rs })
-                    })
-                    this.getBidder()
-                }
-            })
-        // this.props.io.socket.get(`${root}/hello`, function serverResponded(body, JWR) {
-        // });
-        fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
-            credentials: 'include'
-        })
-            .then(res => res.json())
-            .then(item => {
-                if (!this.mounted) return
-                this.setState({ loading: false })
-                if (!item.error) {
-                    this.setState({ currentPrice: item.findItem.currentPrice })
-                    let nextStep = item.findItem.bids.length > 0 ?
-                        item.findItem.bids[0].currentPrice * 0.5 :
-                        item.findItem.currentPrice * 0.5
-                    let initBid = item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice : item.findItem.currentPrice
-                    this.props.io.socket.get('/socket/items/' + item.findItem.id, (body, JWR) => {
-                    })
-                    this.props.io.socket.on('room' + item.findItem.id, this.onReceiveRoomMessage)
-                    this.setState({
-                        images: item.findImg,
-                        itemDetail: item.findItem,
-                        step: nextStep,
-                        currentBidding: initBid + nextStep,
-                        isApproved: item.isApproved
-                    }, () => {
-                        this.setCountDown()
-                    })
-                }
-                else {
-                    if (!this.mounted) return
-                    this.setState({ itemDetail: null })
-                }
-            })
+  componentDidMount() {
+    this.mounted = true
+    var tokenContract = this.web3.eth.contract(DappToken.abi)
+    this.blcToken = tokenContract.at('0xb768E1155041126eE5668ba907ab5BD6E7788E05')
+    fetch(`${root}/api/v1/contracts/${this.props.match.params.id}`)
+      .then(res => res.json())
+      .then(res => {
+        if (!this.mounted) return
+        if (res.success) {
+          if (!window.web3) {
+            this.setState({ getMetaMask: false })
+            return
+          }
+          this.setState({ deployContract: false, startBidding: true })
+          var auctionContract = this.web3.eth.contract(AuctionBid.abi)
+          this.contract = auctionContract.at((res.contractAddress.contractAddress).toString())
+
+
+          this.contractEnded = res.contractAddress.ended
+          this.contract.highestBidder((err, rs) => {
+            this.setState({ rs })
+          })
+          this.getBidder()
+        }
+      })
+    // this.props.io.socket.get(`${root}/hello`, function serverResponded(body, JWR) {
+    // });
+    fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
+      credentials: 'include'
+    })
+      .then(res => res.json())
+      .then(item => {
+        if (!this.mounted) return
+        this.setState({ loading: false })
+        if (!item.error) {
+          this.setState({ currentPrice: item.findItem.currentPrice })
+          let nextStep = item.findItem.bids.length > 0 ?
+            item.findItem.bids[0].currentPrice * 0.5 :
+            item.findItem.currentPrice * 0.5
+          let initBid = item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice : item.findItem.currentPrice
+          this.props.io.socket.get('/socket/items/' + item.findItem.id, (body, JWR) => {
+          })
+          this.props.io.socket.on('room' + item.findItem.id, this.onReceiveRoomMessage)
+          this.setState({
+            images: item.findImg,
+            itemDetail: item.findItem,
+            step: nextStep,
+            currentBidding: initBid + nextStep,
+            isApproved: item.isApproved
+          }, () => {
+            this.setCountDown()
+          })
+        }
+        else {
+          if (!this.mounted) return
+          this.setState({ itemDetail: null })
+        }
+      })
 
   }
   onReceiveRoomMessage(newBid) {
@@ -132,8 +137,7 @@ class ItemDetail extends Component {
         for (let i = 0; i < bidLength; i++) {
           promises.push(new Promise((resolve, reject) => {
             this.contract.bids(i, (err, address) => {
-              var value = this.web3.fromWei(address[1].toNumber(), 'ether')
-              resolve({ address: address[0], value: value, time: address[2].toNumber() })
+              resolve({ address: address[0], value: address[1].toNumber(), time: address[2].toNumber() })
             })
           }))
         }
@@ -167,9 +171,7 @@ class ItemDetail extends Component {
           }
           this.contract.owner((err, owner) => {
             if (window.web3.eth.accounts[0] === owner && !this.contractEnded) {
-              console.log(this.contractEnded)
               this.contract.auctionEnd((err, success) => {
-                console.log(err, success)
                 if (err) {
                   return console.log(err)
                 } else {
@@ -224,64 +226,64 @@ class ItemDetail extends Component {
         this.setState({ getMetaMask: true })
       }, 2000)
     } else {
-      this.contract.bid(new Date().getTime(), {
-        from: window.web3.eth.accounts[0], value: (this.state.currentBidding * 1000000000000000000).toString()
-      }, (err, txHash) => {
-        if (typeof txHash === 'undefined') {
-          this.setState({ sendTransaction: false })
-          setInterval(() => {
-            this.setState({ sendTransaction: true })
-          }, 2000)
-        } else {
-          this.setState({ waitForMining: true })
-          this.watchEventBid()
-          var filter = this.web3.eth.filter('latest')
-          filter.watch((error, result) => {
-            this.web3.eth.getTransactionReceipt(txHash, (err, block) => {
-              if (err) {
-                console.log(err)
-              }
-              if (block && block.transactionHash === txHash) {
-                console.log(block.timestamp)
-                this.setState({ waitForMining: false })
-                filter.stopWatching()
-                this.props.io.socket.post(`${root}/api/v1/bid/${this.state.itemDetail.id}`, {
-                  currentPrice: this.state.currentBidding,
-                  userId: this.props.userId,
-                  isLastFiveSec: this.state.timeLeft <= 5000
-                }, res => {
+      this.contract.bid(new Date().getTime(), this.state.currentBidding,
+        {
+          from: window.web3.eth.accounts[0],
+        }, (err, txHash) => {
+          if (typeof txHash === 'undefined') {
+            this.setState({ sendTransaction: false })
+            setInterval(() => {
+              this.setState({ sendTransaction: true })
+            }, 2000)
+          } else {
+            this.setState({ waitForMining: true })
+            this.watchEventBid()
+            var filter = this.web3.eth.filter('latest')
+            filter.watch((error, result) => {
+              this.web3.eth.getTransactionReceipt(txHash, (err, block) => {
+                if (err) {
+                  console.log(err)
+                }
+                if (block && block.transactionHash === txHash) {
+                  this.setState({ waitForMining: false })
+                  filter.stopWatching()
+                  this.props.io.socket.post(`${root}/api/v1/bid/${this.state.itemDetail.id}`, {
+                    currentPrice: this.state.currentBidding,
+                    userId: this.props.userId,
+                    isLastFiveSec: this.state.timeLeft <= 5000
+                  }, res => {
 
-                  if (!res.error) {
-                    let { itemDetail } = this.state
-                    if (itemDetail) {
-                      itemDetail.bids.unshift(res.newBid)
-                      itemDetail.currentPrice = itemDetail.bids[0].currentPrice
-                      let nextStep = itemDetail.bids[0].currentPrice * 0.5
-                      if (res.newAdditionalTime) {
-                        let modifyDetail = this.state.itemDetail
-                        modifyDetail.additionalTime = res.newAdditionalTime
-                        this.setState({
-                          itemDetail: modifyDetail
-                        }, () => {
-                          this.setCountDown()
-                        })
+                    if (!res.error) {
+                      let { itemDetail } = this.state
+                      if (itemDetail) {
+                        itemDetail.bids.unshift(res.newBid)
+                        itemDetail.currentPrice = itemDetail.bids[0].currentPrice
+                        let nextStep = itemDetail.bids[0].currentPrice * 0.5
+                        if (res.newAdditionalTime) {
+                          let modifyDetail = this.state.itemDetail
+                          modifyDetail.additionalTime = res.newAdditionalTime
+                          this.setState({
+                            itemDetail: modifyDetail
+                          }, () => {
+                            this.setCountDown()
+                          })
+                        }
+                        this.getBidder()
+                        this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
                       }
-                      this.getBidder()
-                      this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
                     }
-                  }
-                  else {
-                    alert(`Cannot bid under the price ${this.state.currentBidding}`)
-                  }
-                })
-              } else {
-                this.setState({ waitForMining: true })
-              }
-            })
+                    else {
+                      alert(`Cannot bid under the price ${this.state.currentBidding}`)
+                    }
+                  })
+                } else {
+                  this.setState({ waitForMining: true })
+                }
+              })
 
-          })
-        }
-      })
+            })
+          }
+        })
     }
   }
 
@@ -332,7 +334,6 @@ class ItemDetail extends Component {
         this.setState({ waitForMining: true })
         if (contract.address) {
           this.contract = contract
-          this.setState({ waitForMining: false })
           var address = this.contract.address
           fetch(`${root}/api/v1/contracts/${this.props.match.params.id}`, {
             method: 'POST',
@@ -341,7 +342,27 @@ class ItemDetail extends Component {
             .then(res => res.json())
             .then(res => {
               if (res.success) {
-                this.setState({ deployContract: false, startBidding: true })
+                
+                this.blcToken.approve((this.contract.address).toString(),
+                  1157920892373161954235709850086879
+                  ,
+                  { from: window.web3.eth.accounts[0], gas: 100000 }
+                  ,
+
+                  (err, txHash) => {
+                    var filter = this.web3.eth.filter('latest')
+                    filter.watch((err, rs) => {
+                      this.web3.eth.getTransactionReceipt(txHash, (err, block) => {
+                        if (block && block.transactionHash == txHash) {
+                          this.setState({
+                            deployContract: false,
+                            startBidding: true,
+                            waitForMining: false
+                          })
+                        }
+                      })
+                    })
+                  })
               }
             })
         }
@@ -362,7 +383,7 @@ class ItemDetail extends Component {
       }, 2000)
       return
     }
-    this.contract.startBidding((this.state.currentPrice * 1000000000000000000).toString(),
+    this.contract.startBidding((this.state.currentPrice),
       { from: window.web3.eth.accounts[0], gas: 100000 }, (err, txHash) => {
         if (err) {
           console.log(err)
@@ -516,14 +537,14 @@ class ItemDetail extends Component {
                           </div>
                         </div>
                         <div className="col-md-6" style={{ wordWrap: 'break-word' }}>
-                          <h4> Current price: <NumberFormat displayType={'text'} value={this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice} thousandSeparator={true} suffix={' ETH'} />
+                          <h4> Current price: <NumberFormat displayType={'text'} value={this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice} thousandSeparator={true} suffix={' BLC'} />
                           </h4>
                           {/* <h4>Current price: ${this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice}</h4> */}
                         </div>
                         <div className="col-md-6">
                         </div>
                         <div className="col-md-6" style={{ wordWrap: 'break-word' }}>
-                          <h4> Current step: <NumberFormat displayType={'text'} value={this.state.step} thousandSeparator={true} suffix={' ETH'} />
+                          <h4> Current step: <NumberFormat displayType={'text'} value={this.state.step} thousandSeparator={true} suffix={' BLC'} />
                           </h4>
                           {/* <h4>Current step: ${this.state.step}</h4> */}
                         </div>
@@ -582,7 +603,7 @@ class ItemDetail extends Component {
                             <tr key={i}>
                               <td>{bid.address}</td>
                               <td>
-                                {<NumberFormat displayType={'text'} value={bid.value} thousandSeparator={true} suffix={' ETH'} />}
+                                {<NumberFormat displayType={'text'} value={bid.value} thousandSeparator={true} suffix={' BLC'} />}
                               </td>
                               <td>{dateFns.format(bid.time, 'HH:mm:ss MM/DD/YYYY')}</td>
                             </tr>
