@@ -59,6 +59,42 @@ class ItemDetail extends Component {
 
   componentDidMount() {
     this.mounted = true
+
+    fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
+      credentials: 'include'
+    })
+      .then(res => res.json())
+      .then(item => {
+        if (!this.mounted) return
+        this.setState({ loading: false })
+        if (!item.error) {
+          this.setState({ currentPrice: item.findItem.currentPrice })
+          let nextStep = item.findItem.bids.length > 0 ?
+            item.findItem.bids[0].currentPrice * 0.5 :
+            item.findItem.currentPrice * 0.5
+          let initBid = item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice : item.findItem.currentPrice
+          this.props.io.socket.get('/socket/items/' + item.findItem.id, (body, JWR) => {
+          })
+          this.props.io.socket.on('room' + item.findItem.id, this.onReceiveRoomMessage)
+          this.setState({
+            images: item.findImg,
+            itemDetail: item.findItem,
+            step: nextStep,
+            currentBidding: initBid + nextStep,
+            isApproved: item.isApproved
+          }, () => {
+            this.setCountDown()
+          })
+        }
+        else {
+          if (!this.mounted) return
+          this.setState({ itemDetail: null })
+        }
+      })
+    if (!window.web3) {
+      this.setState({ getMetaMask: false })
+      return
+    }
     var tokenContract = this.web3.eth.contract(DappToken.abi)
     this.blcToken = tokenContract.at('0xb768E1155041126eE5668ba907ab5BD6E7788E05')
     fetch(`${root}/api/v1/contracts/${this.props.match.params.id}`)
@@ -70,10 +106,12 @@ class ItemDetail extends Component {
             this.setState({ getMetaMask: false })
             return
           }
+
           this.setState({ deployContract: false, startBidding: true })
           var auctionContract = this.web3.eth.contract(AuctionBid.abi)
           this.contract = auctionContract.at((res.contractAddress.contractAddress).toString())
-          if(!window.web3.eth.accounts[0]) {
+          this.watchEventBid()
+          if (!window.web3.eth.accounts[0]) {
             this.setState({ getMetaMask: false })
             return
           }
@@ -119,37 +157,7 @@ class ItemDetail extends Component {
       })
     // this.props.io.socket.get(`${root}/hello`, function serverResponded(body, JWR) {
     // });
-    fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
-      credentials: 'include'
-    })
-      .then(res => res.json())
-      .then(item => {
-        if (!this.mounted) return
-        this.setState({ loading: false })
-        if (!item.error) {
-          this.setState({ currentPrice: item.findItem.currentPrice })
-          let nextStep = item.findItem.bids.length > 0 ?
-            item.findItem.bids[0].currentPrice * 0.5 :
-            item.findItem.currentPrice * 0.5
-          let initBid = item.findItem.bids.length > 0 ? item.findItem.bids[0].currentPrice : item.findItem.currentPrice
-          this.props.io.socket.get('/socket/items/' + item.findItem.id, (body, JWR) => {
-          })
-          this.props.io.socket.on('room' + item.findItem.id, this.onReceiveRoomMessage)
-          this.setState({
-            images: item.findImg,
-            itemDetail: item.findItem,
-            step: nextStep,
-            currentBidding: initBid + nextStep,
-            isApproved: item.isApproved
-          }, () => {
-            this.setCountDown()
-          })
-        }
-        else {
-          if (!this.mounted) return
-          this.setState({ itemDetail: null })
-        }
-      })
+
 
   }
   onReceiveRoomMessage(newBid) {
@@ -244,9 +252,11 @@ class ItemDetail extends Component {
     }).watch((error, event) => {
       if (error) console.log(error)
       let newBidders = [].concat(this.state.bidders)
-      newBidders.unshift({ address: event.args.address, time: event.args.time, value: event.args.value })
+      newBidders.unshift({ address: event.args.player, time: event.args.time.c[0], value: event.args.value.c[0] })
+      this.setState({ rs: event.args.player, bidders: newBidders }, () => {
+        this.handleBidPageChange(1)
 
-      this.setState({ rs: event.args.player, bidders: newBidders })
+      })
     })
   }
   onSubmitBid(e) {
@@ -267,6 +277,7 @@ class ItemDetail extends Component {
           alert('You dont have enough money')
           return
         } else {
+          console.log(this.state.currentBidding)
           this.contract.bid(new Date().getTime(), this.state.currentBidding,
             {
               from: window.web3.eth.accounts[0],
@@ -278,7 +289,7 @@ class ItemDetail extends Component {
                 }, 2000)
               } else {
                 this.setState({ waitForMining: true })
-                this.watchEventBid()
+                // this.watchEventBid()
                 var filter = this.web3.eth.filter('latest')
                 filter.watch((error, result) => {
                   this.web3.eth.getTransactionReceipt(txHash, (err, block) => {

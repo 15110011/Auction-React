@@ -51,7 +51,10 @@ class DashBoard extends Component {
             renderedItems: [],
             itemPerPage: 10,
             search: '',
-            filteredItems: []
+            filteredItems: [],
+            sort: {
+
+            }
         }
         this.handleAddItem = this.handleAddItem.bind(this)
         this.getItem = this.getItem.bind(this)
@@ -72,7 +75,7 @@ class DashBoard extends Component {
         });
     }
     componentDidMount() {
-
+        this.mounted = true
         // FB.api('/me', data => {
         //     if (!data.error) {
         //         this.setState({ userID: data.id, loadingItem: false }, () => {
@@ -89,8 +92,21 @@ class DashBoard extends Component {
 
             // let initCat =[]
             // initCat.push(...res.cats)
+            if (!this.mounted) { return }
             this.setState({ categories: cloneCat })
 
+
+        })
+    }
+    componentWillUnmount() {
+        this.mounted = false
+    }
+    onSort = (e) => {
+        let sortKey = e.currentTarget.name
+        let {sort} = this.state
+        sort[sortKey]=!sort[sortKey]
+        this.setState({
+            sort
         })
     }
     handleDelete(e) {
@@ -285,7 +301,7 @@ class DashBoard extends Component {
     }
 
     render() {
-        const { page, total, renderedItems, itemPerPage } = this.state
+        const { page, total, renderedItems, itemPerPage, sort } = this.state
 
         if (this.props.loggedIn === GUEST_STATUS) {
             return (
@@ -494,50 +510,63 @@ class DashBoard extends Component {
                             <table className="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th scope="col">
+                                        <th scope="col" style={{ paddingBottom: '20px' }}>
                                             #
-                                            <Button color="info" className="ml-3 text-dark">
-                                                <i className="fas fa-sort-alpha-down"></i>
-                                            </Button>
                                         </th>
                                         <th scope="col">
                                             Name
-                                            <Button color="info" className="ml-3 text-dark">
-                                                <i className="fas fa-sort-alpha-down"></i>
+                                            <Button color="info" name='name' onClick={this.onSort} className="ml-3 text-dark">
+                                                {sort.name ?
+                                                    <i className="fas fa-sort-alpha-up"></i>
+                                                    :
+                                                    <i className="fas fa-sort-alpha-down"></i>
+                                                }
                                             </Button>
                                         </th>
                                         <th scope="col">
                                             Price (BLC)
-                                            <Button color="info" className="ml-3 text-dark">
-                                                <i className="fas fa-sort-alpha-down"></i>
+                                            <Button color="info" name='currentPrice' onClick={this.onSort} className="ml-3 text-dark">
+                                                {sort.currentPrice ?
+                                                    <i className="fas fa-sort-alpha-up"></i>
+                                                    :
+                                                    <i className="fas fa-sort-alpha-down"></i>
+                                                }
                                             </Button>
                                         </th>
                                         <th scope="col">
                                             Quantity
-                                            <Button color="info" className="ml-3 text-dark">
-                                                <i className="fas fa-sort-alpha-down"></i>
+                                            <Button color="info" name='quantity' onClick={this.onSort} className="ml-3 text-dark">
+                                                {sort.quantity ?
+                                                    <i className="fas fa-sort-alpha-up"></i>
+                                                    :
+                                                    <i className="fas fa-sort-alpha-down"></i>
+                                                }
                                             </Button>
                                         </th>
                                         <th scope="col">
                                             Category
-                                            <Button color="info" className="ml-3 text-dark">
-                                                <i className="fas fa-sort-alpha-down"></i>
+                                            <Button color="info" className="ml-3 text-dark" name='categoriesId' onClick={this.onSort}>
+                                                {sort.categoriesId ?
+                                                    <i className="fas fa-sort-alpha-up"></i>
+                                                    :
+                                                    <i className="fas fa-sort-alpha-down"></i>
+                                                }
                                             </Button>
                                         </th>
-                                        <th scope="col">
-                                            <Input type="select" value="Details" disabled>
-                                                <option defaultValue>Details</option>
-                                            </Input>
+                                        <th scope="col" style={{ paddingBottom: '20px' }}>
+                                            Details
                                         </th>
-                                        <th scope="col">
-                                            <Input type="select" value="Action" disabled>
-                                                <option defaultValue>Action</option>
-                                            </Input>
+                                        <th scope="col" style={{ paddingBottom: '20px' }}>
+                                            Action
                                         </th>
                                         <th scope="col">
                                             Status
-                                            <Button color="info" className="ml-3 text-dark">
-                                                <i class="fas fa-sort-alpha-down"></i>
+                                            <Button color="info" className="ml-3 text-dark" onClick={this.onSort} name='isAccept'>
+                                                {sort.isAccept ?
+                                                    <i className="fas fa-sort-alpha-up"></i>
+                                                    :
+                                                    <i className="fas fa-sort-alpha-down"></i>
+                                                }
                                             </Button>
                                         </th>
                                     </tr>
@@ -550,7 +579,7 @@ class DashBoard extends Component {
                                                     <th scope="row"> {(page - 1) * itemPerPage + (i + 1)}</th>
                                                     <td>
                                                         <p title={item.name}>
-                                                            {`${item.name.slice(0,18)}...`} 
+                                                            {item.name.length >= 18 ? `${item.name.slice(0, 18)}...` : `${item.name}`}
                                                         </p>
                                                     </td>
                                                     <td><NumberFormat displayType={'text'} value={item.currentPrice} thousandSeparator={true} suffix={' ETH'} /></td>
