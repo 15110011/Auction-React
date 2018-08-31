@@ -61,7 +61,7 @@ class SearchResult extends Component {
                       <div className="text-center">
                         <h5>{item.name}</h5>
                       </div>
-                      <p className="card-title">Current price:&nbsp;<NumberFormat displayType={'text'} value={item.currentPrice} thousandSeparator={true} suffix={' ETH'} /></p>
+                      <p className="card-title">Current price:&nbsp;<NumberFormat displayType={'text'} value={item.currentPrice} thousandSeparator={true} suffix={' BLC'} /></p>
                       {
                         item.startedAt === 0 ? (
                           <p classname="card-price" style={{ flex: '1' }}>Auction hasn't started yet</p>

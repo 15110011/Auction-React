@@ -367,8 +367,8 @@ class DashBoard extends Component {
                                                     </div>
                                                     <div className="col-md-6 col-xs-12">
                                                         <FormGroup>
-                                                            <Label for="exampleEmail">Price <span id="force">(*)</span></Label>
-                                                            <Input type="number" name="currentPrice" title="Nhập cmn vào" id="examplePrice" min="0"
+                                                            <Label for="exampleEmail">Price (BLC) <span id="force">(*)</span></Label>
+                                                            <Input type="number" name="currentPrice" title="Price in BLC" id="examplePrice" min="0"
                                                                 value={this.state.currentPrice}
                                                                 onChange={e => this.setState({ currentPrice: e.target.value })}
                                                             />
@@ -507,9 +507,15 @@ class DashBoard extends Component {
                                             </Button>
                                         </th>
                                         <th scope="col">
+<<<<<<< HEAD
                                             Price
                                             <Button color="info" className="ml-3 text-dark">
                                                 <i className="fas fa-sort-alpha-down"></i>
+=======
+                                            Price 
+                                            <Button color="info" className="ml-5 text-dark">
+                                                <i class="fas fa-sort-amount-down"></i>
+>>>>>>> 561c6e58af9532309923af7a9b6554297f249701
                                             </Button>
                                         </th>
                                         <th scope="col">

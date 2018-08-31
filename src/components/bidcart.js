@@ -175,7 +175,7 @@ class Bidcart extends Component {
                                   <td>{item.itemName}</td>
 
                                   <td>
-                                    <NumberFormat displayType={'text'} value={item.curPrice} thousandSeparator={true} suffix={' ETH'} />
+                                    <NumberFormat displayType={'text'} value={item.curPrice} thousandSeparator={true} suffix={' BLC'} />
                                   </td>
                                   <td>{item.quantity}</td>
                                   <td>{item.categoryName}</td>
@@ -237,7 +237,7 @@ class Bidcart extends Component {
                                       {item.itemId}
                                     </td>
                                     <td>{item.name}</td>
-                                    <td>{item.winPrice} ETH</td>
+                                    <td>{item.winPrice} BLC</td>
                                     <td>{item.quantity}</td>
                                     <td>{item.catName}</td>
                                     <td>
@@ -291,7 +291,7 @@ class Bidcart extends Component {
                                       {item.id}
                                     </td>
                                     <td>{item.name}</td>
-                                    <td>{item.currentPrice}</td>
+                                    <td>{item.currentPrice} BLC</td>
                                     <td>{item.quantity}</td>
                                     <td>{item.categoriesId}</td>
                                     <td>{item.userId}</td>

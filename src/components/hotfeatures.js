@@ -77,7 +77,7 @@ class Features extends Component {
                                                                 {vehicle.itemName}
                                                             </Link>
                                                             <p>Time Left: {fromMillisecondsToFormattedString(vehicle.endTime - currentTime)}
-                                                                | Current: {vehicle.curPrice} ETH
+                                                                | Current: {vehicle.curPrice} BLC
                                                             </p>
                                                         </div>
                                                     </div>
@@ -107,7 +107,7 @@ class Features extends Component {
                                                 Jewelry.length > 0 ? Jewelry.map((jewelry, i) => {
                                                     if (jewelry.endTime - currentTime > 0 && i <= 2) {
                                                         return (<div className="col-sm-6">
-                                                            <Link to="#">
+                                                            <Link to={`/items/${jewelry.itemId}`}>
                                                                 <div className="cate-product">
                                                                     {jewelry.link ?
                                                                         <img style={{ borderRadius: '5px' }} className="img-fluid" src={`${root}/uploads/${jewelry.link}`} alt="category" />
@@ -159,7 +159,7 @@ class Features extends Component {
                                                     if (coin.endTime - currentTime > 0 && i <= 2) {
 
                                                         return (<div className="col-sm-6">
-                                                            <Link to="#">
+                                                            <Link to={`/items/${coin.itemId}`}>
                                                                 <div className="cate-product">
                                                                     {coin.link ?
                                                                         <img style={{ borderRadius: '5px' }} className="img-fluid" src={`${root}/uploads/${coin.link}`} alt="category" />
@@ -266,7 +266,7 @@ class Features extends Component {
                                                             if (art.endTime - currentTime > 0 && i <= 1) {
 
                                                                 return (<div className="col-sm-6">
-                                                                    <Link to="#">
+                                                                    <Link to={`/items/${art.itemId}`}>
                                                                         <div className="cate-product">
                                                                             {art.link ?
                                                                                 <img style={{ borderRadius: '5px' }} className="img-fluid" src={`${root}/uploads/${art.link}`} alt="category" />
@@ -316,7 +316,7 @@ class Features extends Component {
                                                         Electronics.length > 0 ? Electronics.map((electronic, i) => {
                                                             if (electronic.endTime - currentTime > 0 && i <= 1) {
                                                                 return (<div className="col-sm-6">
-                                                                    <Link to="#">
+                                                                    <Link to={`/items/${electronic.itemId}`}>
                                                                         <div className="cate-product">
                                                                             {electronic.link ?
                                                                                 <img style={{ borderRadius: '5px' }} className="img-fluid" src={`${root}/uploads/${electronic.link}`} alt="category" />
