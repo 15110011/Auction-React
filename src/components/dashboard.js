@@ -548,8 +548,10 @@ class DashBoard extends Component {
                                             return (
                                                 <tr className="fixprop" key={item.id}>
                                                     <th scope="row"> {(page - 1) * itemPerPage + (i + 1)}</th>
-                                                    <td style={{ width: '256px', wordBreak: 'break-all', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                                        {item.name}
+                                                    <td>
+                                                        <p title={item.name}>
+                                                            {`${item.name.slice(0,18)}...`} 
+                                                        </p>
                                                     </td>
                                                     <td><NumberFormat displayType={'text'} value={item.currentPrice} thousandSeparator={true} suffix={' ETH'} /></td>
                                                     <td>{item.quantity}</td>

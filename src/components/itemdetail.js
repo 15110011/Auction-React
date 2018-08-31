@@ -99,7 +99,7 @@ class ItemDetail extends Component {
                     var filter = this.web3.eth.filter('latest')
                     filter.watch((err, rs) => {
                       this.web3.eth.getTransactionReceipt(txHash, (err, block) => {
-                        if (block && block.transactionHash == txHash) {
+                        if (block && block.transactionHash === txHash) {
                           this.setState({
                             deployContract: false,
                             waitForMining: false
@@ -405,7 +405,7 @@ class ItemDetail extends Component {
                     var filter = this.web3.eth.filter('latest')
                     filter.watch((err, rs) => {
                       this.web3.eth.getTransactionReceipt(txHash, (err, block) => {
-                        if (block && block.transactionHash == txHash) {
+                        if (block && block.transactionHash === txHash) {
                           this.setState({
                             deployContract: false,
                             waitForMining: false,
