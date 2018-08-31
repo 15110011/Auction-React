@@ -507,15 +507,9 @@ class DashBoard extends Component {
                                             </Button>
                                         </th>
                                         <th scope="col">
-<<<<<<< HEAD
-                                            Price
+                                            Price (BLC)
                                             <Button color="info" className="ml-3 text-dark">
                                                 <i className="fas fa-sort-alpha-down"></i>
-=======
-                                            Price 
-                                            <Button color="info" className="ml-5 text-dark">
-                                                <i class="fas fa-sort-amount-down"></i>
->>>>>>> 561c6e58af9532309923af7a9b6554297f249701
                                             </Button>
                                         </th>
                                         <th scope="col">
