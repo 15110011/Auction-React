@@ -152,7 +152,7 @@ class ItemDetail extends Component {
           this.contract.highestBidder((err, rs) => {
             this.setState({ rs })
           })
-          this.getBidder()
+          // this.getBidder()
         }
       })
     // this.props.io.socket.get(`${root}/hello`, function serverResponded(body, JWR) {
@@ -185,7 +185,7 @@ class ItemDetail extends Component {
           }))
         }
         Promise.all(promises).then((e) => {
-
+          console.log(e)
           this.setState({ bidders: e.reverse() }, () => {
             this.handleBidPageChange(1)
           })
@@ -250,6 +250,7 @@ class ItemDetail extends Component {
       fromBlock: 0,
       toBlock: 'lastest'
     }).watch((error, event) => {
+      console.log(event)
       if (error) console.log(error)
       let newBidders = [].concat(this.state.bidders)
       newBidders.unshift({ address: event.args.player, time: event.args.time.c[0], value: event.args.value.c[0] })
