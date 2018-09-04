@@ -52,9 +52,7 @@ class DashBoard extends Component {
             itemPerPage: 10,
             search: '',
             filteredItems: [],
-            sort: {
-
-            }
+            sort: {}
         }
         this.handleAddItem = this.handleAddItem.bind(this)
         this.getItem = this.getItem.bind(this)
@@ -103,10 +101,32 @@ class DashBoard extends Component {
     }
     onSort = (e) => {
         let sortKey = e.currentTarget.name
-        let {sort} = this.state
-        sort[sortKey]=!sort[sortKey]
+        let { sort, items, filteredItems } = this.state
+        let lastStatus = sort[sortKey]
+        
+        sort = {}
+        sort[sortKey] = !lastStatus
+    
         this.setState({
             sort
+        }, () => {
+            let sortCriteria = []
+            sortCriteria.push(sortKey)
+
+            let cloneItems = [].concat(filteredItems.length > 0 ? filteredItems : items)
+            if (sortCriteria.indexOf('name') !== -1) {
+                cloneItems = _.sortBy(cloneItems, [o => o.name.toLowerCase()])
+            }
+            else {
+                cloneItems = _.sortBy(cloneItems, sortCriteria)
+            }
+            if(lastStatus===true)
+            {
+                cloneItems = cloneItems.reverse()
+            }
+            this.setState({ filteredItems: cloneItems, total: cloneItems.length }, () => {
+                this.handlePageChange(1)
+            })
         })
     }
     handleDelete(e) {
@@ -255,6 +275,7 @@ class DashBoard extends Component {
                 return items.json()
             })
             .then(items => {
+
                 this.setState({ items: items.findItem, renderedItems: items.findItem.slice(0, this.state.itemPerPage), total: items.findItem.length, page: 1, loadingItem: false })
             })
 
@@ -281,7 +302,9 @@ class DashBoard extends Component {
         return true
     }
     handleSearch = (e) => {
+
         e.preventDefault()
+
         const { items, categories } = this.state
         let cloneItems = [].concat(items)
         cloneItems = cloneItems.filter((cur) => {
@@ -297,7 +320,17 @@ class DashBoard extends Component {
             temp.categoriesId = categories[temp.categoriesId]
             return JSON.stringify(Object.values(temp)).toLowerCase().indexOf(this.state.search.toLowerCase()) !== -1
         })
-        this.setState({ renderedItems: cloneItems, page: 1, total: cloneItems.length })
+        this.setState({ filteredItems: cloneItems, total: cloneItems.length }, () => {
+            this.handlePageChange(1)
+        })
+    }
+
+    onPressDefault = () => {
+        const { items } = this.state
+
+        this.setState({ filteredItems: [], total: items.length }, () => {
+            this.handlePageChange(1)
+        })
     }
 
     render() {
@@ -446,6 +479,7 @@ class DashBoard extends Component {
                                                             <Editor placeholder="Detail about your item..."
                                                                 editorState={this.state.editorState}
                                                                 onEditorStateChange={this.onEditorStateChange}
+
                                                             />
                                                         </div>
                                                     </div>
@@ -491,7 +525,7 @@ class DashBoard extends Component {
                                     <Button color="secondary" onClick={(e) => {
                                         this.setState({ search: '' },
                                             () => {
-                                                this.handleSearch(e)
+                                                this.onPressDefault(e)
                                             }
                                         )
                                     }}>
