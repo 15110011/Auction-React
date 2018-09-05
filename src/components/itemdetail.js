@@ -252,6 +252,9 @@ class ItemDetail extends Component {
     }).watch((error, event) => {
       if (error) console.log(error)
       let newBidders = [].concat(this.state.bidders)
+      console.log(
+        this.web3.fromWei(((event.args.value).toNumber()),'ether') 
+      )
       newBidders.unshift({ address: event.args.player, time: event.args.time.c[0], value: 
         this.web3.fromWei(((event.args.value).toNumber()),'ether') 
       })
@@ -322,7 +325,6 @@ class ItemDetail extends Component {
                                 this.setCountDown()
                               })
                             }
-                            this.getBidder()
                             this.setState({ itemDetail, step: nextStep, currentBidding: res.newBid.currentPrice + nextStep })
                           }
                         }
