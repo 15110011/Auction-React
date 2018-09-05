@@ -275,12 +275,12 @@ class ItemDetail extends Component {
     }
     else {
       this.blcToken.balanceOf(window.web3.eth.accounts[0], (err, amount) => {
-        if (amount.toNumber() < this.state.currentBidding) {
+        if (amount.toNumber() < this.web3.toWei(this.state.currentBidding,'ether')) {
           alert('You dont have enough money')
           return
         } else {
-          console.log(this.state.currentBidding)
-          this.contract.bid(new Date().getTime(), this.state.currentBidding,
+          this.contract.bid(new Date().getTime(), 
+          this.web3.toWei(this.state.currentBidding,'ether'),
             {
               from: window.web3.eth.accounts[0],
             }, (err, txHash) => {
@@ -448,7 +448,7 @@ class ItemDetail extends Component {
       }, 2000)
       return
     }
-    this.contract.startBidding((this.state.currentPrice),
+    this.contract.startBidding(this.web3.toWei((this.state.currentPrice),'ether'),
       { from: window.web3.eth.accounts[0], gas: 100000 }, (err, txHash) => {
         if (err) {
           this.setState({ sendTransaction: false })
