@@ -616,7 +616,7 @@ class DashBoard extends Component {
                                                             {item.name.length >= 18 ? `${item.name.slice(0, 18)}...` : `${item.name}`}
                                                         </p>
                                                     </td>
-                                                    <td><NumberFormat displayType={'text'} value={item.currentPrice} thousandSeparator={true} suffix={' ETH'} /></td>
+                                                    <td><NumberFormat displayType={'text'} value={item.currentPrice} thousandSeparator={true} suffix={' BLC'} /></td>
                                                     <td>{item.quantity}</td>
                                                     <td>{this.state.categories[item.categoriesId]}</td>
                                                     <td>

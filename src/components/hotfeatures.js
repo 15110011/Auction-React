@@ -235,7 +235,7 @@ class Features extends Component {
                                                                         {book.itemName}
                                                                     </Link>
                                                                     <p>Time Left: {fromMillisecondsToFormattedString(book.endTime - currentTime)}
-                                                                        | Current: {book.curPrice} ETH
+                                                                        | Current: {book.curPrice} BLC
                                                             </p>
                                                                 </div>
                                                             </div>
