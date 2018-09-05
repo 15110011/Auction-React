@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { CREATED_MODE, DELETED_MODE, UPDATED_MODE } from '../config';
 import AdminPendingItems from './AdminPendingItems';
 import AdminCategories from './AdminCategories';
+import AdminBalance from './AdminBalance'
 
 class AdminPanel extends Component {
     constructor(props) {
@@ -32,7 +33,6 @@ class AdminPanel extends Component {
 
         if (newCat.id) {
             let cloneCats = this.state.categories.slice()
-            console.log(newCat, "9999999")
             if (mode === CREATED_MODE) {
                 newCat.items = []
                 cloneCats.push(newCat)
@@ -50,7 +50,6 @@ class AdminPanel extends Component {
                 let index = _.findIndex(cloneCats, cat => {
                     return cat.id === +newCat.id
                 })
-                console.log(index)
                 if (index > -1) {
                     cloneCats[index].name = newCat.name
                     this.setState({ categories: cloneCats })
@@ -79,6 +78,14 @@ class AdminPanel extends Component {
                                 Category
                             </NavLink>
                         </NavItem>
+                        <NavItem>
+                            <NavLink
+                                className={classnames({ active: this.state.activeTab === '3' })}
+                                onClick={() => { this.toggle('3'); }}
+                            >
+                                Withdraw Money
+                            </NavLink>
+                        </NavItem>
                     </Nav>
                     <TabContent activeTab={this.state.activeTab} id="admin-panel">
                         <TabPane tabId="1">
@@ -87,9 +94,12 @@ class AdminPanel extends Component {
                         <TabPane tabId="2">
                             <AdminCategories {...this.props} categories={this.state.categories} updateCategories={this.updateCategories}></AdminCategories>
                         </TabPane>
+                        <TabPane tabId="3">
+                            <AdminBalance ></AdminBalance>
+                        </TabPane>
                     </TabContent>
                 </div> : <div className="container adminpanel" style={{ paddingTop: '30px' }}>
-                        <p className="alert alert-danger text-center light-word">HELLO FROM OTHER SIDE</p>
+                        <p className="alert alert-danger text-center light-word">Only Admin Can Enter This Page</p>
                     </div>}
             </div>
         )
