@@ -102,7 +102,7 @@ class Features extends Component {
                                 {/* JEWELRY START */}
                                 <div className="row pt-2">
                                     <div className="col-12">
-                                        <div class="row">
+                                        <div className="row">
                                             {
                                                 Jewelry.length > 0 ? Jewelry.map((jewelry, i) => {
                                                     if (jewelry.endTime - currentTime > 0 && i <= 2) {
@@ -260,7 +260,7 @@ class Features extends Component {
                                         {/* ARTS START */}
                                         <div className="row pt-2">
                                             <div className="col-12">
-                                                <div class="row">
+                                                <div className="row">
                                                     {
                                                         Art.length > 0 ? Art.map((art, i) => {
                                                             if (art.endTime - currentTime > 0 && i <= 1) {
@@ -311,7 +311,7 @@ class Features extends Component {
                                         <div className="row pt-2">
                                             {/* ELECTRONICS START */}
                                             <div className="col-12">
-                                                <div class="row">
+                                                <div className="row">
                                                     {
                                                         Electronics.length > 0 ? Electronics.map((electronic, i) => {
                                                             if (electronic.endTime - currentTime > 0 && i <= 1) {

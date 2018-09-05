@@ -170,7 +170,7 @@ class Bidcart extends Component {
                               return (
                                 <tr key={i} className="fixprop">
                                   <td>
-                                    {item.itemId}
+                                    {i+1}
                                   </td>
                                   <td>{item.itemName}</td>
 
@@ -234,7 +234,7 @@ class Bidcart extends Component {
                                 return (
                                   <tr key={i} className="fixprop">
                                     <td>
-                                      {item.itemId}
+                                      {i+1}
                                     </td>
                                     <td>{item.name}</td>
                                     <td>{item.winPrice} BLC</td>

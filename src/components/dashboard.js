@@ -103,10 +103,10 @@ class DashBoard extends Component {
         let sortKey = e.currentTarget.name
         let { sort, items, filteredItems } = this.state
         let lastStatus = sort[sortKey]
-        
+
         sort = {}
         sort[sortKey] = !lastStatus
-    
+
         this.setState({
             sort
         }, () => {
@@ -120,8 +120,7 @@ class DashBoard extends Component {
             else {
                 cloneItems = _.sortBy(cloneItems, sortCriteria)
             }
-            if(lastStatus===true)
-            {
+            if (lastStatus === true) {
                 cloneItems = cloneItems.reverse()
             }
             this.setState({ filteredItems: cloneItems, total: cloneItems.length }, () => {
@@ -661,13 +660,14 @@ class DashBoard extends Component {
                                     }
                                 </tbody>
                             </table>}
-                        <Pagination aria-label="Page navigation example"
-                            margin={2}
-                            page={page}
-                            count={Math.ceil(total / itemPerPage)}
-                            onPageChange={this.handlePageChange}
-                        />
-
+                        {total > 0 &&
+                            <Pagination aria-label="Page navigation example"
+                                margin={2}
+                                page={page}
+                                count={Math.ceil(total / itemPerPage)}
+                                onPageChange={this.handlePageChange}
+                            />
+                        }
 
                     </div>
                 </div>

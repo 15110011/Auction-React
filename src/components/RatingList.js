@@ -224,12 +224,14 @@ export default class RatingList extends Component {
                     </div>
                 </div>
                 <div className="d-flex justify-content-end">
-                    <Pagination
-                        margin={2}
-                        page={pageReview}
-                        count={Math.ceil(reviews.length / reviewPerPage)}
-                        onPageChange={this.handleReviewPageChange}
-                    />
+                    {reviews.length > 0 &&
+                        <Pagination
+                            margin={2}
+                            page={pageReview}
+                            count={Math.ceil(reviews.length / reviewPerPage)}
+                            onPageChange={this.handleReviewPageChange}
+                        />
+                    }
                 </div>
             </Fragment>
         )

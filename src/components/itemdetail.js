@@ -39,7 +39,8 @@ class ItemDetail extends Component {
       ended: false,
       pageBid: 1,
       renderedBids: [],
-      bidPerPage: 10
+      bidPerPage: 10,
+      totalMoney: 0
     }
     if (typeof this.web3 !== 'undefined') {
       this.web3Provider = this.web3.currentProvider
@@ -252,15 +253,18 @@ class ItemDetail extends Component {
     }).watch((error, event) => {
       if (error) console.log(error)
       let newBidders = [].concat(this.state.bidders)
-      console.log(
-        this.web3.fromWei(((event.args.value).toNumber()),'ether') 
-      )
-      newBidders.unshift({ address: event.args.player, time: event.args.time.c[0], value: 
-        this.web3.fromWei(((event.args.value).toNumber()),'ether') 
+      newBidders.unshift({
+        address: event.args.player, time: event.args.time.c[0], value:
+          this.web3.fromWei(((event.args.value).toNumber()), 'ether')
       })
+      if (window.web3.eth.accounts[0] === event.args.player) {
+        let oldTotalMoney = this.state.totalMoney
+        let newTotalMoney = oldTotalMoney + +this.web3.fromWei(((event.args.value).toNumber()), 'ether')
+        this.setState({ totalMoney: newTotalMoney })
+      }
+
       this.setState({ rs: event.args.player, bidders: newBidders }, () => {
         this.handleBidPageChange(1)
-
       })
     })
   }
@@ -278,12 +282,13 @@ class ItemDetail extends Component {
     }
     else {
       this.blcToken.balanceOf(window.web3.eth.accounts[0], (err, amount) => {
-        if (amount.toNumber() < this.web3.toWei(this.state.currentBidding,'ether')) {
+        console.log(amount.toNumber())
+        if (amount.toNumber() < this.web3.toWei(this.state.currentBidding, 'ether')) {
           alert('You dont have enough money')
           return
         } else {
-          this.contract.bid(new Date().getTime(), 
-          this.web3.toWei(this.state.currentBidding,'ether'),
+          this.contract.bid(new Date().getTime(),
+            this.web3.toWei(this.state.currentBidding, 'ether'),
             {
               from: window.web3.eth.accounts[0],
             }, (err, txHash) => {
@@ -365,6 +370,18 @@ class ItemDetail extends Component {
       this.props.io.socket.get(`${root}/leave/items/${this.state.itemDetail.id}`, (body, JWR) => {
       })
     }
+  }
+  onWithdraw = () => {
+    this.contract.withdraw({}, (err, txHash) => {
+      if (err) {
+        this.setState({ sendTransaction: false })
+        setTimeout(() => {
+          this.setState({ sendTransaction: true })
+        }, 2000)
+        return
+      }
+      this.setState({ totalMoney: 0 })
+    })
   }
   onBeginAuction() {
     if (!window.web3) {
@@ -450,7 +467,7 @@ class ItemDetail extends Component {
       }, 2000)
       return
     }
-    this.contract.startBidding(this.web3.toWei((this.state.currentPrice),'ether'),
+    this.contract.startBidding(this.web3.toWei((this.state.currentPrice), 'ether'),
       { from: window.web3.eth.accounts[0], gas: 100000 }, (err, txHash) => {
         if (err) {
           this.setState({ sendTransaction: false })
@@ -494,7 +511,6 @@ class ItemDetail extends Component {
             }
           })
         })
-
       })
   }
 
@@ -506,7 +522,7 @@ class ItemDetail extends Component {
 
   render() {
     const { current, itemDetail, images, loading, isApproved, getMetaMask,
-      sendTransaction, waitForMining, bidPerPage, pageBid, bidders } = this.state
+      sendTransaction, waitForMining, bidPerPage, pageBid, bidders, totalMoney } = this.state
     if (loading) {
       return (
         <div role="alert" style={{ marginTop: '75px' }}>
@@ -567,6 +583,7 @@ class ItemDetail extends Component {
                         && <button className="btn btn-primary ml-auto" onClick={this.startBidding}>Start An Auction</button>
                       )
                     }
+                    {/**/}
                   </h3>
                 </div>
                 <hr />
@@ -595,28 +612,28 @@ class ItemDetail extends Component {
                           <div>
                             {this.state.itemDetail.startedAt === 0 && <h4>Duration: {this.state.itemDetail.period} hour(s)</h4>}
                             {(this.state.itemDetail.startedAt !== 0 && this.state.timeLeft > 0) &&
-                              <h4>Time left: {
+                              <h5>Time left: {
                                 this.fromMillisecondsToFormattedString(this.state.timeLeft)}
-                              </h4>
+                              </h5>
                             }
                             {(this.state.itemDetail.startedAt !== 0 && this.state.timeLeft < 0) &&
-                              <h4>
+                              <h5>
                                 Ended {dateFns.distanceInWordsToNow(
                                   new Date(itemDetail.startedAt + itemDetail.period * 3600 * 1000 + itemDetail.additionalTime))} ago
-                                                            </h4>
+                                                            </h5>
                             }
                           </div>
                         </div>
                         <div className="col-md-6" style={{ wordWrap: 'break-word' }}>
-                          <h4> Current price: <NumberFormat displayType={'text'} value={this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice} thousandSeparator={true} suffix={' BLC'} />
-                          </h4>
+                          <h5> Current price: <NumberFormat displayType={'text'} value={this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice} thousandSeparator={true} suffix={' BLC'} />
+                          </h5>
                           {/* <h4>Current price: ${this.state.itemDetail.bids.length > 0 ? this.state.itemDetail.bids[0].currentPrice : this.state.itemDetail.currentPrice}</h4> */}
                         </div>
                         <div className="col-md-6">
                         </div>
                         <div className="col-md-6" style={{ wordWrap: 'break-word' }}>
-                          <h4> Current step: <NumberFormat displayType={'text'} value={this.state.step} thousandSeparator={true} suffix={' BLC'} />
-                          </h4>
+                          <h5> Current step: <NumberFormat displayType={'text'} value={this.state.step} thousandSeparator={true} suffix={' BLC'} />
+                          </h5>
                           {/* <h4>Current step: ${this.state.step}</h4> */}
                         </div>
                       </div>
@@ -643,13 +660,10 @@ class ItemDetail extends Component {
                             }}
                           ></BidInput>
                           {(this.state.itemDetail.startedAt !== 0 && this.state.timeLeft > 0 && waitForMining === false) && <button style={{ marginLeft: '30px', marginTop: '10px' }} className="btn btn-primary mb-2" type="submit"><i className="fas fa-gavel"> Bid now</i></button>}
-                          {/* {
-                                                        this.state.ended && (
-                                                            <p className="alert alert-info light-word mt-2">{this.watchEventEnd().address}</p>
-                                                        )
-                                                    } */}
+                          {(this.state.itemDetail.startedAt !== 0 && this.state.timeLeft <= 0) && <button className="btn btn-primary mb-2" onClick={this.onWithdraw} style={{ marginLeft: '22px', marginTop: '10px' }}>Withdraw BLC</button>}
+
                         </form>
-                        {this.state.itemDetail.bids.length > 0 ? <p style={{ wordWrap: 'break-word', marginRight: '30px' }} className="alert alert-info light-word mt-2">
+                        {this.state.itemDetail.bids.length > 0 ? <p style={{ wordWrap: 'break-word', marginRight: '10px' }} className="alert alert-info light-word mt-2">
                           {/* Last bid by : {this.state.itemDetail.bids[0].userName} */}
                           Last bid by : {this.state.rs}
                         </p> : ''}
@@ -684,12 +698,12 @@ class ItemDetail extends Component {
                     </tbody>
                   </table>
                   <div className="d-flex justify-content-center">
-                    <Pagination
+                    {bidders.length > 0 && <Pagination
                       margin={2}
                       page={pageBid}
                       count={Math.ceil(bidders.length / bidPerPage)}
                       onPageChange={this.handleBidPageChange}
-                    />
+                    />}
                   </div>
                 </div>
                 <hr />
@@ -704,18 +718,7 @@ class ItemDetail extends Component {
                 {(this.props.userId !== '' && itemDetail) && <RatingList userId={this.props.userId} itemDetail={itemDetail} itemId={this.props.match.params.id} isApproved={isApproved}></RatingList>}
               </div>
               <div className="col-md-12 items-info mt-2">
-                {/* <div className="comment-titles pt-3">
-                                    <h3>Comments</h3>
-                                </div>
-                                <hr style={{ width: '825px', marginLeft: '-16px' }} />
-                                <div className="comment-content">
-                                    <div className="comment-block"> */}
                 <Comments itemId={this.props.match.params.id} userId={this.props.userId} startedAt={this.state.itemDetail.startedAt} io={this.props.io}></Comments>
-                {/* </div>
-                                </div>
-                                <div className="d-flex justify-content-end"> */}
-                {/*pagin*/}
-                {/* </div> */}
               </div>
             </div>
             <div className="col-sm-3">

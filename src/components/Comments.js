@@ -24,20 +24,20 @@ class Comments extends Component {
                 .then(comments => {
                     if (!comments.error) {
                         this.setState({ comments: comments.comments })
-                        const renderedComments = 
-                            comments.comments.slice((this.state.pageComment - 1) * 
-                            this.state.commentPerPage, (this.state.pageComment - 1) * 
-                            this.state.commentPerPage + this.state.commentPerPage)
+                        const renderedComments =
+                            comments.comments.slice((this.state.pageComment - 1) *
+                                this.state.commentPerPage, (this.state.pageComment - 1) *
+                                this.state.commentPerPage + this.state.commentPerPage)
                         this.setState({ renderedComments })
                     }
                 })
         }
     }
     handleCommentPageChange = (page) => {
-        const renderedComments = 
-            this.state.comments.slice((page - 1) 
-            * this.state.commentPerPage, (page - 1) 
-            * this.state.commentPerPage + this.state.commentPerPage)
+        const renderedComments =
+            this.state.comments.slice((page - 1)
+                * this.state.commentPerPage, (page - 1)
+                * this.state.commentPerPage + this.state.commentPerPage)
         this.setState({ pageComment: page, renderedComments })
     }
 
@@ -109,13 +109,14 @@ class Comments extends Component {
                     </div>
                 </div>
                 <div className="d-flex justify-content-end">
-                    {/*pagin*/}
-                    <Pagination
-                        margin={2}
-                        page={pageComment}
-                        count={Math.ceil(comments.length / commentPerPage)}
-                        onPageChange={this.handleCommentPageChange}
-                    />
+                    {comments.length > 0 &&
+                        <Pagination
+                            margin={2}
+                            page={pageComment}
+                            count={Math.ceil(comments.length / commentPerPage)}
+                            onPageChange={this.handleCommentPageChange}
+                        />
+                    }
                 </div>
             </Fragment>
         )
