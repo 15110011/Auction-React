@@ -40,14 +40,15 @@ class ItemDetail extends Component {
       pageBid: 1,
       renderedBids: [],
       bidPerPage: 10,
-      totalMoney: 0
+      totalMoney: 0,
+      owner: ''
     }
-    if (typeof this.web3 !== 'undefined') {
-      this.web3Provider = this.web3.currentProvider
-    } else {
-      this.web3Provider = new Web3.providers.HttpProvider('https://ropsten.infura.io/99efdc0bd45147cebbdfd88e5eff1d75')
-      // this.web3Provider = new Web3.providers.HttpProvider("http://127.0.0.1:7545")
-    }
+    // if (typeof this.web3 !== 'undefined') {
+    //   this.web3Provider = this.web3.currentProvider
+    // } else {
+    //   this.web3Provider = new Web3.providers.HttpProvider('https://ropsten.infura.io/99efdc0bd45147cebbdfd88e5eff1d75')
+    //   // this.web3Provider = new Web3.providers.HttpProvider("http://127.0.0.1:7545")
+    // }
     this.web3 = window.web3
 
     this.onSubmitBid = this.onSubmitBid.bind(this)
@@ -60,7 +61,7 @@ class ItemDetail extends Component {
 
   componentDidMount() {
     this.mounted = true
-
+    
     fetch(`${root}/api/v1/items/${this.props.match.params.id}`, {
       credentials: 'include'
     })
@@ -116,6 +117,14 @@ class ItemDetail extends Component {
             this.setState({ getMetaMask: false })
             return
           }
+          this.contract.owner((err,owner)=>{
+            if(err) {
+              alert('Something went wrong')
+              return
+            }
+            console.log(owner)
+            this.setState({ owner })
+          })
           this.blcToken.allowance(window.web3.eth.accounts[0], this.contract.address.toString(),
             (err, allowance) => {
               if (allowance.toNumber() === 0) {
@@ -522,7 +531,7 @@ class ItemDetail extends Component {
 
   render() {
     const { current, itemDetail, images, loading, isApproved, getMetaMask,
-      sendTransaction, waitForMining, bidPerPage, pageBid, bidders, totalMoney } = this.state
+      sendTransaction, waitForMining, bidPerPage, pageBid, bidders, owner } = this.state
     if (loading) {
       return (
         <div role="alert" style={{ marginTop: '75px' }}>
@@ -659,8 +668,21 @@ class ItemDetail extends Component {
                               this.setState({ currentBidding: (this.state.currentBidding + this.state.step) })
                             }}
                           ></BidInput>
-                          {(this.state.itemDetail.startedAt !== 0 && this.state.timeLeft > 0 && waitForMining === false) && <button style={{ marginLeft: '30px', marginTop: '10px' }} className="btn btn-primary mb-2" type="submit"><i className="fas fa-gavel"> Bid now</i></button>}
-                          {(this.state.itemDetail.startedAt !== 0 && this.state.timeLeft <= 0) && <button className="btn btn-primary mb-2" onClick={this.onWithdraw} style={{ marginLeft: '22px', marginTop: '10px' }}>Withdraw BLC</button>}
+                          {(this.state.itemDetail.startedAt !== 0
+                            && this.state.timeLeft > 0
+                            && waitForMining === false
+                            && owner !== '' 
+                            && owner !== window.web3.eth.accounts[0]
+                          )
+                            &&
+                            <button style={{ marginLeft: '30px', marginTop: '10px' }} className="btn btn-primary mb-2" type="submit"><i className="fas fa-gavel"> Bid now</i></button>}
+                          {(this.state.itemDetail.startedAt !== 0 
+                            && this.state.timeLeft <= 0
+                            && owner !== '' 
+                            && owner !== window.web3.eth.accounts[0]
+                            ) 
+                            && 
+                          <button className="btn btn-primary mb-2" onClick={this.onWithdraw} style={{ marginLeft: '22px', marginTop: '10px' }}>Withdraw BLC</button>}
 
                         </form>
                         {this.state.itemDetail.bids.length > 0 ? <p style={{ wordWrap: 'break-word', marginRight: '10px' }} className="alert alert-info light-word mt-2">
