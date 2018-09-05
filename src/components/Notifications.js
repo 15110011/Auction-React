@@ -89,7 +89,7 @@ export default class Notification extends Component {
                         )
                     }
                 </Link>
-                <div id="a-color" className="dropdown-menu account-menu notification-panel" aria-labelledby="header-account-menu-link">
+                <div id="a-color" className="dropdown-menu account-menu notification-panel"  aria-labelledby="header-account-menu-link">
                     <div className="container row">
                         <div className="col-md-6">
                             <p>Notifications</p>
@@ -99,7 +99,7 @@ export default class Notification extends Component {
                         </div>
                     </div>
                     <hr style={{ marginTop: '-10px' }} />
-                    <ul className="notification">
+                    <ul className="notification" style={{ maxHeight: '500px', overflow: 'scroll' }} >
                         {
                             getNoti ? (
                                 getNoti.map((info, i) => {
@@ -108,7 +108,7 @@ export default class Notification extends Component {
                                             <li className="notification">
                                                 <div className="media" style={{ borderBottom: '1px solid #F1F1F1', minHeight: '55px' }}>
                                                     <div className="avatar-noti pb-2">
-                                                        <img src="./images/car.jpg" alt="img" />
+                                                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Anonymous_emblem.svg/160px-Anonymous_emblem.svg.png" alt="img" />
                                                     </div>
                                                     <div className="container content-noti">
                                                         {info.isAccept ? (
