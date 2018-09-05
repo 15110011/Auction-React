@@ -60,13 +60,15 @@ class Header extends Component {
 		})
 		if (window.web3) {
 			var tokenContract = this.web3.eth.contract(DappToken.abi)
-			this.blcToken = tokenContract.at('0xb768E1155041126eE5668ba907ab5BD6E7788E05')
+			this.blcToken = tokenContract.at('0x0ef72c129aed97e869bddedfb4a3ea628e9a7eb4')
 			var saleTokenContract = this.web3.eth.contract(DappTokenSale.abi)
-			this.saleToken = saleTokenContract.at('0x54793a239298848328363dc0B4813195855FD586')
+			this.saleToken = saleTokenContract.at('0x1a1a0294f26da590fdfe9c78b8193d73ca791e2a')
 			if(window.web3.eth.accounts[0]) {
 			setInterval(() => {
 				this.blcToken.balanceOf(window.web3.eth.accounts[0], (err, balance) => {
-					this.setState({ balance: balance.toNumber() })
+					this.setState({ balance: this.web3.fromWei(balance.toNumber(), 'ether') })
+					// this.setState({ balance: balance.toNumber()})
+
 				})
 			}, 100)
 		}
@@ -95,7 +97,6 @@ class Header extends Component {
 				.then(res => res.json())
 				.then(res => {
 					var itemsFound = res.resultItem
-					console.log(itemsFound)
 					if (itemsFound.length === 0) {
 						this.props.history.push({
 							pathname: '/results',
@@ -120,7 +121,6 @@ class Header extends Component {
 	handleBuyToken = (e) => {
 		e.preventDefault()
 		const { amount } = this.state
-		console.log(typeof +amount)
 		this.saleToken.buyTokens(+amount,
 			{ from: window.web3.eth.accounts[0], gas: 500000, value: (+amount * 1000000000000000) },
 			(err, txHash) => {

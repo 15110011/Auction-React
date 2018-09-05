@@ -96,7 +96,7 @@ class ItemDetail extends Component {
       return
     }
     var tokenContract = this.web3.eth.contract(DappToken.abi)
-    this.blcToken = tokenContract.at('0xb768E1155041126eE5668ba907ab5BD6E7788E05')
+    this.blcToken = tokenContract.at('0x0ef72c129aed97e869bddedfb4a3ea628e9a7eb4')
     fetch(`${root}/api/v1/contracts/${this.props.match.params.id}`)
       .then(res => res.json())
       .then(res => {
@@ -250,10 +250,11 @@ class ItemDetail extends Component {
       fromBlock: 0,
       toBlock: 'lastest'
     }).watch((error, event) => {
-      console.log(event)
       if (error) console.log(error)
       let newBidders = [].concat(this.state.bidders)
-      newBidders.unshift({ address: event.args.player, time: event.args.time.c[0], value: event.args.value.c[0] })
+      newBidders.unshift({ address: event.args.player, time: event.args.time.c[0], value: 
+        this.web3.fromWei(((event.args.value).toNumber()),'ether') 
+      })
       this.setState({ rs: event.args.player, bidders: newBidders }, () => {
         this.handleBidPageChange(1)
 

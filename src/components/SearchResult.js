@@ -50,7 +50,7 @@ class SearchResult extends Component {
                   <div key={i} className="col-sm-3 card">
                     {
                       item.length !== 0 ? (
-                        <Link className="borderitem" to={`/items/${item.itemId}`}>
+                        <Link className="borderitem" to={`/items/${item.id}`}>
                           <img className="card-img-top" src={`${root}/uploads/${item.link}`} alt="" style={{ minHeight: '200px', maxHeight: '200px', objectFit: 'cover' }} />
                         </Link>
                       ) : (
